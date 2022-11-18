@@ -1,4 +1,6 @@
 <html>
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <head>
     <meta charset="utf-8">
     <title>Registration Page</title>
@@ -124,7 +126,7 @@
     <div class="center">
         <h1>Create a new account</h1>
 		<!--- need to ask for the following items: Admin	Username	Email	Password	First Name	Last Name --->
-        <form method="post" action= "registerServer.php">
+        <form method="post" action= "functions.php">
                 <div class="txt_field">
                 <input type="text" name="firstname" id="firstname" required>
                 <label>Please enter your first name.</label>
