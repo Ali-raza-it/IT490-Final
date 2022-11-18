@@ -118,17 +118,17 @@ function doLogin($username,$password)
         return true;
 }
 
-function getSong($songID)
+function getSong($songTitle)
 {
 	global $mydb;
-	$song = "select songID from music where songID = ?;";
+	$song = "select songTitle from music where songTitle = ?;";
         $songquery = mysqli_stmt_init($mydb);
         if(!mysqli_stmt_prepare($songquery, $song))
         {
                 return false;
                 exit();
         }
-        mysqli_stmt_bind_param($songquery, "s", $songID);
+        mysqli_stmt_bind_param($songquery, "s", $songTitle);
         mysqli_stmt_execute($songquery);
 	$songresult = mysqli_stmt_get_result($songquery);
 	mysqli_stmt_close($songquery);
@@ -146,7 +146,7 @@ function getSong($songID)
 
 		$request = array();
 		$request['type'] = "songapi";
-		$request['songID'] = $songID;
+		$request['songTitle'] = $songTitle;
 		$request['message'] = $msg;
 		$response = $client->send_request($request);
 		if($response == false)
@@ -228,7 +228,7 @@ function genreRecommendation($genre)
 
 }
 
-function addFriend($username, $firendusername, $firstname, $lastname)
+function addFriend($username, $friendusername, $firstname, $lastname)
 {
 	global $mydb;
 	//checks to see if the user is already friends with the other user
@@ -386,7 +386,7 @@ function requestProcessor($request)
     case "validate_session":
       return doValidate($request['sessionId']);
     case "song":
-      return getSong($request['id']);
+      return getSong($request['title']);
     case "genre":
       return genreRecommendation($request['genre']);
     case "add friend":
