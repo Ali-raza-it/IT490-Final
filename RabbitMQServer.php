@@ -154,26 +154,26 @@ function getSong($songTitle)
 			return false;
 			exit();
 		}
-		list($songID, $title, $artist, $genre) = $response;
-		$insert = "insert into music (songID, songTitle, artist, genre) values(?,?,?,?);";
+		list($title, $artist, $genre, $playlist) = $response;
+		$insert = "insert into music (songTitle, artist, genre, playlist) values(?,?,?,?);";
         	$insertstmt = mysqli_stmt_init($mydb);
         	if(!mysqli_stmt_prepare($insertstmt, $insert))
         	{
                 	return false;
                 	exit();
         	}
-        	mysqli_stmt_bind_param($insertstmt, "ssss", $songID, $title, $artist, $genre);
+        	mysqli_stmt_bind_param($insertstmt, "ssss", $title, $artist, $genre, $playlist);
         	mysqli_stmt_execute($insertstmt);
 		mysqli_stmt_close($insertstmt);
 	}
-	$songdata = "select * from music where songID  = ?;";
+	$songdata = "select songTitle, artist, genre, playlist from music where songTitle = ?;";
         $sdquery = mysqli_stmt_init($mydb);
         if(!mysqli_stmt_prepare($sdquery, $songdata))
         {
         	return false;
                 exit();
         }
-        mysqli_stmt_bind_param($sdquery, "s", $songID);
+        mysqli_stmt_bind_param($sdquery, "s", $songTitle);
         mysqli_stmt_execute($sdquery);
         $sdresult = mysqli_stmt_get_result($sdquery);
 	$sfetch = mysqli_fetch_assoc($sdresult);
@@ -186,36 +186,35 @@ function getSong($songTitle)
 	return $songarray;
 }
 
-function genreRecommendation($genre)
+function getArtist($artist)
 {
-	global $mydb;
-        $g = "select title, service from moviesAndEpisodes where genre = ?;";
-        $gquery = mysqli_stmt_init($mydb);
-        if(!mysqli_stmt_prepare($gquery, $g))
+        global $mydb;
+        $a = "select artist from music where artist = ?;";
+        $artistquery = mysqli_stmt_init($mydb);
+        if(!mysqli_stmt_prepare($artistquery, $a))
         {
                 return false;
                 exit();
         }
-        mysqli_stmt_bind_param($gquery, "s", $genre);
-        mysqli_stmt_execute($gquery);
-	$genreresult = mysqli_stmt_get_result($gquery);
-	$genreassoc = mysqli_fetch_assoc($genreresult);
-	mysqli_stmt_close($gquery);
-        if ($genreassoc == Null)
-	{
-		$client = new rabbitMQClient("testRabbitMQ.ini","testServer");
+        mysqli_stmt_bind_param($artistquery, "s", $artist);
+        mysqli_stmt_execute($artistquery);
+        $artistresult = mysqli_stmt_get_result($artistquery);
+        mysqli_stmt_close($artistquery);
+        if (mysqli_fetch_assoc($artistresult) == Null)
+        {
+                $client = new rabbitMQClient("testRabbitMQ.ini","testServer");
                 if (isset($argv[1]))
                 {
-                        $msg = $argv[1];
-                }
-                else
+			$msg = $argv[1];
+		}
+		else
                 {
                         $msg = "test message";
                 }
 
                 $request = array();
-                $request['type'] = "genre";
-                $request['title'] = $genre;
+                $request['type'] = "artistapi";
+                $request['artist'] = $artist;
                 $request['message'] = $msg;
                 $response = $client->send_request($request);
                 if($response == false)
@@ -223,10 +222,126 @@ function genreRecommendation($genre)
                         return false;
                         exit();
                 }
+                list($title, $artist, $genre, $playlist) = $response;
+                $insert = "insert into music (songTitle, artist, genre, playlist) values(?,?,?,?);";
+                $insertstmt = mysqli_stmt_init($mydb);
+                if(!mysqli_stmt_prepare($insertstmt, $insert))
+		{
+			return false;
+                        exit();
+                }
+                mysqli_stmt_bind_param($insertstmt, "ssss", $title, $artist, $genre, $playlist);
+                mysqli_stmt_execute($insertstmt);
+                mysqli_stmt_close($insertstmt);
+        }
+        $artistdata = "select songTitle, artist, genre, playlist from music where artist = ?;";
+        $adquery = mysqli_stmt_init($mydb);
+        if(!mysqli_stmt_prepare($adquery, $artistdata))
+        {
+                return false;
+                exit();
+        }
+        mysqli_stmt_bind_param($adquery, "s", $artist);
+        mysqli_stmt_execute($adquery);
+        $adresult = mysqli_stmt_get_result($adquery);
+        $afetch = mysqli_fetch_assoc($adresult);
+        $artistarray = array();
+        foreach($afetch as $key => $value)
+	{
+                array_push($artistarray, $value);
+        }
+        mysqli_stmt_close($adquery);
+        return $artistarray;
 
-	}
+function getArtist($artist)
+{
+        global $mydb;
+        $a = "select artist from music where artist = ?;";
+        $artistquery = mysqli_stmt_init($mydb);
+        if(!mysqli_stmt_prepare($artistquery, $a))
+        {
+                return false;
+                exit();
+        }
+        mysqli_stmt_bind_param($artistquery, "s", $artist);
+        mysqli_stmt_execute($artistquery);
+        $artistresult = mysqli_stmt_get_result($artistquery);
+        mysqli_stmt_close($artistquery);
+        if (mysqli_fetch_assoc($artistresult) == Null)
+        {
+                $client = new rabbitMQClient("testRabbitMQ.ini","testServer");
+                if (isset($argv[1]))
+                {
+                        $msg = $argv[1];
 
-}
+
+//function genreRecommendation($genre)
+//{
+	//global $mydb;
+        //$g = "select title, service from moviesAndEpisodes where genre = ?;";
+       // $gquery = mysqli_stmt_init($mydb);
+       // if(!mysqli_stmt_prepare($gquery, $g))
+       // {
+               // return false;
+               // exit();
+       // }
+       // mysqli_stmt_bind_param($gquery, "s", $genre);
+       // mysqli_stmt_execute($gquery);
+	//$genreresult = mysqli_stmt_get_result($gquery);
+	//$genreassoc = mysqli_fetch_assoc($genreresult);
+	//mysqli_stmt_close($gquery);
+        //if ($genreassoc == Null)
+	//{
+		//$client = new rabbitMQClient("testRabbitMQ.ini","testServer");
+                //if (isset($argv[1]))
+               //{
+                        //$msg = $argv[1];
+                //}
+                //else
+                //{
+                        //$msg = "test message";
+                //}
+
+                //$request = array();
+                //$request['type'] = "genre";
+               // $request['title'] = $genre;
+                //$request['message'] = $msg;
+                //$response = $client->send_request($request);
+                //if($response == false)
+                //{
+                       // return false;
+                        //exit();
+                //}
+
+	//}
+
+//}
+
+function getGenre($genre)
+{
+        global $mydb;
+        $a = "select genre from music where genre = ?;";
+        $genrequery = mysqli_stmt_init($mydb);
+        if(!mysqli_stmt_prepare($genrequery, $a))
+        {
+                return false;
+                exit();
+        }
+        mysqli_stmt_bind_param($artistquery, "s", $artist);
+        mysqli_stmt_execute($artistquery);
+        $artistresult = mysqli_stmt_get_result($artistquery);
+        mysqli_stmt_close($artistquery);
+        if (mysqli_fetch_assoc($artistresult) == Null)
+        {
+                $client = new rabbitMQClient("testRabbitMQ.ini","testServer");
+                if (isset($argv[1]))
+                {
+                        $msg = $argv[1];
+                }
+                else
+                {
+                        $msg = "test message";
+
 
 function addFriend($username, $friendusername, $firstname, $lastname)
 {
@@ -387,8 +502,12 @@ function requestProcessor($request)
       return doValidate($request['sessionId']);
     case "song":
       return getSong($request['title']);
+    case "artist":
+      return getArtist($request['artist']);
     case "genre":
-      return genreRecommendation($request['genre']);
+        return getGenre($rquest['genre']);
+    case "playlist":
+	return getPlaylist($request['playlist']);
     case "add friend":
       return addFriend($request['username'],$request['friendusername'],  $request['firstname'], $request['lastname']);
     case "remove friend":
