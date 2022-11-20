@@ -11,7 +11,9 @@ using PHP | PHP tutuorial | Learn PHP programming
 Discussion Forum: Youtube-Aaron Jack: Let's code a Forum App in 5
 minutes - HTML, CSS, and JavaScript
 
-HTTPS and SSL: Youtube-Christian Lempa: How to create a valid self signed 
-SSL Certificate?
+Friends Databse Table: stackoverflow - BuddyList: Relational Databse 
+Table Design
+
+Database stuff: w3schools.com/sql
 
 IT202  Bootstrap Intro Matt Toegel youtube video - youtube.com/watch?v=ct_dc99eMeE
