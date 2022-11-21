@@ -1,5 +1,5 @@
 <?php
-$results = shell_exec('GET https://rapidapi.com/movie-of-the-night-movie-of-the-night-default/api/streaming-availability');
+$results = shell_exec('GET https://creative-gelato-acc5e4.netlify.app/spotify%20api%20automatic/how-to-use-spotify-s-api-with-javascript-main/');
 $arrayCode = json_decode($results);
 var_dump($arrayCode);
 ?>
