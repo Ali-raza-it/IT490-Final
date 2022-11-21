@@ -8,6 +8,9 @@ configure the OSSIM by Alienware
 Password Hashing: Youtube-Dani Krossing: 43:Hashing and de-hashing data 
 using PHP | PHP tutuorial | Learn PHP programming
 
+Firewall Config: Youtube-Linode: Linux Firewall Tutorial | How to Configure 
+Firewall Rules with UFW
+
 Discussion Forum: Youtube-Aaron Jack: Let's code a Forum App in 5
 minutes - HTML, CSS, and JavaScript
 
@@ -17,3 +20,5 @@ Table Design
 Database stuff: w3schools.com/sql
 
 IT202  Bootstrap Intro Matt Toegel youtube video - youtube.com/watch?v=ct_dc99eMeE
+
+DMZ: Youtube - Roel Van de Paar: Ubuntu:  Port fowarding with UFW

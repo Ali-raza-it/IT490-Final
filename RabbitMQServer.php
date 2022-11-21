@@ -249,7 +249,7 @@ function getArtist($artist)
         }
         mysqli_stmt_close($adquery);
         return $artistarray;
-
+}
 function getGenre($genre)
 {
 	global $mydb;
@@ -460,7 +460,7 @@ function searchUser($username)
 	// Returns the requested username to the client.
 	foreach($selectassoc as $key => $value)
         {
-                $user = $value
+                $user = $value;
 	}
 	return $user;
 
@@ -511,7 +511,6 @@ function addFriend($username, $friendusername)
 	}
 	// Returns false if user is already friends with the other user.
 	return false;
-
 }
 
 function removeFriend($username, $friendusername)
@@ -558,7 +557,7 @@ function removeFriend($username, $friendusername)
         }
         mysqli_stmt_bind_param($deletestmt2, "ss", $friendusername, $username);
         mysqli_stmt_execute($deletestmt2);
-        mysqli_stmt_close($deletestmt2)
+        mysqli_stmt_close($deletestmt2);
         return true;
 
 }
@@ -652,7 +651,7 @@ function requestProcessor($request)
     case "artist":
       return getArtist($request['artist']);
     case "genre":
-        return getGenre($rquest['genre']);
+      return getGenre($request['genre']);
     case "playlist":
       return getPlaylist($request['playlist']);
     case "search user":
