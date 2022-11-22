@@ -1,7 +1,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Login Page</title>
+    <title>Search for Song</title>
     <style>
     body{
       margin: 0;

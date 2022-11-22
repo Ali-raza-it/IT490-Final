@@ -1,7 +1,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Login Page</title>
+    <title>Search For Users</title>
     <style>
     body{
       margin: 0;
@@ -111,7 +111,7 @@
   
     <div class="center">
         <h1>Search For User<h1>
-        <form method="post" action= "../testRabbitMQClient.php">
+        <form method="post" action= "../searchUserClient.php">
 
                 <div class="txt_field">
                 <input type="text" name="Search Username" id="Search Username" required>
