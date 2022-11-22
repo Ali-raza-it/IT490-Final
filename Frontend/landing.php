@@ -116,7 +116,7 @@
     </style>
 </head>
 <body>
-<h1>Welcome to CNAZ Streaming Movie and Show Match</h1>
+<h1>Welcome to CNAZ Music</h1>
 <a href='logout.php'>Logout</a>;
 </body>
 </html>

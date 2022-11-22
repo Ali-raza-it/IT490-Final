@@ -29,7 +29,7 @@ echo "client received response: ".PHP_EOL;
 echo "\n\n";
 
 if ($response == true) {
-  header('Location: index.html');
+  header('Location: Frontend/landing.php');
 }
 else {
   header('Location: Frontend/login.php');
