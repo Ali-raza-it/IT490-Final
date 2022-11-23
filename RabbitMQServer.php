@@ -466,6 +466,36 @@ function searchUser($username)
 
 }
 
+function searchUserAll($username)
+{
+        global $mydb;
+        // Searches for the requested username in the users table.
+        $select = "select username, firstname, lastname, email from users where username = ?;";
+        $selectstmt = mysqli_stmt_init($mydb);
+        if(!mysqli_stmt_prepare($selectstmt, $select))
+        {
+                return false;
+                exit();
+        }
+        mysqli_stmt_bind_param($selectstmt, "s", $username);
+        mysqli_stmt_execute($selectstmt);
+        $selectresult = mysqli_stmt_get_result($selectstmt);
+        $selectassoc = mysqli_fetch_assoc($selectresult);
+        mysqli_stmt_close($selectstmt);
+        if($selectassoc == Null)
+        {
+                return false;
+                exit();
+	}
+	$userarry= array();
+        // Returns the username, firstname, lastname, and email of the requested username to the client.
+	foreach($selectassoc as $key => $value)
+	{
+		array_push($userarray, $value);
+	}
+	return $userarray;
+}
+
 function addFriend($username, $friendusername)
 {
 	global $mydb;
@@ -633,6 +663,7 @@ function getConcert($concertTitle)
 function addDiscussion($username, $content, $timestamp)
 {
 	global $mydb;
+	//Inserts the newest discussionpost into the discussion table.
         $discussion = "insert into discussion (username, content, timestamp) values(?, ?, ?);";
 
         $discussionquery = mysqli_stmt_init($mydb);
@@ -694,6 +725,8 @@ function requestProcessor($request)
       return getPlaylist($request['playlist']);
     case "search user":
       return searchUser($request['username']);
+    case "search user all":
+      return searchUserAll($request['username']);
     case "add friend":
       return addFriend($request['username'],$request['friendusername']);
     case "remove friend":
