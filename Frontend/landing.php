@@ -116,7 +116,7 @@
     </style>
 </head>
 <body>
-<h1>Welcome to CNAZ Music</h1>
-<a href='logout.php'>Logout</a>;
+<script id=replace_with_navbar src=nav.js></script>
+<h1>Welcome to CKNAZ Spotify Music</h1>
 </body>
 </html>
