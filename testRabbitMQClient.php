@@ -1,5 +1,6 @@
 #!/usr/bin/php
 <?php
+session_start();
 require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
@@ -27,12 +28,15 @@ $response = $client->send_request($request);
 
 echo "client received response: ".PHP_EOL;
 echo "\n\n";
+echo $response;
 
-if ($response == true) {
+if ($response==1) {
+  $_SESSION['valid'] = true;
   header('Location: Frontend/landing.php');
 }
-else {
-  header('Location: Frontend/login.php');
+else
+{
+ header('Location: Frontend/login.php');
 }
-echo $argv[0]." END".PHP_EOL;
 
+echo $argv[0]." END".PHP_EOL;
