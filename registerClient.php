@@ -42,7 +42,7 @@ $response = $client->send_request($request);
 echo "client received response: ".PHP_EOL;
 echo "\n\n";
 
-if ($response == true) {
+if ($response==1) {
   header('Location: Frontend/login.php');
 }
 else {
