@@ -630,6 +630,46 @@ function getConcert($concertTitle)
 
 }
 
+function addDiscussion($username, $content, $timestamp)
+{
+	global $mydb;
+        $discussion = "insert into discussion (username, content, timestamp) values(?, ?, ?);";
+
+        $discussionquery = mysqli_stmt_init($mydb);
+        if(!mysqli_stmt_prepare($discussionquery, $discussion))
+        {
+                return false;
+                exit();
+        }
+        mysqli_stmt_bind_param($discussionquery, "sss", $username, $content, $timestamp);
+        mysqli_stmt_execute($discussionquery);
+	mysqli_stmt_close($discussionquery);
+	return true;
+}
+
+function getDiscussion()
+{
+	global $mydb;
+        // check username.
+        $discussion = "select * from discussion;";
+        $discussionquery = mysqli_stmt_init($mydb);
+        if(!mysqli_stmt_prepare($discussionquery, $discussion))
+        {
+                return false;
+                exit();
+        }
+        mysqli_stmt_execute($discussionquery);
+	$discussionresult = mysqli_stmt_get_result($discussionquery);
+	$discussionfetch = mysqli_fetch_assoc($discussionresult);
+        $discussionarray = array();
+        foreach($discussionfetch as $key => $value)
+        {
+                array_push($discussionarray, $value);
+        }
+	mysqli_stmt_close($discussionquery);
+	return $discussionarray;
+}
+
 function requestProcessor($request)
 {
   echo "received request".PHP_EOL;
@@ -660,6 +700,11 @@ function requestProcessor($request)
       return removeFriend($request['username'], $request['friendusername']);
     case "concert":
       return getConcert($request['title']);
+    case "add discussion":
+      return addDiscussion($request['username'], $request['post content'], $request['timestamp']);
+    case "get discussion":
+      return getDiscussion();
+
   }
 }
 
