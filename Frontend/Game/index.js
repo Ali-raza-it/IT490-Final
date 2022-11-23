@@ -1,83 +1,83 @@
 const questions = [
     {
-        question: "How many days makes a week ?",
-        optionA: "10 days",
-        optionB: "14 days",
-        optionC: "5 days",
-        optionD: "7 days",
+        question: "Still we offer your ...... ?",
+        optionA: "reaction",
+        optionB: "Judgment",
+        optionC: "Reputation",
+        optionD: "meditation",
+        correctOption: "optionA"
+    },
+
+    {
+        question: "We will still be .....forever ?",
+        optionA: "friends",
+        optionB: "old",
+        optionC: "sick",
+        optionD: "together",
+        correctOption: "optionA"
+    },
+
+    {
+        question: "Let the ....fall down ?",
+        optionA: "tears",
+        optionB: "light",
+        optionC: "dreams",
+        optionD: "rain",
         correctOption: "optionD"
     },
 
     {
-        question: "How many players are allowed on a soccer pitch ?",
-        optionA: "10 players",
-        optionB: "11 players",
-        optionC: "9 players",
-        optionD: "12 players",
+        question: "life is a work of .....?",
+        optionA: "sweetness",
+        optionB: "music",
+        optionC: "art",
+        optionD: "fun",
+        correctOption: "optionC"
+    },
+
+    {
+        question: "The tears in my.....?",
+        optionA: "eyes",
+        optionB: "reflection",
+        optionC: "inspection",
+        optionD: "heart",
         correctOption: "optionB"
     },
 
     {
-        question: "Who was the first President of USA ?",
-        optionA: "Donald Trump",
-        optionB: "Barack Obama",
-        optionC: "Abraham Lincoln",
-        optionD: "George Washington",
+        question: "And.....come(s) true?",
+        optionA: "things",
+        optionB: "reality",
+        optionC: "times",
+        optionD: "dreams",
         correctOption: "optionD"
     },
 
     {
-        question: "30 days has ______ ?",
-        optionA: "January",
-        optionB: "December",
-        optionC: "June",
-        optionD: "August",
-        correctOption: "optionC"
+        question: "into the .....now yoy don't need to know how ?",
+        optionA: "time",
+        optionB: "rush",
+        optionC: "fair",
+        optionD: "cone",
+        correctOption: "optionB"
     },
 
     {
-        question: "How manay hours can be found in a day ?",
-        optionA: "30 hours",
-        optionB: "38 hours",
-        optionC: "48 hours",
-        optionD: "24 hours",
-        correctOption: "optionD"
-    },
-
-    {
-        question: "Which is the longest river in the world ?",
-        optionA: "River Nile",
-        optionB: "Long River",
-        optionC: "River Niger",
-        optionD: "Lake Chad",
+        question: "I love you ....?",
+        optionA: "baby",
+        optionB: "sweety",
+        optionC: "treaty",
+        optionD: "honey",
         correctOption: "optionA"
     },
 
     {
-        question: "_____ is the hottest Continent on Earth ?",
-        optionA: "Oceania",
-        optionB: "Antarctica",
-        optionC: "Africa",
-        optionD: "North America",
+        question: "we started of as close ....?",
+        optionA: "list",
+        optionB: "brothers",
+        optionC: "frineds",
+        optionD: "cousins",
         correctOption: "optionC"
-    },
-
-    {
-        question: "Which country is the largest in the world ?",
-        optionA: "Russia",
-        optionB: "Canada",
-        optionC: "Africa",
-        optionD: "Egypt",
-        correctOption: "optionA"
-    },
-
-    {
-        question: "Which of these numbers is an odd number ?",
-        optionA: "Ten",
-        optionB: "Twelve",
-        optionC: "Eight",
-        optionD: "Eleven",
-        correctOption: "optionD"
     },
 
     {
