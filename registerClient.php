@@ -31,7 +31,7 @@ else
 $request = array();
 $request['type'] = "register";
 $request['username'] = $username;
-$request['password'] = $passowrd;
+$request['password'] = $password;
 $request['firstname'] = $firstname;
 $request['lastname'] = $lastname;
 $request['email'] = $email;
