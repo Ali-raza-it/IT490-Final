@@ -1,6 +1,7 @@
 const APIController = (function() {
     
-    my_token <- get_spotify_api_token(client_id = "***", client_secret = "***")
+    const clientId = '5c656406dc194df492d66971c51a00dd';
+    const clientSecret = '8e01cb3408854c7a82dcbab204da924e';
 
     // private methods
     const _getToken = async () => {
