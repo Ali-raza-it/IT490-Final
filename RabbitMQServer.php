@@ -487,7 +487,7 @@ function searchUserAll($username)
                 return false;
                 exit();
 	}
-	$userarry= array();
+	$userarray= array();
         // Returns the username, firstname, lastname, and email of the requested username to the client.
 	foreach($selectassoc as $key => $value)
 	{
