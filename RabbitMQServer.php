@@ -644,8 +644,6 @@ function requestProcessor($request)
       return doLogin($request["username"],$request["password"]);
     case "register":
       return doSignup($request["username"],$request["password"], $request["firstname"], $request["lastname"], $request["email"]);
-    case "validate_session":
-      return doValidate($request['sessionId']);
     case "song":
       return getSong($request['title']);
     case "artist":
