@@ -22,3 +22,6 @@ Database stuff: w3schools.com/sql
 IT202  Bootstrap Intro Matt Toegel youtube video - youtube.com/watch?v=ct_dc99eMeE
 
 DMZ: Youtube - Roel Van de Paar: Ubuntu:  Port fowarding with UFW
+
+profile page :youtube/dynamic webZone: profile page in HTML CSS
+
