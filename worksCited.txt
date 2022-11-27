@@ -11,6 +11,9 @@ using PHP | PHP tutuorial | Learn PHP programming
 Firewall Config: Youtube-Linode: Linux Firewall Tutorial | How to Configure 
 Firewall Rules with UFW
 
+HTTPS: Youtube-Christian Lempa: How to create a valid self signed SSL 
+Certificate
+
 Discussion Forum: Youtube-Aaron Jack: Let's code a Forum App in 5
 minutes - HTML, CSS, and JavaScript
 

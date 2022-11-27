@@ -1,50 +1,102 @@
-//this would be the object shape for storing the questions  
- //you can change the questions to your own taste or even add more questions..
- const questions = [
+const questions = [
     {
-        question: "Sin City's cold and empty, no one's around to .....?",
-        optionA: "love me",
-        optionB: "judge me",
-        optionC: "Hug Me",
-        optionD: "Dump me",
-        correctOption: "optionB"
+        question: "Still we offer your ...... ?",
+        optionA: "reaction",
+        optionB: "Judgment",
+        optionC: "Reputation",
+        optionD: "meditation",
+        correctOption: "optionA"
     },
 
     {
-        question: "why are men great till they.... ?",
-        optionA: "forget how to be great",
-        optionB: "go and hate",
-        optionC: "go and irritate",
-        optionD: "gotta be great",
+        question: "We will still be .....forever ?",
+        optionA: "friends",
+        optionB: "old",
+        optionC: "sick",
+        optionD: "together",
+        correctOption: "optionA"
+    },
+
+    {
+        question: "Let the ....fall down ?",
+        optionA: "tears",
+        optionB: "light",
+        optionC: "dreams",
+        optionD: "rain",
         correctOption: "optionD"
     },
 
     {
-        question: "Land in miami the air was hot....?",
-        optionA: "from summer rain",
-        optionB: "on the pain",
-        optionC: "sun rain",
-        optionD: "Gfrom your pretty face",
-        correctOption: "optionA"
+        question: "life is a work of .....?",
+        optionA: "sweetness",
+        optionB: "music",
+        optionC: "art",
+        optionD: "fun",
+        correctOption: "optionC"
     },
 
-
     {
-        question: "I'm gonna take my horse to the old town road, I'm gonna ride till...?",
-        optionA: "I need it more",
-        optionB: "I can't no more",
-        optionC: "48",
-        optionD: "24 hours",
+        question: "The tears in my.....?",
+        optionA: "eyes",
+        optionB: "reflection",
+        optionC: "inspection",
+        optionD: "heart",
         correctOption: "optionB"
     },
 
     {
-        question: "Don't start now...?",
-        optionA: "Goodbye",
-        optionB: "Ugly",
-        optionC: "Bye-Bye",
-        optionD: "sorry",
+        question: "And.....come(s) true?",
+        optionA: "things",
+        optionB: "reality",
+        optionC: "times",
+        optionD: "dreams",
+        correctOption: "optionD"
+    },
+
+    {
+        question: "into the .....now yoy don't need to know how ?",
+        optionA: "time",
+        optionB: "rush",
+        optionC: "fair",
+        optionD: "cone",
+        correctOption: "optionB"
+    },
+
+    {
+        question: "I love you ....?",
+        optionA: "baby",
+        optionB: "sweety",
+        optionC: "treaty",
+        optionD: "honey",
         correctOption: "optionA"
+    },
+
+    {
+        question: "we started of as close ....?",
+        optionA: "list",
+        optionB: "brothers",
+        optionC: "frineds",
+        optionD: "cousins",
+        correctOption: "optionC"
+    },
+
+    {
+        question: `"You Can't see me" is a popular saying by`,
+        optionA: "Eminem",
+        optionB: "Bill Gates",
+        optionC: "Chris Brown",
+        optionD: "John Cena",
+        correctOption: "optionD"
+    },
+
+
+    {
+        question: "How many teeth does an adult human have ?",
+        optionA: "28",
+        optionB: "30",
+        optionC: "32",
+        optionD: "36",
+        correctOption: "optionC"
     }
 
 ]
