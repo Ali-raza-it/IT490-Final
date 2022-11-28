@@ -156,15 +156,14 @@ function getSong($songTitle)
 			exit();
 		}
 		// Inserts the values that were returned from the api and the dmz into the databse.
-		list($songTitle, $artist, $genre, $playlist) = $response;
-		$insert = "insert into music (songTitle, artist, genre, playlist) values(?,?,?,?);";
+		$insert = "insert into music (songTitle, artist, album) values(?,?,?);";
         	$insertstmt = mysqli_stmt_init($mydb);
         	if(!mysqli_stmt_prepare($insertstmt, $insert))
         	{
                 	return false;
                 	exit();
         	}
-        	mysqli_stmt_bind_param($insertstmt, "ssss", $songTitle, $artist, $genre, $playlist);
+        	mysqli_stmt_bind_param($insertstmt, "sss", $songTitle, $response[1], $response[2]);
         	mysqli_stmt_execute($insertstmt);
 		mysqli_stmt_close($insertstmt);
 		$insert2 = "insert into songLikesandDislike (songTitle, likes, dislikes) values(?, ?, ?);";
@@ -180,7 +179,7 @@ function getSong($songTitle)
 
 	}
 	// Returns the information of the requested song to the client in the form of an array.
-	$songdata = "select songTitle, artist, genre, playlist from music where songTitle = ?;";
+	$songdata = "select songTitle, artist, album from music where songTitle = ?;";
         $sdquery = mysqli_stmt_init($mydb);
         if(!mysqli_stmt_prepare($sdquery, $songdata))
         {
@@ -204,7 +203,7 @@ function getArtist($artist)
 {
 	global $mydb;
 	// Searches for the requested artist in the music database.
-        $a = "select artist from music where artist = ?;";
+        $a = "select artistName from artist where artistName = ?;";
         $artistquery = mysqli_stmt_init($mydb);
         if(!mysqli_stmt_prepare($artistquery, $a))
         {
@@ -239,20 +238,19 @@ function getArtist($artist)
                         exit();
 		}
 		// Inserts the values returned from the api and the dmz into the database.
-                list($title, $artist, $genre, $playlist) = $response;
-                $insert = "insert into music (songTitle, artist, genre, playlist) values(?,?,?,?);";
+                $insert = "insert into artist (artistName, followers, monthlyListeners, worldRank) values(?,?,?,?);";
                 $insertstmt = mysqli_stmt_init($mydb);
                 if(!mysqli_stmt_prepare($insertstmt, $insert))
 		{
 			return false;
                         exit();
                 }
-                mysqli_stmt_bind_param($insertstmt, "ssss", $title, $artist, $genre, $playlist);
+                mysqli_stmt_bind_param($insertstmt, "siii", $artist, $response[1], $response[2], $response[3]);
                 mysqli_stmt_execute($insertstmt);
                 mysqli_stmt_close($insertstmt);
 	}
 	// Returns all songs made by the requested artist to the client in the form of an array.
-        $artistdata = "select songTitle, artist, genre, playlist from music where artist = ?;";
+        $artistdata = "select * from artist where artistName = ?;";
         $adquery = mysqli_stmt_init($mydb);
         if(!mysqli_stmt_prepare($adquery, $artistdata))
         {
@@ -272,79 +270,7 @@ function getArtist($artist)
         return $artistarray;
 }
 
-function getGenre($genre)
-{
-	global $mydb;
-	// Searches for the requested genre in the music database.
-        $g = "select genre from music where genre = ?;";
-        $genrequery = mysqli_stmt_init($mydb);
-        if(!mysqli_stmt_prepare($genrequery, $g))
-        {
-                return false;
-                exit();
-        }
-        mysqli_stmt_bind_param($genrequery, "s", $genre);
-        mysqli_stmt_execute($genrequery);
-        $genreresult = mysqli_stmt_get_result($genrequery);
-	mysqli_stmt_close($genrequery);
-	// Sends a client request to the dmz if the requested genre isn't in the music database.
-        if (mysqli_fetch_assoc($genreresult) == Null)
-        {
-                $client = new rabbitMQClient("testRabbitMQ.ini","testServer");
-                if (isset($argv[1]))
-                {
-                        $msg = $argv[1];
-		}
-		else
-                {
-                        $msg = "test message";
-                }
-
-                $request = array();
-                $request['type'] = "genreapi";
-                $request['genre'] = $genre;
-                $request['message'] = $msg;
-                $response = $client->send_request($request);
-                if($response == false)
-                {
-                        return false;
-                        exit();
-		}
-		// Inserts the values returend by the pi and the dmz into the database.
-                list($title, $artist, $genre, $playlist) = $response;
-                $insert = "insert into music (songTitle, artist, genre, playlist) values(?,?,?,?);";
-                $insertstmt = mysqli_stmt_init($mydb);
-                if(!mysqli_stmt_prepare($insertstmt, $insert))
-                {
-                        return false;
-                        exit();
-		}
-		mysqli_stmt_bind_param($insertstmt, "ssss", $title, $artist, $genre, $playlist);
-                mysqli_stmt_execute($insertstmt);
-                mysqli_stmt_close($insertstmt);
-	}
-	// Returns all songs of the requested genre to the client in the form of an array. 
-        $genredata = "select songTitle, artist, genre, playlist from music where genre = ?;";
-        $gquery = mysqli_stmt_init($mydb);
-        if(!mysqli_stmt_prepare($gquery, $genredata))
-        {
-                return false;
-                exit();
-        }
-        mysqli_stmt_bind_param($gquery, "s", $genre);
-        mysqli_stmt_execute($gquery);
-        $gresult = mysqli_stmt_get_result($gquery);
-        $gfetch = mysqli_fetch_assoc($gresult);
-        $genrearray = array();
-        foreach($gfetch as $key => $value)
-        {
-                array_push($genrearray, $value);
-        }
-        mysqli_stmt_close($gquery);
-        return $genrearray;	
-}
-
-function addLike($username, $songTitle, $genre)
+function addLikeSong($username, $songTitle, $genre)
 {
 	global $mydb;
 	// Searches for the number of likes the requested song currently has.
@@ -452,7 +378,7 @@ function addLike($username, $songTitle, $genre)
 	return $likesUpdated;
 }
 
-function addDislike($username, $songTitle, $genre)
+function addDislikeSong($username, $songTitle, $genre)
 {
 	global $mydb;
 	// Searches for the number of dislikes the requested song currently has. 
@@ -559,7 +485,7 @@ function addDislike($username, $songTitle, $genre)
 	return $dislikesUpdated;
 }
 
-function genreRecommendation($username)
+function getRecommendation($username)
 {
 	global $mydb;
 	// Selects the like to dislike ratio of all genres for the selected user.
@@ -648,80 +574,7 @@ function genreRecommendation($username)
         mysqli_stmt_close($gquery);
 	return $recarray;
 }
-
-function getPlaylist($playlist)
-{
-	global $mydb;
-	// Searches for the requested playlist in the music database.
-        $p = "select playlist from music where playlist = ?;";
-        $playlistquery = mysqli_stmt_init($mydb);
-        if(!mysqli_stmt_prepare($playlistquery, $p))
-        {
-                return false;
-                exit();
-        }
-        mysqli_stmt_bind_param($playlistquery, "s", $playlist);
-        mysqli_stmt_execute($playlistquery);
-        $playlistresult = mysqli_stmt_get_result($playlistquery);
-	mysqli_stmt_close($playlistquery);
-	// Sends a client request to the dmz if the requested playlist was't in the database.
-        if (mysqli_fetch_assoc($playlistresult) == Null)
-        {
-                $client = new rabbitMQClient("testRabbitMQ.ini","testServer");
-                if (isset($argv[1]))
-                {
-                        $msg = $argv[1];
-                }
-                else
-                {
-                        $msg = "test message";
-
-		}
-		$request = array();
-                $request['type'] = "playlistapi";
-                $request['playlist'] = $playlist;
-                $request['message'] = $msg;
-		$response = $client->send_request($request);
-		// Returns false if the requested playlist was not found in the api.
-                if($response == false)
-                {
-                        return false;
-                        exit();
-		}
-		// Inserts the values returned by the api and the dmz into the database.
-                list($title, $artist, $genre, $playlist) = $response;
-                $insert = "insert into music (songTitle, artist, genre, playlist) values(?,?,?,?);";
-                $insertstmt = mysqli_stmt_init($mydb);
-                if(!mysqli_stmt_prepare($insertstmt, $insert))
-                {
-                        return false;
-                        exit();
-                }
-                mysqli_stmt_bind_param($insertstmt, "ssss", $title, $artist, $genre, $playlist);
-                mysqli_stmt_execute($insertstmt);
-                mysqli_stmt_close($insertstmt);
-	}
-	// Returns all songs in the requested playlist to the client in the forms of an array.
-        $playlistdata = "select songTitle, artist, genre, playlist from music where playlist = ?;";
-        $pdquery = mysqli_stmt_init($mydb);
-	if(!mysqli_stmt_prepare($pdquery, $playlistdata))
-        {
-                return false;
-                exit();
-        }
-        mysqli_stmt_bind_param($pdquery, "s", $playlist);
-        mysqli_stmt_execute($pdquery);
-        $pdresult = mysqli_stmt_get_result($pdquery);
-        $pdfetch = mysqli_fetch_assoc($pdresult);
-        $playlistarray = array();
-        foreach($pdfetch as $key => $value)
-        {
-                array_push($playlistarray, $value);
-        }
-        mysqli_stmt_close($pdquery);
-        return $playlistarray;
-}
-
+           
 function searchUser($username)
 {
 	global $mydb;
@@ -878,11 +731,11 @@ function removeFriend($username, $friendusername)
 
 }
 
-function getConcert($concertTitle)
+function getConcert($artist)
 {
 	global $mydb;
-	// Searches for the requested concert in the concert database table.
-        $concert = "select concertTitle from concerts where concertTitle = ?;";
+	// Searches for the requested artist in the concert database table.
+        $concert = "select artist from concerts where artist = ?;";
         $concertquery = mysqli_stmt_init($mydb);
         if(!mysqli_stmt_prepare($concertquery, $concert))
         {
@@ -895,7 +748,7 @@ function getConcert($concertTitle)
         mysqli_stmt_close($concertquery);
         if (mysqli_fetch_assoc($movieresult) == Null)
 	{
-		// Sends a client request to the dmz if the concert was not found in the database.
+		// Sends a client request to the dmz if the artist was not found in the concerts database.
                 $client = new rabbitMQClient("testRabbitMQ.ini","testServer");
                 if (isset($argv[1]))
                 {
@@ -907,7 +760,7 @@ function getConcert($concertTitle)
                 }
                 $request = array();
                 $request['type'] = "concertapi";
-                $request['title'] = $concertTitle;
+                $request['artist'] = $artist;
                 $request['message'] = $msg;
 		$response = $client->send_request($request);
 		// Returns false if the concert was not found in the api.
@@ -917,7 +770,6 @@ function getConcert($concertTitle)
                         exit();
 		}
 		// Insert the concert and concert information into the database.
-		list($concertTitle, $artist, $location, $datetime) = $response;
                 $insert = "insert into concerts (concertTitle, artist, location, dateAndTime) values(?,?,?,?);";
                 $insertstmt = mysqli_stmt_init($mydb);
                 if(!mysqli_stmt_prepare($insertstmt, $insert))
@@ -925,19 +777,19 @@ function getConcert($concertTitle)
                         return false;
                         exit();
                 }
-                mysqli_stmt_bind_param($insertstmt, "ssss", $concertTitle, $artist, $locaton, $datetime);
+                mysqli_stmt_bind_param($insertstmt, "ssss", $response[0], $artist, $response[2], $response[3]);
                 mysqli_stmt_execute($insertstmt);
                 mysqli_stmt_close($insertstmt);
 	}
 	// Returns concert information to the client.
-	$concertdata = "select * from concerts where concertTitle  = ?;";
+	$concertdata = "select * from concerts where artist  = ?;";
         $cdquery = mysqli_stmt_init($mydb);
         if(!mysqli_stmt_prepare($cdquery, $concertdata))
         {
                 return false;
                 exit();
         }
-        mysqli_stmt_bind_param($cdquery, "s", $concertTitle);
+        mysqli_stmt_bind_param($cdquery, "s", $artist);
         mysqli_stmt_execute($cdquery);
         $cdresult = mysqli_stmt_get_result($cdquery);
         $cfetch = mysqli_fetch_assoc($cdresult);
@@ -1105,10 +957,6 @@ function requestProcessor($request)
       return getSong($request['title']);
     case "artist":
       return getArtist($request['artist']);
-    case "genre":
-      return getGenre($request['genre']);
-    case "playlist":
-      return getPlaylist($request['playlist']);
     case "search user":
       return searchUser($request['username']);
     case "search user all":
@@ -1118,7 +966,7 @@ function requestProcessor($request)
     case "remove friend":
       return removeFriend($request['username'], $request['friendusername']);
     case "concert":
-      return getConcert($request['title']);
+      return getConcert($request['artist']);
     case "add discussion":
       return addDiscussion($request['username'], $request['post content'], $request['timestamp'], $request['topic']);
     case "get discussion":
@@ -1130,9 +978,9 @@ function requestProcessor($request)
     case "get notification by user":
       return getNotificationByUSer($request['username']);
     case "like":
-      return addLike($reuest['username'],$request['song'], $request['genre']);
+      return addLikeSong($reuest['username'],$request['song'], $request['genre']);
     case "dislike":
-      return addDislike($reuest['username'], $request['song'], $request['genre']);
+      return addDislikeSong($reuest['username'], $request['song'], $request['genre']);
     case "get recomendation":
       return getRecomendation($request['username']);
     case "add category":
