@@ -14,17 +14,7 @@ function searchArtist($artist)
 
 }
 
-function searchGenre($genre)
-{
-
-}
-
-function searchPlaylist($playlist)
-{
-
-}
-
-function searchConcert($concertTitle)
+function searchConcert($artist)
 {
     
 }
@@ -43,10 +33,6 @@ function requestProcessor($request)
       return searchSong($request['songTitle']);
     case "artistapi":
       return searchArtist($request['artist']);
-    case "genreapi":
-      return searchGenre($request['genre']);
-    case "playlistapi":
-      return searchPlaylist($request['playlist']);
     case "concertapi":
       return searchConcet($request['title']);
   }
