@@ -26,5 +26,9 @@ IT202  Bootstrap Intro Matt Toegel youtube video - youtube.com/watch?v=ct_dc99eM
 
 DMZ: Youtube - Roel Van de Paar: Ubuntu:  Port fowarding with UFW
 
-profile page :youtube/dynamic webZone: profile page in HTML CSS
+profile page: youtube-dynamic webZone: profile page in HTML CSS
 
+Hot Standby: linuxconfig.org - How to create a hot standby with PostgreSQL
+
+Notification System: webdamm.com - Build Push Notification System with 
+PHP and MySQL
