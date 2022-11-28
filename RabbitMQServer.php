@@ -957,11 +957,11 @@ function getConcert($concertTitle)
 
 //}
 
-function addDiscussion($username, $content, $timestamp)
+function addDiscussion($username, $content, $timestamp, $topic)
 {
 	global $mydb;
 	// Inserts the newest discussion post into the discussion table.
-        $discussion = "insert into discussion (username, content, timestamp) values(?, ?, ?);";
+        $discussion = "insert into discussion (username, content, timestamp, postTopic) values(?, ?, ?, ?);";
 
         $discussionquery = mysqli_stmt_init($mydb);
         if(!mysqli_stmt_prepare($discussionquery, $discussion))
@@ -969,7 +969,7 @@ function addDiscussion($username, $content, $timestamp)
                 return false;
                 exit();
         }
-        mysqli_stmt_bind_param($discussionquery, "sss", $username, $content, $timestamp);
+        mysqli_stmt_bind_param($discussionquery, "sssi", $username, $content, $timestamp, $topic);
         mysqli_stmt_execute($discussionquery);
 	mysqli_stmt_close($discussionquery);
 	return true;
@@ -978,7 +978,7 @@ function addDiscussion($username, $content, $timestamp)
 function getDiscussion()
 {
 	global $mydb;
-        // Searches for an returns all discussion posts.
+        // Searches for and returns all discussion posts.
         $discussion = "select * from discussion;";
         $discussionquery = mysqli_stmt_init($mydb);
         if(!mysqli_stmt_prepare($discussionquery, $discussion))
@@ -996,6 +996,90 @@ function getDiscussion()
         }
 	mysqli_stmt_close($discussionquery);
 	return $discussionarray;
+}
+
+function addCategory($categoryName, $description)
+{
+	global $mydb;
+	// Inserts the new category into the categories table.
+	$category = "insert into categroies (catName, catDescription) values(?, ?);";
+	$categoryquery = mysqli_stmt_init($mydb);
+        if(!mysqli_stmt_prepare($categoryquery, $category))
+        {
+                return false;
+                exit();
+        }
+        mysqli_stmt_bind_param($categoryquery, "ss", $categoryName, $description);
+        mysqli_stmt_execute($categoryquery);
+        mysqli_stmt_close($categoryquery);
+        return true;
+
+}
+
+function getCategories()
+{
+	global $mydb;
+        // Searches for and return all categories.
+        $category = "select * from categories;";
+        $categoryquery = mysqli_stmt_init($mydb);
+        if(!mysqli_stmt_prepare($categoryquery, $category))
+        {
+                return false;
+                exit();
+        }
+        mysqli_stmt_execute($categoryquery);
+        $categoryresult = mysqli_stmt_get_result($categoryquery);
+        $categoryfetch = mysqli_fetch_assoc($categoryresult);
+        $categoryarray = array();
+        foreach($categoryfetch as $key => $value)
+        {
+                array_push($categoryarray, $value);
+        }
+        mysqli_stmt_close($categoryquery);
+        return $categoryarray;
+
+}
+
+function addTopic($username, $subject, $category, $date)
+{
+	global $mydb;
+	// Inserts new topic into the topics table.
+        $topic = "insert into topics (topicSubject, topicDate, topicCat, username) values(?, ?, ?, ?);";
+        $topicquery = mysqli_stmt_init($mydb);
+        if(!mysqli_stmt_prepare($topicquery, $topic))
+        {
+                return false;
+                exit();
+        }
+        mysqli_stmt_bind_param($topicquery, "ssis", $subject, $date, $category, $username);
+        mysqli_stmt_execute($topicquery);
+        mysqli_stmt_close($topicquery);
+        return true;
+
+}
+
+function getTopics()
+{
+	global $mydb;
+        // Searches for and returns all topics.
+        $topic = "select * from topics;";
+        $topicquery = mysqli_stmt_init($mydb);
+        if(!mysqli_stmt_prepare($topicquery, $topic))
+        {
+                return false;
+                exit();
+        }
+        mysqli_stmt_execute($topicquery);
+        $topicresult = mysqli_stmt_get_result($topicquery);
+        $topicfetch = mysqli_fetch_assoc($topicresult);
+        $topicarray = array();
+        foreach($topicfetch as $key => $value)
+        {
+                array_push($topicarray, $value);
+        }
+        mysqli_stmt_close($topicquery);
+        return $topicarray;
+
 }
 
 //function sendNotification()
@@ -1036,7 +1120,7 @@ function requestProcessor($request)
     case "concert":
       return getConcert($request['title']);
     case "add discussion":
-      return addDiscussion($request['username'], $request['post content'], $request['timestamp']);
+      return addDiscussion($request['username'], $request['post content'], $request['timestamp'], $request['topic']);
     case "get discussion":
       return getDiscussion();
     case "get notification":
@@ -1051,6 +1135,14 @@ function requestProcessor($request)
       return addDislike($reuest['username'], $request['song'], $request['genre']);
     case "get recomendation":
       return getRecomendation($request['username']);
+    case "add category":
+      return addCategory($request['cat name'], $request['description']);
+    case "get categories":
+      return getCategories();
+    case "add topic":
+      return addTopic($request['username'], $request['subject'], $request['category'],$request['date']);
+    case "get topics":
+      return getTopics();
   }
 }
 
