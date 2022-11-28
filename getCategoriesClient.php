@@ -4,7 +4,6 @@ require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 
-$genre = $_POST['Search Genre'];
 
 $client = new rabbitMQClient("testRabbitMQ.ini","testServer");
 if (isset($argv[1]))
@@ -17,8 +16,7 @@ else
 }
 
 $request = array();
-$request['type'] = "genre";
-$request['genre'] = $genre;
+$request['type'] = "get categories";
 $request['message'] = $msg;
 $response = $client->send_request($request);
 //$response = $client->publish($request);

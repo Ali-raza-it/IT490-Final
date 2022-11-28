@@ -4,7 +4,10 @@ require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 
-$playlist = $_POST['Search Playlist'];
+$username = $_POST['username'];
+$subject = $_POST['subject'];
+$categoryID = $_POST['category'];
+$date = $_POST['date'];
 
 $client = new rabbitMQClient("testRabbitMQ.ini","testServer");
 if (isset($argv[1]))
@@ -17,9 +20,11 @@ else
 }
 
 $request = array();
-$request['type'] = "playlist";
-$request['playlist'] = $playlist;
-$request['message'] = $msg;
+$request['type'] = "add topic";
+$request['username'] = $username;
+$request['subject'] = $subject;
+$request['category'] = $categoryID; 
+$request['date'] = $date;
 $response = $client->send_request($request);
 //$response = $client->publish($request);
 

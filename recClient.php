@@ -4,7 +4,7 @@ require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 
-$artist = $_POST['Search Artist'];
+$username = $_POST['username'];
 
 $client = new rabbitMQClient("testRabbitMQ.ini","testServer");
 if (isset($argv[1]))
@@ -17,8 +17,8 @@ else
 }
 
 $request = array();
-$request['type'] = "concert";
-$request['artist'] = $artist;
+$request['type'] = "get recomendation";
+$request['username'] = $username;
 $request['message'] = $msg;
 $response = $client->send_request($request);
 //$response = $client->publish($request);
