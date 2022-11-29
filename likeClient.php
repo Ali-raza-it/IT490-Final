@@ -6,7 +6,7 @@ require_once('rabbitMQLib.inc');
 
 $username = $_POST['username'];
 $song = $_POST['songtitle'];
-$genre = $_POST['genre'];
+$artist = $_POST['artist'];
 
 $client = new rabbitMQClient("testRabbitMQ.ini","testServer");
 if (isset($argv[1]))
@@ -22,7 +22,7 @@ $request = array();
 $request['type'] = "like";
 $request['username'] = $username;
 $request['song'] = $song;
-$request['genre'] = $genre; 
+$request['artist'] = $artist; 
 $request['message'] = $msg;
 $response = $client->send_request($request);
 //$response = $client->publish($request);
