@@ -58,14 +58,14 @@ function doSignup($username,$password,$firstname,$lastname,$email)
         mysqli_stmt_bind_param($insertstmt, "sssss", $username, $hashedpassword, $firstname, $lastname, $email);
         mysqli_stmt_execute($insertstmt);
 	mysqli_stmt_close($insertstmt);
-	$insert2 = "insert into userRec (username, hiphopLD, countryLD, popLD, rockLD, indieLD, lationoLD, RandBLD, edmLD, chillLD) values(?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
+	$insert2 = "insert into userRec (username) values(?);";
                 $insertstmt2 = mysqli_stmt_init($mydb);
                 if(!mysqli_stmt_prepare($insertstmt2, $insert2))
                 {
                         return false;
                         exit();
                 }
-                mysqli_stmt_bind_param($insertstmt2, "s", $username, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+                mysqli_stmt_bind_param($insertstmt2, "s", $username);
                 mysqli_stmt_execute($insertstmt2);
                 mysqli_stmt_close($insertstmt2);
         return true;
@@ -314,18 +314,39 @@ function addLikeSong($username, $songTitle, $artist)
                 return false;
                 exit();
         }
-        mysqli_stmt_bind_param($selectstmt2, "ss", $column, $username);
+        mysqli_stmt_bind_param($selectstmt2, "ss", $artist, $username);
         mysqli_stmt_execute($selectstmt2);
        	$selectresult2 = mysqli_stmt_get_result($selectstmt2);
         $selectassoc2 = mysqli_fetch_assoc($selectresult2);
         mysqli_stmt_close($selectstmt2);
         if($selectassoc2 == Null)
         {
-                return false;
-                exit();
+		$alter = "alter table userRec add ? int(10) not null default 0;";
+		$alterstmt = mysqli_stmt_init($mydb);
+        	if(!mysqli_stmt_prepare($alterstmt, $alter))
+        	{
+                	return false;
+                	exit();
+        	}
+        	mysqli_stmt_bind_param($alterstmt, "s", $artist);
+        	mysqli_stmt_execute($alterstmt);
+		mysqli_stmt_close($alterstmt);
+		$select2 = "select ? from userRec where username = ?;";
+        	$selectstmt2 = mysqli_stmt_init($mydb);
+        	if(!mysqli_stmt_prepare($selectstmt2, $select2))
+        	{
+                	return false;
+                	exit();
+        	}
+        	mysqli_stmt_bind_param($selectstmt2, "ss", $artist, $username);
+        	mysqli_stmt_execute($selectstmt2);
+        	$selectresult2 = mysqli_stmt_get_result($selectstmt2);
+        	$selectassoc2 = mysqli_fetch_assoc($selectresult2);
+        	mysqli_stmt_close($selectstmt2);
+
 	}
-	// Updates the like to dislike ratio of the genre of the song this specific user liked.
-	foreach($selectassoc as $key => $value)
+	// Updates the like to dislike ratio of the artist of the song this specific user liked.
+	foreach($selectassoc2 as $key => $value)
         {
 		$ldUpdated = $value +1;
 		$update2 = "update userRec set ? = ? where username = ?;";
@@ -335,7 +356,7 @@ function addLikeSong($username, $songTitle, $artist)
                         return false;
                         exit();
                 }
-                mysqli_stmt_bind_param($updatestmt2, "sis", $column, $ldUpdated, $username);
+                mysqli_stmt_bind_param($updatestmt2, "sis", $artist, $ldUpdated, $username);
                 mysqli_stmt_execute($updatestmt2);
                 mysqli_stmt_close($updatestmt2);
 	}
@@ -378,43 +399,7 @@ function addDislikeSong($username, $songTitle, $artist)
                 mysqli_stmt_execute($updatestmt);
                 mysqli_stmt_close($updatestmt);
 	}
-	// Selects the column to update in the userRec table based on the genre of the disliked song.
-        if($genre == "pop")
-        {
-                $column = "popLD";
-        }
-        if($genre == "hiphop")
-        {
-                $column = "hiphopLD";
-        }
-        if($genre == "country")
-        {
-                $column = "countryLD";
-	}
-	if($genre == "latino")
-        {
-                $column = "lationLD";
-        }
-        if($genre == "indie")
-        {
-                $column = "indieLD";
-        }
-        if($genre == "rock")
-        {
-                $column = "rockLD";
-        }
-        if($genre == "edm")
-        {
-                $column = "edmLD";
-        }
-        if($genre == "R&B")
-        {
-                $column = "RandBLD";
-	}
-	if($genre == "chill")
-        {
-                $column = "chillLD";
-        }
+	// Selects the column to update in the userRec table based on the artist of the disliked song.
 	$select2 = "select ? from userRec where username = ?;";
         $selectstmt2 = mysqli_stmt_init($mydb);
         if(!mysqli_stmt_prepare($selectstmt2, $select2))
@@ -422,17 +407,38 @@ function addDislikeSong($username, $songTitle, $artist)
                 return false;
                 exit();
         }
-        mysqli_stmt_bind_param($selectstmt2, "ss", $column, $username);
+        mysqli_stmt_bind_param($selectstmt2, "ss", $artist, $username);
         mysqli_stmt_execute($selectstmt2);
         $selectresult2 = mysqli_stmt_get_result($selectstmt2);
         $selectassoc2 = mysqli_fetch_assoc($selectresult2);
         mysqli_stmt_close($selectstmt2);
         if($selectassoc2 == Null)
         {
-                return false;
-                exit();
+                $alter = "alter table userRec add ? int(10) not null default 0;";
+                $alterstmt = mysqli_stmt_init($mydb);
+                if(!mysqli_stmt_prepare($alterstmt, $alter))
+                {
+                        return false;
+                        exit();
+                }
+                mysqli_stmt_bind_param($alterstmt, "s", $artist);
+                mysqli_stmt_execute($alterstmt);
+                mysqli_stmt_close($alterstmt);
+                $select2 = "select ? from userRec where username = ?;";
+                $selectstmt2 = mysqli_stmt_init($mydb);
+                if(!mysqli_stmt_prepare($selectstmt2, $select2))
+                {
+                        return false;
+                        exit();
+                }
+                mysqli_stmt_bind_param($selectstmt2, "ss", $artist, $username);
+                mysqli_stmt_execute($selectstmt2);
+                $selectresult2 = mysqli_stmt_get_result($selectstmt2);
+                $selectassoc2 = mysqli_fetch_assoc($selectresult2);
+                mysqli_stmt_close($selectstmt2);
+
 	}
-	// Updates the like to dislike ratio of the genre of the song this specific user disliked.
+	// Updates the like to dislike ratio of the artist of the song this specific user disliked.
         foreach($selectassoc as $key => $value)
         {
                 $ldUpdated = $value-1;
@@ -442,7 +448,7 @@ function addDislikeSong($username, $songTitle, $artist)
                 {
                         return false;
 		}
-		mysqli_stmt_bind_param($updatestmt2, "sis", $column, $ldUpdated, $username);
+		mysqli_stmt_bind_param($updatestmt2, "sis", $artist, $ldUpdated, $username);
                 mysqli_stmt_execute($updatestmt2);
                 mysqli_stmt_close($updatestmt2);
 	}
@@ -452,7 +458,7 @@ function addDislikeSong($username, $songTitle, $artist)
 function getRecommendation($username)
 {
 	global $mydb;
-	// Selects the like to dislike ratio of all genres for the selected user.
+	// Selects the like to dislike ratio of all artists for the selected user.
         $select = "select * from userRec where username = ?;";
         $selectquery = mysqli_stmt_init($mydb);
         if(!mysqli_stmt_prepare($selectquery, $select))
@@ -470,56 +476,20 @@ function getRecommendation($username)
 		return false;
 		exit();
 	}
-	// Loops through the user's like to dislike ratio for each genre to see hwich genre has the greatest ratio.
+	// Loops through the user's like to dislike ratio for each artist to see which genre has the greatest ratio.
 	$greatestRatio = -999;
-	$column = "";
+	$recArtist = "";
 	foreach($selectassoc as $key => $value)
 	{
 		if($value > $greatestRatio)
 		{
 			$greatestRatio = $value;
-			$column = $key;
+			$recArtist = $key;
 		}
 	}
-	// Chooses a genre to recomend to the user based on which genre had the highest like to dislike ratio.
-	if($column == "popLD")
-        {
-                $genre = "pop";
-        }
-        if($column == "hiphopLD")
-        {
-                $genre = "hiphop";
-        }
-        if($column == "countryLD")
-        {
-                $genre = "country";
-        }
-        if($column == "latinoLD")
-        {
-                $genre = "lation";
-        }
-        if($column == "indieLD")
-        {
-                $genre = "indie";
-        }
-        if($column == "rockLD")
-        {
-                $genre = "rock";
-        }
-	if($column == "edmLD")
-        {
-                $genre = "edm";
-        }
-        if($column == "RandBLD")
-        {
-                $genre = "R&B";
-        }
-        if($column == "chillLD")
-        {
-                $genre = "chill";
-	}
+	// Chooses a artist to recomend to the user based on which artist had the highest like to dislike ratio.
 	// Returns songs and song information of the picked genre. 
-	$rec = "select songTitle, artist, genre, playlist from music where genre = ?;";
+	$rec = "select songTitle, artist, album from music where artist = ?;";
         $recquery = mysqli_stmt_init($mydb);
         if(!mysqli_stmt_prepare($recquery, $rec))
         {
