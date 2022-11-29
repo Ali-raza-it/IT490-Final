@@ -110,7 +110,6 @@
     </style>
 </head>
 <body>
-  
     <div class="center">
         <h1>Login</h1>
         <form method="post" action= "../testRabbitMQClient.php">
