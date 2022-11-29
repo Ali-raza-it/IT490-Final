@@ -166,14 +166,14 @@ function getSong($songTitle)
         	mysqli_stmt_bind_param($insertstmt, "sss", $songTitle, $response[1], $response[2]);
         	mysqli_stmt_execute($insertstmt);
 		mysqli_stmt_close($insertstmt);
-		$insert2 = "insert into songLikesandDislike (songTitle, likes, dislikes) values(?, ?, ?);";
+		$insert2 = "insert into songLikesandDislike (songTitle, likes, dislikes, artist) values(?, ?, ?, ?);";
                 $insertstmt2 = mysqli_stmt_init($mydb);
                 if(!mysqli_stmt_prepare($insertstmt2, $insert2))
                 {
                         return false;
                         exit();
                 }
-                mysqli_stmt_bind_param($insertstmt2, "sss", $songTitle, 0, 0);
+                mysqli_stmt_bind_param($insertstmt2, "siis", $songTitle, 0, 0, $response[1]);
                 mysqli_stmt_execute($insertstmt2);
                 mysqli_stmt_close($insertstmt2);
 
@@ -270,7 +270,7 @@ function getArtist($artist)
         return $artistarray;
 }
 
-function addLikeSong($username, $songTitle, $genre)
+function addLikeSong($username, $songTitle, $artist)
 {
 	global $mydb;
 	// Searches for the number of likes the requested song currently has.
@@ -306,43 +306,7 @@ function addLikeSong($username, $songTitle, $genre)
         	mysqli_stmt_execute($updatestmt);
         	mysqli_stmt_close($updatestmt);
 	}
-	// Selects the column to update in the userRec table based on the genre of the liked song.
-	if($genre == "pop")
-	{
-		$column = "popLD";
-	}
-	if($genre == "hiphop")
-        {
-                $column = "hiphopLD";
-        }
-	if($genre == "country")
-        {
-		$column = "countryLD";	
-	}
-	if($genre == "latino")
-	{
-		$column = "lationLD";
-	}
-	if($genre == "indie")
-	{
-		$column = "indieLD";
-	}
-	if($genre == "rock")
-	{
-		$column = "rockLD";
-	}
-	if($genre == "edm")
-	{
-		$column = "edmLD";
-	}
-	if($genre == "R&B")
-	{
-		$column = "R&BLD";
-	}
-	if($genre == "chill")
-	{
-		$column = "chillLD";
-	}
+	// Selects the column to update in the userRec table based on the artist of the liked song.
 	$select2 = "select ? from userRec where username = ?;";
         $selectstmt2 = mysqli_stmt_init($mydb);
         if(!mysqli_stmt_prepare($selectstmt2, $select2))
@@ -378,7 +342,7 @@ function addLikeSong($username, $songTitle, $genre)
 	return $likesUpdated;
 }
 
-function addDislikeSong($username, $songTitle, $genre)
+function addDislikeSong($username, $songTitle, $artist)
 {
 	global $mydb;
 	// Searches for the number of dislikes the requested song currently has. 
@@ -555,23 +519,23 @@ function getRecommendation($username)
                 $genre = "chill";
 	}
 	// Returns songs and song information of the picked genre. 
-	$genredata = "select songTitle, artist, genre, playlist from music where genre = ?;";
-        $gquery = mysqli_stmt_init($mydb);
-        if(!mysqli_stmt_prepare($gquery, $genredata))
+	$rec = "select songTitle, artist, genre, playlist from music where genre = ?;";
+        $recquery = mysqli_stmt_init($mydb);
+        if(!mysqli_stmt_prepare($recquery, $rec))
         {
                 return false;
                 exit();
         }
-        mysqli_stmt_bind_param($gquery, "s", $recGenre);
-        mysqli_stmt_execute($gquery);
-        $gresult = mysqli_stmt_get_result($gquery);
-        $gfetch = mysqli_fetch_assoc($gresult);
+        mysqli_stmt_bind_param($recquery, "s", $recArtist);
+        mysqli_stmt_execute($recquery);
+        $recresult = mysqli_stmt_get_result($recquery);
+        $recfetch = mysqli_fetch_assoc($recresult);
         $recarray = array();
-        foreach($gfetch as $key => $value)
+        foreach($recfetch as $key => $value)
         {
                 array_push($recarray, $value);
         }
-        mysqli_stmt_close($gquery);
+        mysqli_stmt_close($recquery);
 	return $recarray;
 }
            
@@ -770,14 +734,14 @@ function getConcert($artist)
                         exit();
 		}
 		// Insert the concert and concert information into the database.
-                $insert = "insert into concerts (concertTitle, artist, location, dateAndTime) values(?,?,?,?);";
+                $insert = "insert into concerts (concertTitle, artist, location, dateAndTime, streamURL) values(?,?,?,?, ?);";
                 $insertstmt = mysqli_stmt_init($mydb);
                 if(!mysqli_stmt_prepare($insertstmt, $insert))
                 {
                         return false;
                         exit();
                 }
-                mysqli_stmt_bind_param($insertstmt, "ssss", $response[0], $artist, $response[2], $response[3]);
+                mysqli_stmt_bind_param($insertstmt, "sssss", $response[0], $artist, $response[2], $response[3], $response[4]);
                 mysqli_stmt_execute($insertstmt);
                 mysqli_stmt_close($insertstmt);
 	}
@@ -978,9 +942,9 @@ function requestProcessor($request)
     case "get notification by user":
       return getNotificationByUSer($request['username']);
     case "like":
-      return addLikeSong($reuest['username'],$request['song'], $request['genre']);
+      return addLikeSong($reuest['username'],$request['song'], $request['artist']);
     case "dislike":
-      return addDislikeSong($reuest['username'], $request['song'], $request['genre']);
+      return addDislikeSong($reuest['username'], $request['song'], $request['artist']);
     case "get recomendation":
       return getRecomendation($request['username']);
     case "add category":
