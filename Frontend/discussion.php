@@ -1,5 +1,8 @@
 <!-- code referenced from https://github.com/aj-4/5m-forum/blob/main/index.html---> 
+<?php
+  session_start();
 
+?>
 <body>
   <div class="top-bar">
       <h1>
