@@ -5,7 +5,7 @@
       exit;
   }
 ?>
-
+<script id=replace_with_navbar src=nav.js></script>
 <!DOCTYPE html>
 <html>
 <head>
