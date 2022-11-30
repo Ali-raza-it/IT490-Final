@@ -3,20 +3,27 @@
 require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
-require_once('httpLib.inc');
 
 function searchSong($songTitle)
 {
-	$client = new http\Client;
-        $request = new http\Client\Request;
-        $request->setRequestUrl('https://spotify-scraper.p.rapidapi.com/v1/track/search');
-        $request->setRequestMethod('GET');
-        $request->setQuery(new http\QueryString(['name' => $songTitle]));
-	$request->setHeaders(['X-RapidAPI-Key' => '147e6c149emsha489899b80761adp17daebjsne9c296bf864a','X-RapidAPI-Host' => 'spotify-scraper.p.rapidapi.com']);
-        $client->enqueue($request)->send();
-	$response = $client->getResponse();
-	return $response;
+	$curl = curl_init();
+	curl_setopt_array($curl, [CURLOPT_URL => "https://spotify-scraper.p.rapidapi.com/v1/track/search?name=$songTitle", CURLOPT_RETURNTRANSFER => true, CURLOPT_FOLLOWLOCATION => true, CURLOPT_ENCODING => "", CURLOPT_MAXREDIRS => 10, CURLOPT_TIMEOUT => 30, CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1, CURLOPT_CUSTOMREQUEST => "GET", CURLOPT_HTTPHEADER => ["X-RapidAPI-Host: spotify-scraper.p.rapidapi.com","X-RapidAPI-Key: SIGN-UP-FOR-KEY"],]);
+
+	$response = curl_exec($curl);
+	$err = curl_error($curl);
+
+	curl_close($curl);
+
+	if ($err) {
+		echo "cURL Error #:" . $err;
+	} 	
+
+	else {
+		return $response;
+	}
 }
+
+print_r(searchSong('Rich Flex'));
 
 function searchArtist($artist)
 {
