@@ -114,7 +114,30 @@ function doLogin($username,$password)
 		}
 	}
 	mysqli_stmt_close($pquery);
-        return true;
+	//Returns user info except password to client to store in the user's session.
+	$select = "select username, firstName, lastName, email from users where username = ?;";
+        $selectstmt = mysqli_stmt_init($mydb);
+        if(!mysqli_stmt_prepare($selectstmt, $select))
+        {
+                return false;
+                exit();
+        }
+        mysqli_stmt_bind_param($selectstmt, "s", $username);
+        mysqli_stmt_execute($selectstmt);
+        $selectresult = mysqli_stmt_get_result($selectstmt);
+        $selectassoc = mysqli_fetch_assoc($selectresult);
+        mysqli_stmt_close($selectstmt);
+        if($selectassoc == Null)
+        {
+                return false;
+                exit();
+	}
+	$selectarray = array();
+        foreach($selectassoc as $key => $value)
+        {
+                array_push($selectarray, $value);
+        }
+        return $selectarray;
 }
 
 function getSong($songTitle)
@@ -191,12 +214,13 @@ function getSong($songTitle)
         $sdresult = mysqli_stmt_get_result($sdquery);
 	$sfetch = mysqli_fetch_assoc($sdresult);
 	$songarray = array();
-	foreach($sfetch as $key => $value)
-	{
-		array_push($songarray, $value);
-	}
-	mysqli_stmt_close($sdquery);
-	return $songarray;
+        foreach($sfetch as $key => $value)
+        {
+                array_push($songarray, $value);
+        }
+        mysqli_stmt_close($sdquery);
+        return $songarray;
+
 }
 
 function getArtist($artist)
@@ -263,7 +287,7 @@ function getArtist($artist)
         $afetch = mysqli_fetch_assoc($adresult);
         $artistarray = array();
         foreach($afetch as $key => $value)
-	{
+        {
                 array_push($artistarray, $value);
         }
         mysqli_stmt_close($adquery);
@@ -344,7 +368,6 @@ function addLikeSong($username, $songTitle, $artist)
         	$selectresult2 = mysqli_stmt_get_result($selectstmt2);
         	$selectassoc2 = mysqli_fetch_assoc($selectresult2);
         	mysqli_stmt_close($selectstmt2);
-
 	}
 	// Updates the like to dislike ratio of the artist of the song this specific user liked.
 	foreach($selectassoc2 as $key => $value)
@@ -502,14 +525,8 @@ function getRecommendation($username)
         mysqli_stmt_bind_param($recquery, "s", $recArtist);
         mysqli_stmt_execute($recquery);
         $recresult = mysqli_stmt_get_result($recquery);
-        $recfetch = mysqli_fetch_assoc($recresult);
-        $recarray = array();
-        foreach($recfetch as $key => $value)
-        {
-                array_push($recarray, $value);
-        }
-        mysqli_stmt_close($recquery);
-	return $recarray;
+	$recfetch = mysqli_fetch_all($recresult);
+	return $recfetch;
 }
            
 function searchUser($username)
@@ -546,7 +563,7 @@ function searchUserAll($username)
 {
         global $mydb;
         // Searches for the requested username in the users table.
-        $select = "select username, firstname, lastname, email from users where username = ?;";
+        $select = "select username, firstName, lastName, email from users where username = ?;";
         $selectstmt = mysqli_stmt_init($mydb);
         if(!mysqli_stmt_prepare($selectstmt, $select))
         {
@@ -563,13 +580,7 @@ function searchUserAll($username)
                 return false;
                 exit();
 	}
-	$userarray= array();
-        // Returns the username, firstname, lastname, and email of the requested username to the client.
-	foreach($selectassoc as $key => $value)
-	{
-		array_push($userarray, $value);
-	}
-	return $userarray;
+	return $selectassoc;
 }
 
 function addFriend($username, $friendusername)
@@ -706,7 +717,8 @@ function getConcert($artist)
                         return false;
                         exit();
 		}
-		// Insert the concert and concert information into the database.
+		// Insert the concert and concert information into the database
+		
                 $insert = "insert into concerts (concertTitle, artist, location, dateAndTime, streamURL) values(?,?,?,?, ?);";
                 $insertstmt = mysqli_stmt_init($mydb);
                 if(!mysqli_stmt_prepare($insertstmt, $insert))
@@ -729,22 +741,9 @@ function getConcert($artist)
         mysqli_stmt_bind_param($cdquery, "s", $artist);
         mysqli_stmt_execute($cdquery);
         $cdresult = mysqli_stmt_get_result($cdquery);
-        $cfetch = mysqli_fetch_assoc($cdresult);
-        $concertarray = array();
-        foreach($cfetch as $key => $value)
-        {
-                array_push($concertarray, $value);
-        }
-        mysqli_stmt_close($cdquery);
-        return $concertarray;
-
+        $cfetch = mysqli_fetch_all($cdresult);
+        return $cfetch;
 }
-
-//function getConcertDate()
-//{
-	//global $mydb;
-
-//}
 
 function addDiscussion($username, $content, $timestamp, $topic)
 {
@@ -777,14 +776,8 @@ function getDiscussion()
         }
         mysqli_stmt_execute($discussionquery);
 	$discussionresult = mysqli_stmt_get_result($discussionquery);
-	$discussionfetch = mysqli_fetch_assoc($discussionresult);
-        $discussionarray = array();
-        foreach($discussionfetch as $key => $value)
-        {
-                array_push($discussionarray, $value);
-        }
-	mysqli_stmt_close($discussionquery);
-	return $discussionarray;
+	$discussionfetch = mysqli_fetch_all($discussionresult);
+        return $discussionfetch;
 }
 
 function addCategory($categoryName, $description)
@@ -818,14 +811,8 @@ function getCategories()
         }
         mysqli_stmt_execute($categoryquery);
         $categoryresult = mysqli_stmt_get_result($categoryquery);
-        $categoryfetch = mysqli_fetch_assoc($categoryresult);
-        $categoryarray = array();
-        foreach($categoryfetch as $key => $value)
-        {
-                array_push($categoryarray, $value);
-        }
-        mysqli_stmt_close($categoryquery);
-        return $categoryarray;
+        $categoryfetch = mysqli_fetch_all($categoryresult);
+        return $categoryfetch;
 
 }
 
@@ -860,14 +847,8 @@ function getTopics()
         }
         mysqli_stmt_execute($topicquery);
         $topicresult = mysqli_stmt_get_result($topicquery);
-        $topicfetch = mysqli_fetch_assoc($topicresult);
-        $topicarray = array();
-        foreach($topicfetch as $key => $value)
-        {
-                array_push($topicarray, $value);
-        }
-        mysqli_stmt_close($topicquery);
-        return $topicarray;
+        $topicfetch = mysqli_fetch_all($topicresult);
+        return $topicfetch;
 
 }
 
