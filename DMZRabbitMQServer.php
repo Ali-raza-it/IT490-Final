@@ -3,6 +3,7 @@
 require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
+require_once('httpLib.inc');
 
 function searchSong($songTitle)
 {
@@ -13,7 +14,8 @@ function searchSong($songTitle)
         $request->setQuery(new http\QueryString(['name' => $songTitle]));
 	$request->setHeaders(['X-RapidAPI-Key' => '147e6c149emsha489899b80761adp17daebjsne9c296bf864a','X-RapidAPI-Host' => 'spotify-scraper.p.rapidapi.com']);
         $client->enqueue($request)->send();
-        $response = $client->getResponse();
+	$response = $client->getResponse();
+	return $response;
 }
 
 function searchArtist($artist)
@@ -23,9 +25,7 @@ function searchArtist($artist)
 	$request->setRequestUrl('https://spotify-scraper.p.rapidapi.com/v1/artist/search%27');
 	$request->setRequestMethod('GET');
 	$request->setQuery(new http\QueryString(['name' => $artist]));
-$request->setHeaders([
-    'X-RapidAPI-Key' => '147e6c149emsha489899b80761adp17daebjsne9c296bf864a',
-    'X-RapidAPI-Host' => 'spotify-scraper.p.rapidapi.com']);
+$request->setHeaders(['X-RapidAPI-Key' => '147e6c149emsha489899b80761adp17daebjsne9c296bf864a','X-RapidAPI-Host' => 'spotify-scraper.p.rapidapi.com']);
 	$client->enqueue($request)->send();
 	$response = $client->getResponse();
 
@@ -34,10 +34,10 @@ $request->setHeaders([
         $request2 = new http\Client\Request;
         $request2->setRequestUrl('https://spotify-scraper.p.rapidapi.com/v1/artist/overview');
         $request2->setRequestMethod('GET');
-        $request2->setQuery(new http\QueryString(['artistId' => $response;]));
+        $request2->setQuery(new http\QueryString(['artistId' => $response]));
         $request2->setHeaders(['X-RapidAPI-Key' => '147e6c149emsha489899b80761adp17daebjsne9c296bf864a','X-RapidAPI-Host' => 'spotify-scraper.p.rapidapi.com']);
         $client2->enqueue($request2)->send();
-        $response2 = $client2->getResponse()
+        $response2 = $client2->getResponse();
 
 }
 
@@ -48,8 +48,7 @@ function searchConcert($artist)
 	$request->setRequestUrl('https://spotify-scraper.p.rapidapi.com/v1/artist/search%27');
 	$request->setRequestMethod('GET');
 	$request->setQuery(new http\QueryString(['name' => $artist]));
-	$request->setHeaders([
-        'X-RapidAPI-Key' => '147e6c149emsha489899b80761adp17daebjsne9c296bf864a','X-RapidAPI-Host' => 'spotify-scraper.p.rapidapi.com']);
+	$request->setHeaders(['X-RapidAPI-Key' => '147e6c149emsha489899b80761adp17daebjsne9c296bf864a','X-RapidAPI-Host' => 'spotify-scraper.p.rapidapi.com']);
 	$client->enqueue($request)->send();
 	$response = $client->getResponse();
 
@@ -58,10 +57,10 @@ function searchConcert($artist)
 	$request2 = new http\Client\Request;
 	$request2->setRequestUrl('https://spotify-scraper.p.rapidapi.com/v1/artist/concerts%27');
 	$request2->setRequestMethod('GET');
-	$request2->setQuery(new http\QueryString(['artistId' => $response;]));
+	$request2->setQuery(new http\QueryString(['artistId' => $response]));
 	$request2->setHeaders(['X-RapidAPI-Key' => '147e6c149emsha489899b80761adp17daebjsne9c296bf864a','X-RapidAPI-Host' => 'spotify-scraper.p.rapidapi.com']);
 	$client2->enqueue($request2)->send();
-	$response2 = $client2->getResponse()
+	$response2 = $client2->getResponse();
 
 }
 
