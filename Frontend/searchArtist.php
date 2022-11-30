@@ -108,7 +108,7 @@
     </style>
 </head>
 <body>
-  
+    <script id=replace_with_navbar src=nav.js></script> 
     <div class="center">
         <h1>Search For Artist<h1>
         <form method="post" action= "../artistClient.php">
