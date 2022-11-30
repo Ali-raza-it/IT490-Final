@@ -331,6 +331,7 @@ function addLikeSong($username, $songTitle, $artist)
         	mysqli_stmt_close($updatestmt);
 	}
 	str_replace(' ', '_', $artist);
+	str_replace('/', 'slash', $artist);
 	// Selects the column to update in the userRec table based on the artist of the liked song.
 	$select2 = "select ? from userRec where username = ?;";
         $selectstmt2 = mysqli_stmt_init($mydb);
@@ -424,6 +425,7 @@ function addDislikeSong($username, $songTitle, $artist)
                 mysqli_stmt_close($updatestmt);
 	}
 	str_replace(' ', '_', $artist);
+	str_replace('/', 'slash', $artist);
 	// Selects the column to update in the userRec table based on the artist of the disliked song.
 	$select2 = "select ? from userRec where username = ?;";
         $selectstmt2 = mysqli_stmt_init($mydb);
@@ -513,6 +515,7 @@ function getRecommendation($username)
 		}
 	}
 	str_replace('_', ' ', $recArtist);
+	str_replace('slash', '/', $artist);
 	// Chooses a artist to recomend to the user based on which artist had the highest like to dislike ratio.
 	// Returns songs and song information of the picked genre. 
 	$rec = "select songTitle, artist, album from music where artist = ?;";
@@ -718,20 +721,22 @@ function getConcert($artist)
                         exit();
 		}
 		// Insert the concert and concert information into the database
-		
-                $insert = "insert into concerts (concertTitle, artist, location, dateAndTime, streamURL) values(?,?,?,?, ?);";
-                $insertstmt = mysqli_stmt_init($mydb);
-                if(!mysqli_stmt_prepare($insertstmt, $insert))
-                {
-                        return false;
-                        exit();
-                }
-                mysqli_stmt_bind_param($insertstmt, "sssss", $response[0], $artist, $response[2], $response[3], $response[4]);
-                mysqli_stmt_execute($insertstmt);
-                mysqli_stmt_close($insertstmt);
+		foreach($response as $concert)
+		{
+                	$insert = "insert into concerts (concertTitle, artist, location, dateAndTime) values(?,?,?,?);";
+                	$insertstmt = mysqli_stmt_init($mydb);
+                	if(!mysqli_stmt_prepare($insertstmt, $insert))
+                	{
+                        	return false;
+                        	exit();
+                	}
+                	mysqli_stmt_bind_param($insertstmt, "ssss", $concert[0], $artist, $concert[2], $concert[3]);
+                	mysqli_stmt_execute($insertstmt);
+			mysqli_stmt_close($insertstmt);
+		}
 	}
 	// Returns concert information to the client.
-	$concertdata = "select * from concerts where artist  = ?;";
+	$concertdata = "select * from concerts where artist = ?;";
         $cdquery = mysqli_stmt_init($mydb);
         if(!mysqli_stmt_prepare($cdquery, $concertdata))
         {
@@ -899,7 +904,7 @@ function requestProcessor($request)
       return addLikeSong($reuest['username'],$request['song'], $request['artist']);
     case "dislike":
       return addDislikeSong($reuest['username'], $request['song'], $request['artist']);
-    case "get recomendation":
+    case "user rec":
       return getRecomendation($request['username']);
     case "add category":
       return addCategory($request['cat name'], $request['description']);
