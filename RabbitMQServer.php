@@ -306,6 +306,7 @@ function addLikeSong($username, $songTitle, $artist)
         	mysqli_stmt_execute($updatestmt);
         	mysqli_stmt_close($updatestmt);
 	}
+	str_replace(' ', '_', $artist);
 	// Selects the column to update in the userRec table based on the artist of the liked song.
 	$select2 = "select ? from userRec where username = ?;";
         $selectstmt2 = mysqli_stmt_init($mydb);
@@ -399,6 +400,7 @@ function addDislikeSong($username, $songTitle, $artist)
                 mysqli_stmt_execute($updatestmt);
                 mysqli_stmt_close($updatestmt);
 	}
+	str_replace(' ', '_', $artist);
 	// Selects the column to update in the userRec table based on the artist of the disliked song.
 	$select2 = "select ? from userRec where username = ?;";
         $selectstmt2 = mysqli_stmt_init($mydb);
@@ -487,6 +489,7 @@ function getRecommendation($username)
 			$recArtist = $key;
 		}
 	}
+	str_replace('_', ' ', $recArtist);
 	// Chooses a artist to recomend to the user based on which artist had the highest like to dislike ratio.
 	// Returns songs and song information of the picked genre. 
 	$rec = "select songTitle, artist, album from music where artist = ?;";
