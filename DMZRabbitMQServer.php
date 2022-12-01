@@ -26,6 +26,8 @@ function searchSong($songTitle)
 	}
 }
 
+print_r(searchSong("Rich Flex"));
+
 
 function searchArtist($artist)
 {
