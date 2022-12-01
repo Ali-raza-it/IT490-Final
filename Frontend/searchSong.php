@@ -119,6 +119,7 @@
 		</div>
 		<input type="submit" value="Submit" name="Search Song">
 	</form>
+  <script src='app.js' type='text/javascript'></script>
 </body>
 </html>
 
