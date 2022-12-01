@@ -158,7 +158,7 @@ function getSong($songTitle)
 	// Sends client request to the dmz if song title isn't in the music database.
 	if (mysqli_fetch_assoc($songresult) == Null)
 	{
-		$client = new rabbitMQClient("testRabbitMQ.ini","testServer");
+		$client = new rabbitMQClient("dmzRabbitMQ.ini","testServer");
 		if (isset($argv[1]))
 		{
   			$msg = $argv[1];
@@ -189,16 +189,16 @@ function getSong($songTitle)
         	mysqli_stmt_bind_param($insertstmt, "sss", $songTitle, $response[1], $response[2]);
         	mysqli_stmt_execute($insertstmt);
 		mysqli_stmt_close($insertstmt);
-		$insert2 = "insert into songLikesAndDislike (songTitle, likes, dislikes, artist) values(?, ?, ?, ?);";
-                $insertstmt2 = mysqli_stmt_init($mydb);
-                if(!mysqli_stmt_prepare($insertstmt2, $insert2))
-                {
-                        return false;
-                        exit();
-                }
-                mysqli_stmt_bind_param($insertstmt2, "siis", $songTitle, 0, 0, $response[1]);
-                mysqli_stmt_execute($insertstmt2);
-                mysqli_stmt_close($insertstmt2);
+		//$insert2 = "insert into songLikesAndDislike (songTitle, likes, dislikes, artist) values(?, ?, ?, ?);";
+                //$insertstmt2 = mysqli_stmt_init($mydb);
+                //if(!mysqli_stmt_prepare($insertstmt2, $insert2))
+                //{
+                        //return false;
+                        //exit();
+                //}
+               // mysqli_stmt_bind_param($insertstmt2, "siis", $songTitle, 0, 0, $response[1]);
+               // mysqli_stmt_execute($insertstmt2);
+               // mysqli_stmt_close($insertstmt2);
 
 	}
 	// Returns the information of the requested song to the client in the form of an array.
@@ -241,7 +241,7 @@ function getArtist($artist)
 	// Sends a client request to the dmz if there are no songs by the requested artist in the music database.
         if (mysqli_fetch_assoc($artistresult) == Null)
         {
-                $client = new rabbitMQClient("testRabbitMQ.ini","testServer");
+                $client = new rabbitMQClient("dmzRabbitMQ.ini","testServer");
                 if (isset($argv[1]))
                 {
 			$msg = $argv[1];
@@ -700,7 +700,7 @@ function getConcert($artist)
         if (mysqli_fetch_all($concertresult) == Null)
 	{
 		// Sends a client request to the dmz if the artist was not found in the concerts database.
-                $client = new rabbitMQClient("testRabbitMQ.ini","testServer");
+                $client = new rabbitMQClient("dmzRabbitMQ.ini","testServer");
                 if (isset($argv[1]))
                 {
                         $msg = $argv[1];
@@ -750,7 +750,6 @@ function getConcert($artist)
         return $cfetch;
 }
 
-print_r(getConcert("Drake"));
 
 
 function addDiscussion($username, $content, $timestamp, $topic)

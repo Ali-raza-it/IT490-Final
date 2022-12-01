@@ -161,7 +161,7 @@ function requestProcessor($request)
   }
 }
 
-$server = new rabbitMQServer("testRabbitMQ.ini","testServer");
+$server = new rabbitMQServer("dmzRabbitMQ.ini","testServer");
 
 $server->process_requests('requestProcessor');
 exit();
