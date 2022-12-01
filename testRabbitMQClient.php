@@ -30,18 +30,16 @@ echo "client received response: ".PHP_EOL;
 echo "\n\n";
 echo $response;
 
-if ($response==0) 
+if ($response==0)
 {
   	header('Location: Frontend/login.php');
+    exit();
 }
 else
 {
 	 $_SESSION['valid'] = true;
-
- //  $_SESSION['username'] = $username;
-    
-
 	 header('Location: Frontend/landing.php');
+   exit();
 }
 
 echo $argv[0]." END".PHP_EOL;
