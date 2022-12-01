@@ -7,20 +7,7 @@ session_start()
 
 ?>
 <body>
-<div id="userbar">
-    <?php
-    $username=$_SESSION["username"];
 
-    if($_SESSION['valid']==1)
-    {
-        echo 'Hello' . $_SESSION['username'] . '. Not you? <a href="logout.php">Sign out</a>';
-    }
-    else
-    {
-        echo '<a href="register.php">Sign in</a> or <a href="sign up">create an account</a>.';
-    }
-
-?>  
 </div> 
   <div class="top-bar">
       <h1>
@@ -36,7 +23,26 @@ session_start()
       </ol>
   </div>
   <script src="discussion.js"></script>
+
   <script>
+      function addComment(comment) {
+            var commentHtml = `
+                <div class="comment">
+                    <div class="top-comment">
+                        <p class="user">
+                            $
+                        </p>
+                        <p class="comment-ts">
+                            ${new Date(comment.date).toLocaleString()}
+                        </p>
+                    </div>
+                    <div class="comment-content">
+                        ${comment.content}
+                    </div>
+                </div>
+            `
+            comments.insertAdjacentHTML('beforeend', commentHtml);
+        }
       console.log(threads);
       var container = document.querySelector('ol');
       for (let thread of threads) {
