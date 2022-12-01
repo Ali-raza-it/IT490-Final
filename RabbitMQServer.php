@@ -693,7 +693,7 @@ function getConcert($artist)
                 return false;
                 exit();
         }
-        mysqli_stmt_bind_param($concertquery, "s", $concertTitle);
+        mysqli_stmt_bind_param($concertquery, "s", $artist);
         mysqli_stmt_execute($concertquery);
         $concertresult = mysqli_stmt_get_result($concertquery);
         mysqli_stmt_close($concertquery);
@@ -723,14 +723,14 @@ function getConcert($artist)
 		// Insert the concert and concert information into the database
 		foreach($response as $concert)
 		{
-                	$insert = "insert into concerts (concertTitle, artist, location, dateAndTime) values(?,?,?,?);";
+                	$insert = "insert into concerts (concertTitle, artist, location, dateAndTime, venue) values(?,?,?,?,?);";
                 	$insertstmt = mysqli_stmt_init($mydb);
                 	if(!mysqli_stmt_prepare($insertstmt, $insert))
                 	{
                         	return false;
                         	exit();
                 	}
-                	mysqli_stmt_bind_param($insertstmt, "ssss", $concert[0], $artist, $concert[2], $concert[3]);
+                	mysqli_stmt_bind_param($insertstmt, "ssss", $concert[0], $artist, $concert[2], $concert[3], $concert[4]);
                 	mysqli_stmt_execute($insertstmt);
 			mysqli_stmt_close($insertstmt);
 		}
