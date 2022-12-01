@@ -189,7 +189,7 @@ function getSong($songTitle)
         	mysqli_stmt_bind_param($insertstmt, "sss", $songTitle, $response[1], $response[2]);
         	mysqli_stmt_execute($insertstmt);
 		mysqli_stmt_close($insertstmt);
-		$insert2 = "insert into songLikesandDislike (songTitle, likes, dislikes, artist) values(?, ?, ?, ?);";
+		$insert2 = "insert into songLikesAndDislike (songTitle, likes, dislikes, artist) values(?, ?, ?, ?);";
                 $insertstmt2 = mysqli_stmt_init($mydb);
                 if(!mysqli_stmt_prepare($insertstmt2, $insert2))
                 {
@@ -697,7 +697,7 @@ function getConcert($artist)
         mysqli_stmt_execute($concertquery);
         $concertresult = mysqli_stmt_get_result($concertquery);
         mysqli_stmt_close($concertquery);
-        if (mysqli_fetch_assoc($movieresult) == Null)
+        if (mysqli_fetch_all($concertresult) == Null)
 	{
 		// Sends a client request to the dmz if the artist was not found in the concerts database.
                 $client = new rabbitMQClient("testRabbitMQ.ini","testServer");
@@ -730,7 +730,7 @@ function getConcert($artist)
                         	return false;
                         	exit();
                 	}
-                	mysqli_stmt_bind_param($insertstmt, "ssss", $concert[0], $artist, $concert[2], $concert[3], $concert[4]);
+                	mysqli_stmt_bind_param($insertstmt, "sssss", $concert[0], $artist, $concert[2], $concert[3], $concert[4]);
                 	mysqli_stmt_execute($insertstmt);
 			mysqli_stmt_close($insertstmt);
 		}
@@ -749,6 +749,9 @@ function getConcert($artist)
         $cfetch = mysqli_fetch_all($cdresult);
         return $cfetch;
 }
+
+print_r(getConcert("Drake"));
+
 
 function addDiscussion($username, $content, $timestamp, $topic)
 {

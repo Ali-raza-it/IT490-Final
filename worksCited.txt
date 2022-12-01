@@ -24,9 +24,9 @@ Database stuff: w3schools.com/sql
 
 IT202  Bootstrap Intro Matt Toegel youtube video - youtube.com/watch?v=ct_dc99eMeE
 
-DMZ: Youtube - Roel Van de Paar: Ubuntu:  Port fowarding with UFW
+API Calls/Functions: Youtube-Coding Reflections: How to use PHP cURL to Handle JSON API Requests.
 
-profile page: youtube-dynamic webZone: profile page in HTML CSS
+Profile Page: youtube-dynamic webZone: profile page in HTML CSS
 
 Hot Standby: linuxconfig.org - How to create a hot standby with PostgreSQL
 

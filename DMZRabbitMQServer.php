@@ -157,7 +157,7 @@ function requestProcessor($request)
     case "artistapi":
       return searchArtist($request['artist']);
     case "concertapi":
-      return searchConcet($request['title']);
+      return searchConcerts($request['artist']);
   }
 }
 
