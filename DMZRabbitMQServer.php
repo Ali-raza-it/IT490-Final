@@ -23,7 +23,7 @@ function searchArtist($artist)
 	$request->setRequestUrl('https://spotify-scraper.p.rapidapi.com/v1/artist/search%27');
 	$request->setRequestMethod('GET');
 	$request->setQuery(new http\QueryString(['name' => $artist]));
-$request->setHeaders([
+  $request->setHeaders([
     'X-RapidAPI-Key' => '147e6c149emsha489899b80761adp17daebjsne9c296bf864a',
     'X-RapidAPI-Host' => 'spotify-scraper.p.rapidapi.com']);
 	$client->enqueue($request)->send();
