@@ -37,6 +37,10 @@ if ($response==0)
 else
 {
 	 $_SESSION['valid'] = true;
+
+ //  $_SESSION['username'] = $username;
+    
+
 	 header('Location: Frontend/landing.php');
 }
 

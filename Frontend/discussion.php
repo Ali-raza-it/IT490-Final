@@ -1,15 +1,37 @@
 <!-- code referenced from https://github.com/aj-4/5m-forum/blob/main/index.html---> 
+
 <?php
-  session_start();
+
+session_start()
+
 
 ?>
 <body>
+<div id="userbar">
+    <?php
+    $username=$_SESSION["username"];
+
+    if($_SESSION['valid']==1)
+    {
+        echo 'Hello' . $_SESSION['username'] . '. Not you? <a href="logout.php">Sign out</a>';
+    }
+    else
+    {
+        echo '<a href="register.php">Sign in</a> or <a href="sign up">create an account</a>.';
+    }
+
+?>  
+</div> 
   <div class="top-bar">
       <h1>
           Movie Discussion Forum
       </h1>
   </div>
-  <div class="main">
+  <div id="wrapper">
+    <div id="menu">
+        
+        <a class="item" href="/forum/create_topic.php">Create a topic</a> 
+      
       <ol>
       </ol>
   </div>
