@@ -1,20 +1,48 @@
 <!-- code referenced from https://github.com/aj-4/5m-forum/blob/main/index.html---> 
+
 <?php
-  session_start();
+
+session_start()
+
 
 ?>
 <body>
+
+</div> 
   <div class="top-bar">
       <h1>
           Movie Discussion Forum
       </h1>
   </div>
-  <div class="main">
+  <div id="wrapper">
+    <div id="menu">
+        
+        <a class="item" href="/forum/create_topic.php">Create a topic</a> 
+      
       <ol>
       </ol>
   </div>
   <script src="discussion.js"></script>
+
   <script>
+      function addComment(comment) {
+            var commentHtml = `
+                <div class="comment">
+                    <div class="top-comment">
+                        <p class="user">
+                            $
+                        </p>
+                        <p class="comment-ts">
+                            ${new Date(comment.date).toLocaleString()}
+                        </p>
+                    </div>
+                    <div class="comment-content">
+                        ${comment.content}
+                    </div>
+                </div>
+            `
+            comments.insertAdjacentHTML('beforeend', commentHtml);
+        }
       console.log(threads);
       var container = document.querySelector('ol');
       for (let thread of threads) {

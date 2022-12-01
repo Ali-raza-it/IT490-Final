@@ -108,7 +108,7 @@
     </style>
 </head>
 <body>
-  
+    <script id=replace_with_navbar src=nav.js></script> 
     <div class="center">
         <h1>Search For Song<h1>
         <form method="post" action= "../songClient.php">
@@ -119,6 +119,7 @@
 		</div>
 		<input type="submit" value="Submit" name="Search Song">
 	</form>
+  <script src='app.js' type='text/javascript'></script>
 </body>
 </html>
 

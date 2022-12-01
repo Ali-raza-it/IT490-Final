@@ -32,3 +32,5 @@ Hot Standby: linuxconfig.org - How to create a hot standby with PostgreSQL
 
 Notification System: webdamm.com - Build Push Notification System with 
 PHP and MySQL
+
+https://code.tutsplus.com/tutorials/how-to-create-a-phpmysql-powered-forum-from-scratch--net-10188
