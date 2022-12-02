@@ -108,17 +108,16 @@
     </style>
 </head>
 <body>
-    <script id=replace_with_navbar src=nav.js></script> 
+    <script id=replace_with_navbar src=nav.js></script>
     <div class="center">
         <h1>Search For Artist<h1>
         <form method="post" action= "../artistClient.php">
 
                 <div class="txt_field">
-                <input type="text" name="Search Artist" id="Search Artist" required>
+                <input type="text" name="artist" id="artist" required>
                 <label>Artist</label>
 		</div>
 		<input type="submit" value="Submit" name="Search Artist">
 	</form>
 </body>
 </html>
-
