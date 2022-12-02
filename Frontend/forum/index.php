@@ -10,7 +10,8 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 	<script src="main.js"></script>
 </head>
-
+<body>
+	<script id=replace_with_navbar src=../nav.js></script>
 <!-- Modal -->
 <div id="ReplyModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
@@ -60,14 +61,14 @@
   </form>
   </div>
 </div>
-  
+
 
 <div class="panel panel-default">
   <div class="panel-body">
-    <h4>Recent questions</h4>           
+    <h4>Recent questions</h4>
 	<table class="table" id="MyTable" style="background-color: #edfafa; border:0px;border-radius:10px">
 	  <tbody id="record">
-		
+
 	  </tbody>
 	</table>
   </div>

@@ -1,10 +1,9 @@
 <html>
-<script id=replace_with_navbar src=nav.js></script>
 <head>
-    <meta charset="UTF-8">
-    <title>Login Page</title>
+    <meta charset="utf-8">
+    <title>Search for Genre</title>
     <style>
-    	body{
+    body{
       margin: 0;
       padding: 0;
       font-family: sans-serif;
@@ -105,23 +104,21 @@
       text-decoration: none;
       color:#9370DB;
     }
+
     </style>
 </head>
 <body>
+  
     <div class="center">
-        <h1>Login</h1>
-        <form method="post" action= "../testRabbitMQClient.php">
+        <h1>Search For Genre<h1>
+        <form method="post" action= "../genreClient.php">
+
                 <div class="txt_field">
-                <input type="text" name="LoginInfo" id="LoginInfo" required>
-                <label>Username or Email</label>
-                </div>
-                <div class="txt_field">
-                <input type="password" name="Password" id="Password" required>
-                <label>Password</label>
-                </div>
-          	<input type="submit" value="Submit" name="login">
-        </form>
-        <h1><a href="register.php">Register</a></h1>
-    </div>
+                <input type="text" name="Search Genre" id="Search Genre" required>
+                <label>Genre</label>
+		</div>
+		<input type="submit" value="Submit" name="Search Genre">
+	</form>
 </body>
 </html>
+
