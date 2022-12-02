@@ -7,7 +7,7 @@ session_start()
 
 ?>
 <body>
-
+  <script id=replace_with_navbar src=nav.js></script>
 </div> 
   <div class="top-bar">
       <h1>
