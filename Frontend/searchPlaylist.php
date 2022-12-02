@@ -1,7 +1,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Search for Song</title>
+    <title>Search For Playlist</title>
     <style>
     body{
       margin: 0;
@@ -108,17 +108,17 @@
     </style>
 </head>
 <body>
-    <script id=replace_with_navbar src=nav.js></script>
+  
     <div class="center">
-        <h1>Search For Song<h1>
-  <form method="post" action= "../songClient.php">
+        <h1>Search For Playlist<h1>
+        <form method="post" action= "../playlistClient.php">
 
-          <div class="txt_field">
-          <input type="text" name="song" id="song" required>
-          <label>Song Title</label>
-          </div>
-      <input type="submit" value="Submit" name="searchSong"></input>
-  </form>
-
+                <div class="txt_field">
+                <input type="text" name="Search Playlist" id="Search Playlist" required>
+                <label>Playlist</label>
+		</div>
+		<input type="submit" value="Submit" name="Search Playlist">
+	</form>
 </body>
 </html>
+

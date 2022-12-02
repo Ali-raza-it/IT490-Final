@@ -4,7 +4,7 @@ require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 
-$song = $_POST['Search Song'];
+$song = $_POST['song'];
 
 $client = new rabbitMQClient("testRabbitMQ.ini","testServer");
 if (isset($argv[1]))
@@ -34,4 +34,3 @@ print_r($response);
   //header('Location: Frontend/login.php');
 //}
 echo $argv[0]." END".PHP_EOL;
-
