@@ -723,6 +723,7 @@ function getConcert($artist)
 		// Insert the concert and concert information into the database
 		foreach($response as $concert)
 		{
+			$dateTime = strtotime($response[3]);
                 	$insert = "insert into concerts (concertTitle, artist, location, dateAndTime, venue) values(?,?,?,?,?);";
                 	$insertstmt = mysqli_stmt_init($mydb);
                 	if(!mysqli_stmt_prepare($insertstmt, $insert))
@@ -730,7 +731,7 @@ function getConcert($artist)
                         	return false;
                         	exit();
                 	}
-                	mysqli_stmt_bind_param($insertstmt, "sssss", $concert[0], $artist, $concert[2], $concert[3], $concert[4]);
+                	mysqli_stmt_bind_param($insertstmt, "sssss", $concert[0], $artist, $concert[2], $dateTime, $concert[4]);
                 	mysqli_stmt_execute($insertstmt);
 			mysqli_stmt_close($insertstmt);
 		}
@@ -750,7 +751,7 @@ function getConcert($artist)
         return $cfetch;
 }
 
-
+print_r(getConcert("Drake"));
 
 function addDiscussion($username, $content, $timestamp, $topic)
 {
@@ -787,77 +788,6 @@ function getDiscussion()
         return $discussionfetch;
 }
 
-function addCategory($categoryName, $description)
-{
-	global $mydb;
-	// Inserts the new category into the categories table.
-	$category = "insert into categroies (catName, catDescription) values(?, ?);";
-	$categoryquery = mysqli_stmt_init($mydb);
-        if(!mysqli_stmt_prepare($categoryquery, $category))
-        {
-                return false;
-                exit();
-        }
-        mysqli_stmt_bind_param($categoryquery, "ss", $categoryName, $description);
-        mysqli_stmt_execute($categoryquery);
-        mysqli_stmt_close($categoryquery);
-        return true;
-
-}
-
-function getCategories()
-{
-	global $mydb;
-        // Searches for and return all categories.
-        $category = "select * from categories;";
-        $categoryquery = mysqli_stmt_init($mydb);
-        if(!mysqli_stmt_prepare($categoryquery, $category))
-        {
-                return false;
-                exit();
-        }
-        mysqli_stmt_execute($categoryquery);
-        $categoryresult = mysqli_stmt_get_result($categoryquery);
-        $categoryfetch = mysqli_fetch_all($categoryresult);
-        return $categoryfetch;
-
-}
-
-function addTopic($username, $subject, $category, $date)
-{
-	global $mydb;
-	// Inserts new topic into the topics table.
-        $topic = "insert into topics (topicSubject, topicDate, topicCat, username) values(?, ?, ?, ?);";
-        $topicquery = mysqli_stmt_init($mydb);
-        if(!mysqli_stmt_prepare($topicquery, $topic))
-        {
-                return false;
-                exit();
-        }
-        mysqli_stmt_bind_param($topicquery, "ssis", $subject, $date, $category, $username);
-        mysqli_stmt_execute($topicquery);
-        mysqli_stmt_close($topicquery);
-        return true;
-
-}
-
-function getTopics()
-{
-	global $mydb;
-        // Searches for and returns all topics.
-        $topic = "select * from topics;";
-        $topicquery = mysqli_stmt_init($mydb);
-        if(!mysqli_stmt_prepare($topicquery, $topic))
-        {
-                return false;
-                exit();
-        }
-        mysqli_stmt_execute($topicquery);
-        $topicresult = mysqli_stmt_get_result($topicquery);
-        $topicfetch = mysqli_fetch_all($topicresult);
-        return $topicfetch;
-
-}
 
 //function sendNotification()
 //{
@@ -909,13 +839,6 @@ function requestProcessor($request)
     case "user rec":
       return getRecomendation($request['username']);
     case "add category":
-      return addCategory($request['cat name'], $request['description']);
-    case "get categories":
-      return getCategories();
-    case "add topic":
-      return addTopic($request['username'], $request['subject'], $request['category'],$request['date']);
-    case "get topics":
-      return getTopics();
   }
 }
 
