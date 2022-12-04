@@ -751,8 +751,6 @@ function getConcert($artist)
         return $cfetch;
 }
 
-print_r(getConcert("Drake"));
-
 function addDiscussion($username, $content, $timestamp, $topic)
 {
 	global $mydb;
