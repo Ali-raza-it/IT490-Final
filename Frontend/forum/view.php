@@ -1,3 +1,4 @@
+
 <?php
 include 'conn.php';
 $data = array();
@@ -11,6 +12,3 @@ while($row = $result->fetch()){
 echo json_encode($data);
 $conn = null;
 exit();
-
-
-
