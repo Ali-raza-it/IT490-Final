@@ -4,10 +4,10 @@ require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 
-$username = $_POST['username'];
-$content = $_POST['content'];
-$time = $_POST['time'];
-$topicID = $_POST['topic'];
+$id = $_POST['id'];
+$name = $_POST['name'];
+$msg = $_POST['msg'];
+
 
 $client = new rabbitMQClient("testRabbitMQ.ini","testServer");
 if (isset($argv[1]))
@@ -20,11 +20,11 @@ else
 }
 
 $request = array();
-$request['type'] = "add discussion";
-$request['username'] = $username;
-$request['post content'] = $content;
-$request['timestamp'] = $time; 
-$request['topic'] = $topicID;
+
+$request['id'] = $id;
+$request['name'] = $name;
+$request['msg'] = $msg; 
+
 $response = $client->send_request($request);
 //$response = $client->publish($request);
 

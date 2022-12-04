@@ -46,7 +46,7 @@
   <div class="panel-body">
     <h3>Spotify Community Forum</h3>
     <hr>
-    <form name="frm" method="post">
+    <form name="frm" method="post" action="../addDiscussionClient.php">
         <input type="hidden" id="commentid" name="Pcommentid" value="0">
 	<div class="form-group">
 	  <label for="usr">Write your name ?:</label>
