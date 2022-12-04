@@ -189,17 +189,6 @@ function getSong($songTitle)
         	mysqli_stmt_bind_param($insertstmt, "sss", $songTitle, $response[1], $response[2]);
         	mysqli_stmt_execute($insertstmt);
 		mysqli_stmt_close($insertstmt);
-		//$insert2 = "insert into songLikesAndDislike (songTitle, likes, dislikes, artist) values(?, ?, ?, ?);";
-                //$insertstmt2 = mysqli_stmt_init($mydb);
-                //if(!mysqli_stmt_prepare($insertstmt2, $insert2))
-                //{
-                        //return false;
-                        //exit();
-                //}
-               // mysqli_stmt_bind_param($insertstmt2, "siis", $songTitle, 0, 0, $response[1]);
-               // mysqli_stmt_execute($insertstmt2);
-               // mysqli_stmt_close($insertstmt2);
-
 	}
 	// Returns the information of the requested song to the client in the form of an array.
 	$songdata = "select songTitle, artist, album from music where songTitle = ?;";
@@ -297,9 +286,8 @@ function getArtist($artist)
 function addLikeSong($username, $songTitle, $artist)
 {
 	global $mydb;
-	// Searches for the number of likes the requested song currently has.
-	$select = "select likes from songLikesAndDislike where songTitle = ?;";
-	$selectstmt = mysqli_stmt_init($mydb);
+	$select = "select songTitle from songLikesAndDislike where songTitle = ?;";
+        $selectstmt = mysqli_stmt_init($mydb);
         if(!mysqli_stmt_prepare($selectstmt, $select))
         {
                 return false;
@@ -310,13 +298,40 @@ function addLikeSong($username, $songTitle, $artist)
         $selectresult = mysqli_stmt_get_result($selectstmt);
         $selectassoc = mysqli_fetch_assoc($selectresult);
         mysqli_stmt_close($selectstmt);
-        if($selectassoc == Null)
+	if($selectassoc == Null)
+	{
+		$insert = "insert into songLikesAndDislike (songTitle, likes, dislikes, artist) values(?, ?, ?, ?);";
+                $insertstmt = mysqli_stmt_init($mydb);
+                if(!mysqli_stmt_prepare($insertstmt, $insert))
+                {
+                        return false;
+                        exit();
+                }
+                mysqli_stmt_bind_param($insertstmt, "siis", $songTitle, 0, 0, $artist);
+                mysqli_stmt_execute($insertstmt);
+                mysqli_stmt_close($insertstmt);
+
+	}
+	// Searches for the number of likes the requested song currently has.
+	$select2 = "select likes from songLikesAndDislike where songTitle = ?;";
+	$selectstmt2 = mysqli_stmt_init($mydb);
+        if(!mysqli_stmt_prepare($selectstmt2, $select2))
+        {
+                return false;
+                exit();
+        }
+        mysqli_stmt_bind_param($selectstmt2, "s", $songTitle);
+        mysqli_stmt_execute($selectstmt2);
+        $selectresult2 = mysqli_stmt_get_result($selectstmt2);
+        $selectassoc2 = mysqli_fetch_assoc($selectresult2);
+        mysqli_stmt_close($selectstmt2);
+        if($selectassoc2 == Null)
         {
                 return false;
                 exit();
         }
         // Updates the like counter for the requested song.
-        foreach($selectassoc as $key => $value)
+        foreach($selectassoc2 as $key => $value)
         {
 		$likesUpdated = $value+1;
 		$update = "update songLikesAndDislike set likes = ? where songTitle = ?;";
@@ -333,19 +348,19 @@ function addLikeSong($username, $songTitle, $artist)
 	str_replace(' ', '_', $artist);
 	str_replace('/', 'slash', $artist);
 	// Selects the column to update in the userRec table based on the artist of the liked song.
-	$select2 = "select ? from userRec where username = ?;";
-        $selectstmt2 = mysqli_stmt_init($mydb);
-        if(!mysqli_stmt_prepare($selectstmt2, $select2))
+	$select3 = "select ? from userRec where username = ?;";
+        $selectstmt3 = mysqli_stmt_init($mydb);
+        if(!mysqli_stmt_prepare($selectstmt3, $select3))
         {
                 return false;
                 exit();
         }
-        mysqli_stmt_bind_param($selectstmt2, "ss", $artist, $username);
-        mysqli_stmt_execute($selectstmt2);
-       	$selectresult2 = mysqli_stmt_get_result($selectstmt2);
-        $selectassoc2 = mysqli_fetch_assoc($selectresult2);
-        mysqli_stmt_close($selectstmt2);
-        if($selectassoc2 == Null)
+        mysqli_stmt_bind_param($selectstmt3, "ss", $artist, $username);
+        mysqli_stmt_execute($selectstmt3);
+       	$selectresult3 = mysqli_stmt_get_result($selectstmt3);
+        $selectassoc3 = mysqli_fetch_assoc($selectresult3);
+        mysqli_stmt_close($selectstmt3);
+        if($selectassoc3 == Null)
         {
 		$alter = "alter table userRec add ? int(10) not null default 0;";
 		$alterstmt = mysqli_stmt_init($mydb);
@@ -357,21 +372,21 @@ function addLikeSong($username, $songTitle, $artist)
         	mysqli_stmt_bind_param($alterstmt, "s", $artist);
         	mysqli_stmt_execute($alterstmt);
 		mysqli_stmt_close($alterstmt);
-		$select2 = "select ? from userRec where username = ?;";
-        	$selectstmt2 = mysqli_stmt_init($mydb);
-        	if(!mysqli_stmt_prepare($selectstmt2, $select2))
+		$select3 = "select ? from userRec where username = ?;";
+        	$selectstmt3 = mysqli_stmt_init($mydb);
+        	if(!mysqli_stmt_prepare($selectstmt3, $select3))
         	{
                 	return false;
                 	exit();
         	}
-        	mysqli_stmt_bind_param($selectstmt2, "ss", $artist, $username);
-        	mysqli_stmt_execute($selectstmt2);
-        	$selectresult2 = mysqli_stmt_get_result($selectstmt2);
-        	$selectassoc2 = mysqli_fetch_assoc($selectresult2);
-        	mysqli_stmt_close($selectstmt2);
+        	mysqli_stmt_bind_param($selectstmt3, "ss", $artist, $username);
+        	mysqli_stmt_execute($selectstmt3);
+        	$selectresult3 = mysqli_stmt_get_result($selectstmt3);
+        	$selectassoc2 = mysqli_fetch_assoc($selectresult3);
+        	mysqli_stmt_close($selectstmt3);
 	}
 	// Updates the like to dislike ratio of the artist of the song this specific user liked.
-	foreach($selectassoc2 as $key => $value)
+	foreach($selectassoc3 as $key => $value)
         {
 		$ldUpdated = $value +1;
 		$update2 = "update userRec set ? = ? where username = ?;";
@@ -391,8 +406,7 @@ function addLikeSong($username, $songTitle, $artist)
 function addDislikeSong($username, $songTitle, $artist)
 {
 	global $mydb;
-	// Searches for the number of dislikes the requested song currently has. 
-	$select = "select dislikes from songLikesAndDislike where songTitle = ?;";
+	$select = "select songTitle from songLikesAndDislike where songTitle = ?;";
         $selectstmt = mysqli_stmt_init($mydb);
         if(!mysqli_stmt_prepare($selectstmt, $select))
         {
@@ -406,11 +420,37 @@ function addDislikeSong($username, $songTitle, $artist)
         mysqli_stmt_close($selectstmt);
         if($selectassoc == Null)
         {
+                $insert = "insert into songLikesAndDislike (songTitle, likes, dislikes, artist) values(?, ?, ?, ?);";
+                $insertstmt = mysqli_stmt_init($mydb);
+                if(!mysqli_stmt_prepare($insertstmt, $insert))
+                {
+                        return false;
+                        exit();
+                }
+                mysqli_stmt_bind_param($insertstmt, "siis", $songTitle, 0, 0, $artist);
+		mysqli_stmt_execute($insertstmt);
+                mysqli_stmt_close($insertstmt);
+	}
+	// Searches for the number of dislikes the requested song currently has. 
+	$select2 = "select dislikes from songLikesAndDislike where songTitle = ?;";
+        $selectstmt2 = mysqli_stmt_init($mydb);
+        if(!mysqli_stmt_prepare($selectstmt2, $select2))
+        {
+                return false;
+                exit();
+        }
+        mysqli_stmt_bind_param($selectstmt2, "s", $songTitle2);
+        mysqli_stmt_execute($selectstmt2);
+        $selectresult2 = mysqli_stmt_get_result($selectstmt2);
+        $selectassoc2 = mysqli_fetch_assoc($selectresult2);
+        mysqli_stmt_close($selectstmt2);
+        if($selectassoc2 == Null)
+        {
                 return false;
                 exit();
         }
         // Updates the dislike counter for the requested song.
-        foreach($selectassoc as $key => $value)
+        foreach($selectassoc2 as $key => $value)
         {
 		$dislikesUpdated = $value + 1;
 		$update = "update songLikesAndDislike set dislikes = ? where songTitle = ?;";
@@ -427,19 +467,19 @@ function addDislikeSong($username, $songTitle, $artist)
 	str_replace(' ', '_', $artist);
 	str_replace('/', 'slash', $artist);
 	// Selects the column to update in the userRec table based on the artist of the disliked song.
-	$select2 = "select ? from userRec where username = ?;";
-        $selectstmt2 = mysqli_stmt_init($mydb);
-        if(!mysqli_stmt_prepare($selectstmt2, $select2))
+	$select3 = "select ? from userRec where username = ?;";
+        $selectstmt3 = mysqli_stmt_init($mydb);
+        if(!mysqli_stmt_prepare($selectstmt3, $select3))
         {
                 return false;
                 exit();
         }
-        mysqli_stmt_bind_param($selectstmt2, "ss", $artist, $username);
-        mysqli_stmt_execute($selectstmt2);
-        $selectresult2 = mysqli_stmt_get_result($selectstmt2);
-        $selectassoc2 = mysqli_fetch_assoc($selectresult2);
-        mysqli_stmt_close($selectstmt2);
-        if($selectassoc2 == Null)
+        mysqli_stmt_bind_param($selectstmt3, "ss", $artist, $username);
+        mysqli_stmt_execute($selectstmt3);
+        $selectresult3 = mysqli_stmt_get_result($selectstmt3);
+        $selectassoc3 = mysqli_fetch_assoc($selectresult3);
+        mysqli_stmt_close($selectstmt3);
+        if($selectassoc3 == Null)
         {
                 $alter = "alter table userRec add ? int(10) not null default 0;";
                 $alterstmt = mysqli_stmt_init($mydb);
@@ -451,22 +491,22 @@ function addDislikeSong($username, $songTitle, $artist)
                 mysqli_stmt_bind_param($alterstmt, "s", $artist);
                 mysqli_stmt_execute($alterstmt);
                 mysqli_stmt_close($alterstmt);
-                $select2 = "select ? from userRec where username = ?;";
-                $selectstmt2 = mysqli_stmt_init($mydb);
-                if(!mysqli_stmt_prepare($selectstmt2, $select2))
+                $select3 = "select ? from userRec where username = ?;";
+                $selectstmt3 = mysqli_stmt_init($mydb);
+                if(!mysqli_stmt_prepare($selectstmt3, $select3))
                 {
                         return false;
                         exit();
                 }
-                mysqli_stmt_bind_param($selectstmt2, "ss", $artist, $username);
-                mysqli_stmt_execute($selectstmt2);
-                $selectresult2 = mysqli_stmt_get_result($selectstmt2);
-                $selectassoc2 = mysqli_fetch_assoc($selectresult2);
-                mysqli_stmt_close($selectstmt2);
+                mysqli_stmt_bind_param($selectstmt3, "ss", $artist, $username);
+                mysqli_stmt_execute($selectstmt3);
+                $selectresult3 = mysqli_stmt_get_result($selectstmt3);
+                $selectassoc3 = mysqli_fetch_assoc($selectresult3);
+                mysqli_stmt_close($selectstmt3);
 
 	}
 	// Updates the like to dislike ratio of the artist of the song this specific user disliked.
-        foreach($selectassoc as $key => $value)
+        foreach($selectassoc3 as $key => $value)
         {
                 $ldUpdated = $value-1;
                 $update2 = "update userRec set ? = ? where username = ?;";

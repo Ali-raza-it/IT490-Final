@@ -1,5 +1,6 @@
 #!/usr/bin/php
 <?php
+@ob_end_clean();
 require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
@@ -23,16 +24,24 @@ $request['message'] = $msg;
 $response = $client->send_request($request);
 //$response = $client->publish($request);
 
-echo "client received response: ".PHP_EOL;
-print_r($response);
-
 
 if ($response!==0) 
 {
-  //header('Location: Frontend/landing.php');
+	echo "<table style='width:100%'>";
+        echo " <tr>";
+        echo "  <th>Song Name</th>";
+        echo "  <th>Artist Name</th>";
+	echo "  <th>Album Name</th>";
+	echo "  <th>Like Song</th>";
+	echo "  <th>Dislike Song</th>";
+        echo " </tr>";
+        echo " <tr>";
+        echo "  <td>".$response[0]."</td>";
+        echo "  <td>".$response[1]."</td>";
+	echo "  <td>".$response[2]."</td>";
+	echo "  <td> </td>";
+	echo "  <td> </td>";
+        echo " </tr>";
+        echo "</table>";
+
 }
-else 
-{
-//header('Location: Frontend/login.php');
-}
-echo $argv[0]." END".PHP_EOL;
