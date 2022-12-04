@@ -4,6 +4,15 @@
       header("location: login.php");
       exit;
   }
+  if(isset($_SESSION['response'])){
+      $response = $_SESSION['response'];
+      
+      $uname = $response[0];
+      $fname = $response[1];
+      $lname = $response[2];
+      $email = $response[3];
+      include "nav.php";
+  }
 ?>
 <!DOCTYPE html>
 <html>
@@ -115,7 +124,6 @@
     </style>
 </head>
 <body>
-<script id=replace_with_navbar src=nav.js></script>
-<h1>Welcome to CKNAZ Spotify Music</h1>
+<h1>Welcome to CKNAZ Spotify Music <?php echo $fname . " " . $lname ?>! </h1>
 </body>
 </html>

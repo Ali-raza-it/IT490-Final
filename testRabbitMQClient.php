@@ -37,6 +37,7 @@ if ($response==0)
 else
 {
 	 $_SESSION['valid'] = true;
+	 $_SESSION['response'] = $response;
 	 header('Location: Frontend/landing.php');
    	 exit();
 }
