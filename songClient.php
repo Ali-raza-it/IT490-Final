@@ -27,10 +27,12 @@ echo "client received response: ".PHP_EOL;
 print_r($response);
 
 
-//if ($response=='true') {
+if ($response!==0) 
+{
   //header('Location: Frontend/landing.php');
-//}
-//else {
-  //header('Location: Frontend/login.php');
-//}
+}
+else 
+{
+//header('Location: Frontend/login.php');
+}
 echo $argv[0]." END".PHP_EOL;
