@@ -36,10 +36,10 @@ if ($response!==0)
 	echo "  <th>World Rank</th>";
 	echo " </tr>";
 	echo " <tr>";
-	echo "  <td>$response[0]</td>";
-	echo "  <td>$response[1]</td>";
-	echo "  <td>$response[2]</td>";
-	echo "  <td>$response[3]</td>";
+	echo "  <td>".$response[0]."</td>";
+	echo "  <td>".$response[1]."</td>";
+	echo "  <td>".$response[2]."</td>";
+	echo "  <td>".$response[3]."</td>";
 	echo " </tr>";
 	echo "</table>";
 }
