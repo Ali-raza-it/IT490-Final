@@ -128,12 +128,13 @@ function searchConcerts($artist)
 				$concertTitle = $concert['title'];
 				$concertLocation = $concert['location'];
 				$concertDate = $concert['date'];
+				$date = substr($concertDate, 0, 10);
 				$concertVenue = $concert['venue'];
 				array_push($carray, $concertTitle);
 				array_push($carray, $artist);
 				array_push($carray, $concertLocation);
-				array_push($carray, $concertDate);
 				array_push($carray, $concertVenue);
+				array_push($carray, $date);
 				array_push($concertArray, $carray);
 			}	
                         return $concertArray;

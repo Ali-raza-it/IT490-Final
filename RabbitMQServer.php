@@ -743,15 +743,15 @@ function getConcert($artist)
 		// Insert the concert and concert information into the database
 		foreach($response as $concert)
 		{
-			$dateTime = strtotime($response[3]);
-                	$insert = "insert into concerts (concertTitle, artist, location, dateAndTime, venue) values(?,?,?,?,?);";
+			$date = date($concert[4]);
+                	$insert = "insert into concerts (concertTitle, artist, location, venue, date) values(?,?,?,?,?);";
                 	$insertstmt = mysqli_stmt_init($mydb);
                 	if(!mysqli_stmt_prepare($insertstmt, $insert))
                 	{
                         	return false;
                         	exit();
                 	}
-                	mysqli_stmt_bind_param($insertstmt, "sssss", $concert[0], $artist, $concert[2], $dateTime, $concert[4]);
+                	mysqli_stmt_bind_param($insertstmt, "sssss", $concert[0], $artist, $concert[2], $concert[3], $date);
                 	mysqli_stmt_execute($insertstmt);
 			mysqli_stmt_close($insertstmt);
 		}
@@ -788,8 +788,6 @@ function addDiscussion($username, $content)
 	mysqli_stmt_close($discussionquery);
 	return true;
 }
-
-print_r(addDiscussion("jdoe", "Hello Hello Hello"));
 
 function getDiscussion()
 {
