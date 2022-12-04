@@ -58,16 +58,6 @@ function doSignup($username,$password,$firstname,$lastname,$email)
         mysqli_stmt_bind_param($insertstmt, "sssss", $username, $hashedpassword, $firstname, $lastname, $email);
         mysqli_stmt_execute($insertstmt);
 	mysqli_stmt_close($insertstmt);
-	$insert2 = "insert into userRec (username) values(?);";
-                $insertstmt2 = mysqli_stmt_init($mydb);
-                if(!mysqli_stmt_prepare($insertstmt2, $insert2))
-                {
-                        return false;
-                        exit();
-                }
-                mysqli_stmt_bind_param($insertstmt2, "s", $username);
-                mysqli_stmt_execute($insertstmt2);
-                mysqli_stmt_close($insertstmt2);
         return true;
 }
 
@@ -345,58 +335,56 @@ function addLikeSong($username, $songTitle, $artist)
         	mysqli_stmt_execute($updatestmt);
         	mysqli_stmt_close($updatestmt);
 	}
-	str_replace(' ', '_', $artist);
-	str_replace('/', 'slash', $artist);
 	// Selects the column to update in the userRec table based on the artist of the liked song.
-	$select3 = "select ? from userRec where username = ?;";
+	$select3 = "select LD from userRec where username = ? and artist = ?;";
         $selectstmt3 = mysqli_stmt_init($mydb);
         if(!mysqli_stmt_prepare($selectstmt3, $select3))
         {
                 return false;
                 exit();
         }
-        mysqli_stmt_bind_param($selectstmt3, "ss", $artist, $username);
+        mysqli_stmt_bind_param($selectstmt3, "ss", $username, $artist);
         mysqli_stmt_execute($selectstmt3);
        	$selectresult3 = mysqli_stmt_get_result($selectstmt3);
         $selectassoc3 = mysqli_fetch_assoc($selectresult3);
         mysqli_stmt_close($selectstmt3);
         if($selectassoc3 == Null)
         {
-		$alter = "alter table userRec add ? int(10) not null default 0;";
-		$alterstmt = mysqli_stmt_init($mydb);
-        	if(!mysqli_stmt_prepare($alterstmt, $alter))
+		$insert2 = "insert into userRec (username, artist) values (?, ?);";
+		$insertstmt2 = mysqli_stmt_init($mydb);
+        	if(!mysqli_stmt_prepare($insertstmt2, $insert2))
         	{
                 	return false;
                 	exit();
         	}
-        	mysqli_stmt_bind_param($alterstmt, "s", $artist);
-        	mysqli_stmt_execute($alterstmt);
-		mysqli_stmt_close($alterstmt);
-		$select3 = "select ? from userRec where username = ?;";
+        	mysqli_stmt_bind_param($insertstmt2, "ss", $username, $artist);
+        	mysqli_stmt_execute($insertstmt2);
+		mysqli_stmt_close($insertstmt2);
+		$select3 = "select LD from userRec where username = ? and artist = ?;";
         	$selectstmt3 = mysqli_stmt_init($mydb);
         	if(!mysqli_stmt_prepare($selectstmt3, $select3))
         	{
                 	return false;
                 	exit();
         	}
-        	mysqli_stmt_bind_param($selectstmt3, "ss", $artist, $username);
+        	mysqli_stmt_bind_param($selectstmt3, "ss", $username, $artist);
         	mysqli_stmt_execute($selectstmt3);
         	$selectresult3 = mysqli_stmt_get_result($selectstmt3);
-        	$selectassoc2 = mysqli_fetch_assoc($selectresult3);
+        	$selectassoc3 = mysqli_fetch_assoc($selectresult3);
         	mysqli_stmt_close($selectstmt3);
 	}
 	// Updates the like to dislike ratio of the artist of the song this specific user liked.
 	foreach($selectassoc3 as $key => $value)
         {
-		$ldUpdated = $value +1;
-		$update2 = "update userRec set ? = ? where username = ?;";
+		$ldUpdated = $value + 1;
+		$update2 = "update userRec set LD = ? where username = ? and artist = ?;";
                 $updatestmt2 = mysqli_stmt_init($mydb);
                 if(!mysqli_stmt_prepare($updatestmt2, $update2))
                 {
                         return false;
                         exit();
                 }
-                mysqli_stmt_bind_param($updatestmt2, "sis", $artist, $ldUpdated, $username);
+                mysqli_stmt_bind_param($updatestmt2, "iss", $ldUpdated, $username, $artist);
                 mysqli_stmt_execute($updatestmt2);
                 mysqli_stmt_close($updatestmt2);
 	}
@@ -439,7 +427,7 @@ function addDislikeSong($username, $songTitle, $artist)
                 return false;
                 exit();
         }
-        mysqli_stmt_bind_param($selectstmt2, "s", $songTitle2);
+        mysqli_stmt_bind_param($selectstmt2, "s", $songTitle);
         mysqli_stmt_execute($selectstmt2);
         $selectresult2 = mysqli_stmt_get_result($selectstmt2);
         $selectassoc2 = mysqli_fetch_assoc($selectresult2);
@@ -452,7 +440,7 @@ function addDislikeSong($username, $songTitle, $artist)
         // Updates the dislike counter for the requested song.
         foreach($selectassoc2 as $key => $value)
         {
-		$dislikesUpdated = $value + 1;
+		$dislikesUpdated = $value+1;
 		$update = "update songLikesAndDislike set dislikes = ? where songTitle = ?;";
                 $updatestmt = mysqli_stmt_init($mydb);
                 if(!mysqli_stmt_prepare($updatestmt, $update))
@@ -464,58 +452,54 @@ function addDislikeSong($username, $songTitle, $artist)
                 mysqli_stmt_execute($updatestmt);
                 mysqli_stmt_close($updatestmt);
 	}
-	str_replace(' ', '_', $artist);
-	str_replace('/', 'slash', $artist);
-	// Selects the column to update in the userRec table based on the artist of the disliked song.
-	$select3 = "select ? from userRec where username = ?;";
+	$select3 = "select LD from userRec where username = ? and artist = ?;";
         $selectstmt3 = mysqli_stmt_init($mydb);
         if(!mysqli_stmt_prepare($selectstmt3, $select3))
         {
                 return false;
                 exit();
         }
-        mysqli_stmt_bind_param($selectstmt3, "ss", $artist, $username);
+        mysqli_stmt_bind_param($selectstmt3, "ss", $username, $artist);
         mysqli_stmt_execute($selectstmt3);
         $selectresult3 = mysqli_stmt_get_result($selectstmt3);
         $selectassoc3 = mysqli_fetch_assoc($selectresult3);
         mysqli_stmt_close($selectstmt3);
         if($selectassoc3 == Null)
         {
-                $alter = "alter table userRec add ? int(10) not null default 0;";
-                $alterstmt = mysqli_stmt_init($mydb);
-                if(!mysqli_stmt_prepare($alterstmt, $alter))
+                $insert2 = "insert into userRec (username, artist) values (?, ?);";
+                $insertstmt2 = mysqli_stmt_init($mydb);
+                if(!mysqli_stmt_prepare($insertstmt2, $insert2))
                 {
                         return false;
                         exit();
                 }
-                mysqli_stmt_bind_param($alterstmt, "s", $artist);
-                mysqli_stmt_execute($alterstmt);
-                mysqli_stmt_close($alterstmt);
-                $select3 = "select ? from userRec where username = ?;";
+		mysqli_stmt_bind_param($insertstmt2, "ss", $username, $artist);
+                mysqli_stmt_execute($insertstmt2);
+                mysqli_stmt_close($insertstmt2);
+                $select3 = "select LD from userRec where username = ? and artist = ?;";
                 $selectstmt3 = mysqli_stmt_init($mydb);
                 if(!mysqli_stmt_prepare($selectstmt3, $select3))
                 {
                         return false;
                         exit();
                 }
-                mysqli_stmt_bind_param($selectstmt3, "ss", $artist, $username);
+                mysqli_stmt_bind_param($selectstmt3, "ss", $username, $artist);
                 mysqli_stmt_execute($selectstmt3);
                 $selectresult3 = mysqli_stmt_get_result($selectstmt3);
                 $selectassoc3 = mysqli_fetch_assoc($selectresult3);
                 mysqli_stmt_close($selectstmt3);
-
-	}
+        }        
 	// Updates the like to dislike ratio of the artist of the song this specific user disliked.
         foreach($selectassoc3 as $key => $value)
         {
                 $ldUpdated = $value-1;
-                $update2 = "update userRec set ? = ? where username = ?;";
+                $update2 = "update userRec set LD = ? where username = ? and artist = ?;";
                 $updatestmt2 = mysqli_stmt_init($mydb);
                 if(!mysqli_stmt_prepare($updatestmt2, $update2))
                 {
                         return false;
 		}
-		mysqli_stmt_bind_param($updatestmt2, "sis", $artist, $ldUpdated, $username);
+		mysqli_stmt_bind_param($updatestmt2, "iss", $ldUpdated, $username, $artist);
                 mysqli_stmt_execute($updatestmt2);
                 mysqli_stmt_close($updatestmt2);
 	}
@@ -526,7 +510,7 @@ function getRecommendation($username)
 {
 	global $mydb;
 	// Selects the like to dislike ratio of all artists for the selected user.
-        $select = "select * from userRec where username = ?;";
+        $select = "select artist, LD from userRec where username = ?;";
         $selectquery = mysqli_stmt_init($mydb);
         if(!mysqli_stmt_prepare($selectquery, $select))
         {
@@ -536,7 +520,7 @@ function getRecommendation($username)
         mysqli_stmt_bind_param($selectquery, "s", $username);
         mysqli_stmt_execute($selectquery);
 	$selectresult = mysqli_stmt_get_result($selectquery);
-	$selectassoc = mysqli_fetch_assoc($selectresult);
+	$selectassoc = mysqli_fetch_all($selectresult);
 	mysqli_stmt_close($selectquery);
         if ($selectassoc == Null)
 	{
@@ -546,17 +530,14 @@ function getRecommendation($username)
 	// Loops through the user's like to dislike ratio for each artist to see which genre has the greatest ratio.
 	$greatestRatio = -999;
 	$recArtist = "";
-	foreach($selectassoc as $key => $value)
+	foreach($selectassoc as $s)
 	{
-		if($value > $greatestRatio)
+		if($s[1] > $greatestRatio)
 		{
-			$greatestRatio = $value;
-			$recArtist = $key;
+			$greatestRatio = $s[1];
+			$recArtist = $s[0];
 		}
 	}
-	str_replace('_', ' ', $recArtist);
-	str_replace('slash', '/', $artist);
-	// Chooses a artist to recomend to the user based on which artist had the highest like to dislike ratio.
 	// Returns songs and song information of the picked genre. 
 	$rec = "select songTitle, artist, album from music where artist = ?;";
         $recquery = mysqli_stmt_init($mydb);
@@ -571,7 +552,7 @@ function getRecommendation($username)
 	$recfetch = mysqli_fetch_all($recresult);
 	return $recfetch;
 }
-           
+
 function searchUser($username)
 {
 	global $mydb;
@@ -616,7 +597,7 @@ function searchUserAll($username)
         mysqli_stmt_bind_param($selectstmt, "s", $username);
         mysqli_stmt_execute($selectstmt);
         $selectresult = mysqli_stmt_get_result($selectstmt);
-        $selectassoc = mysqli_fetch_assoc($selectresult);
+        $selectassoc = mysqli_fetch_all($selectresult);
         mysqli_stmt_close($selectstmt);
         if($selectassoc == Null)
         {
@@ -630,7 +611,7 @@ function addFriend($username, $friendusername)
 {
 	global $mydb;
 	// Checks to see if the user is already friends with the other user.
-	$select = "select username1, username2 from ? friends where username1 = ? and username2 = ?;";
+	$select = "select username1, username2 from friends where username1 = ? and username2 = ?;";
         $selectstmt = mysqli_stmt_init($mydb);
         if(!mysqli_stmt_prepare($selectstmt, $select))
         {
@@ -655,7 +636,6 @@ function addFriend($username, $friendusername)
         	mysqli_stmt_bind_param($insertstmt1, "ss", $username, $friendusername);
         	mysqli_stmt_execute($insertstmt1);
         	mysqli_stmt_close($insertstmt1);
-		return true;
 		$insert2 = "insert into friends (username1, username2) values(?, ?);";
                 $insertstmt2 = mysqli_stmt_init($mydb);
                 if(!mysqli_stmt_prepare($insertstmt2, $insert2))
@@ -678,7 +658,7 @@ function removeFriend($username, $friendusername)
 	global $mydb;
 	// Checks to see if the user the other user attempting to unfriend it friends with that user.
 	$select = "select username1, username2 from friends where username1 = ?
- and username 2 = ?;";
+ and username2 = ?;";
         $selectstmt = mysqli_stmt_init($mydb);
         if(!mysqli_stmt_prepare($selectstmt, $select))
         {
@@ -791,11 +771,11 @@ function getConcert($artist)
         return $cfetch;
 }
 
-function addDiscussion($username, $content, $timestamp, $topic)
+function addDiscussion($username, $content)
 {
 	global $mydb;
 	// Inserts the newest discussion post into the discussion table.
-        $discussion = "insert into discussion (username, content, timestamp, postTopic) values(?, ?, ?, ?);";
+        $discussion = "insert into discussion (username, content) values(?, ?);";
 
         $discussionquery = mysqli_stmt_init($mydb);
         if(!mysqli_stmt_prepare($discussionquery, $discussion))
@@ -803,11 +783,13 @@ function addDiscussion($username, $content, $timestamp, $topic)
                 return false;
                 exit();
         }
-        mysqli_stmt_bind_param($discussionquery, "sssi", $username, $content, $timestamp, $topic);
+        mysqli_stmt_bind_param($discussionquery, "ss", $username, $content);
         mysqli_stmt_execute($discussionquery);
 	mysqli_stmt_close($discussionquery);
 	return true;
 }
+
+print_r(addDiscussion("jdoe", "Hello Hello Hello"));
 
 function getDiscussion()
 {
@@ -861,7 +843,7 @@ function requestProcessor($request)
     case "concert":
       return getConcert($request['artist']);
     case "add discussion":
-      return addDiscussion($request['username'], $request['post content'], $request['timestamp'], $request['topic']);
+      return addDiscussion($request['username'], $request['msg']);
     case "get discussion":
       return getDiscussion();
     case "get notification":
@@ -871,9 +853,9 @@ function requestProcessor($request)
     case "get notification by user":
       return getNotificationByUSer($request['username']);
     case "like":
-      return addLikeSong($reuest['username'],$request['song'], $request['artist']);
+      return addLikeSong($request['username'],$request['song'], $request['artist']);
     case "dislike":
-      return addDislikeSong($reuest['username'], $request['song'], $request['artist']);
+      return addDislikeSong($request['username'], $request['song'], $request['artist']);
     case "user rec":
       return getRecomendation($request['username']);
     case "add category":

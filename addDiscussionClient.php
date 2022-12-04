@@ -4,8 +4,7 @@ require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 
-$id = $_POST['id'];
-$name = $_POST['name'];
+$name = $_POST['username'];
 $msg = $_POST['msg'];
 
 
@@ -20,17 +19,12 @@ else
 }
 
 $request = array();
-
-$request['id'] = $id;
-$request['name'] = $name;
+$request['type'] = "add discussion";
+$request['username'] = $name;
 $request['msg'] = $msg; 
-
 $response = $client->send_request($request);
 //$response = $client->publish($request);
 
-echo "client received response: ".PHP_EOL;
-print_r($response);
-echo "\n\n";
 
 //if ($response=='true') {
   //header('Location: Frontend/landing.php');
@@ -38,5 +32,4 @@ echo "\n\n";
 //else {
   //header('Location: Frontend/login.php');
 //}
-echo $argv[0]." END".PHP_EOL;
 
