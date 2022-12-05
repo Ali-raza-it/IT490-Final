@@ -792,11 +792,11 @@ function getConcert($artist)
         return $cfetch;
 }
 
-function addDiscussion($username, $content)
+function addDiscussion($username, $content, $parentComment)
 {
 	global $mydb;
 	// Inserts the newest discussion post into the discussion table.
-        $discussion = "insert into discussion (username, content) values(?, ?);";
+        $discussion = "insert into discussion (username, content, parentComment) values(?, ?, ?);";
 
         $discussionquery = mysqli_stmt_init($mydb);
         if(!mysqli_stmt_prepare($discussionquery, $discussion))
@@ -804,7 +804,7 @@ function addDiscussion($username, $content)
                 return false;
                 exit();
         }
-        mysqli_stmt_bind_param($discussionquery, "ss", $username, $content);
+        mysqli_stmt_bind_param($discussionquery, "sss", $username, $content. $parentComment);
         mysqli_stmt_execute($discussionquery);
 	mysqli_stmt_close($discussionquery);
 	return true;
@@ -928,7 +928,7 @@ function requestProcessor($request)
     case "concert":
       return getConcert($request['artist']);
     case "add discussion":
-      return addDiscussion($request['username'], $request['msg']);
+      return addDiscussion($request['username'], $request['msg'], $request['parentComment']);
     case "get discussion":
       return getDiscussion();
     case "get notification":
