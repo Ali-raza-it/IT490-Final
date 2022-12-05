@@ -58,16 +58,6 @@ function doSignup($username,$password,$firstname,$lastname,$email)
         mysqli_stmt_bind_param($insertstmt, "sssss", $username, $hashedpassword, $firstname, $lastname, $email);
         mysqli_stmt_execute($insertstmt);
 	mysqli_stmt_close($insertstmt);
-	$insert2 = "insert into userRec (username) values(?);";
-                $insertstmt2 = mysqli_stmt_init($mydb);
-                if(!mysqli_stmt_prepare($insertstmt2, $insert2))
-                {
-                        return false;
-                        exit();
-                }
-                mysqli_stmt_bind_param($insertstmt2, "s", $username);
-                mysqli_stmt_execute($insertstmt2);
-                mysqli_stmt_close($insertstmt2);
         return true;
 }
 
@@ -158,7 +148,7 @@ function getSong($songTitle)
 	// Sends client request to the dmz if song title isn't in the music database.
 	if (mysqli_fetch_assoc($songresult) == Null)
 	{
-		$client = new rabbitMQClient("testRabbitMQ.ini","testServer");
+		$client = new rabbitMQClient("dmzRabbitMQ.ini","testServer");
 		if (isset($argv[1]))
 		{
   			$msg = $argv[1];
@@ -189,17 +179,6 @@ function getSong($songTitle)
         	mysqli_stmt_bind_param($insertstmt, "sss", $songTitle, $response[1], $response[2]);
         	mysqli_stmt_execute($insertstmt);
 		mysqli_stmt_close($insertstmt);
-		$insert2 = "insert into songLikesandDislike (songTitle, likes, dislikes, artist) values(?, ?, ?, ?);";
-                $insertstmt2 = mysqli_stmt_init($mydb);
-                if(!mysqli_stmt_prepare($insertstmt2, $insert2))
-                {
-                        return false;
-                        exit();
-                }
-                mysqli_stmt_bind_param($insertstmt2, "siis", $songTitle, 0, 0, $response[1]);
-                mysqli_stmt_execute($insertstmt2);
-                mysqli_stmt_close($insertstmt2);
-
 	}
 	// Returns the information of the requested song to the client in the form of an array.
 	$songdata = "select songTitle, artist, album from music where songTitle = ?;";
@@ -241,7 +220,7 @@ function getArtist($artist)
 	// Sends a client request to the dmz if there are no songs by the requested artist in the music database.
         if (mysqli_fetch_assoc($artistresult) == Null)
         {
-                $client = new rabbitMQClient("testRabbitMQ.ini","testServer");
+                $client = new rabbitMQClient("dmzRabbitMQ.ini","testServer");
                 if (isset($argv[1]))
                 {
 			$msg = $argv[1];
@@ -297,9 +276,8 @@ function getArtist($artist)
 function addLikeSong($username, $songTitle, $artist)
 {
 	global $mydb;
-	// Searches for the number of likes the requested song currently has.
-	$select = "select likes from songLikesAndDislike where songTitle = ?;";
-	$selectstmt = mysqli_stmt_init($mydb);
+	$select = "select songTitle from songLikesAndDislike where songTitle = ?;";
+        $selectstmt = mysqli_stmt_init($mydb);
         if(!mysqli_stmt_prepare($selectstmt, $select))
         {
                 return false;
@@ -310,13 +288,40 @@ function addLikeSong($username, $songTitle, $artist)
         $selectresult = mysqli_stmt_get_result($selectstmt);
         $selectassoc = mysqli_fetch_assoc($selectresult);
         mysqli_stmt_close($selectstmt);
-        if($selectassoc == Null)
+	if($selectassoc == Null)
+	{
+		$insert = "insert into songLikesAndDislike (songTitle, likes, dislikes, artist) values(?, ?, ?, ?);";
+                $insertstmt = mysqli_stmt_init($mydb);
+                if(!mysqli_stmt_prepare($insertstmt, $insert))
+                {
+                        return false;
+                        exit();
+                }
+                mysqli_stmt_bind_param($insertstmt, "siis", $songTitle, 0, 0, $artist);
+                mysqli_stmt_execute($insertstmt);
+                mysqli_stmt_close($insertstmt);
+
+	}
+	// Searches for the number of likes the requested song currently has.
+	$select2 = "select likes from songLikesAndDislike where songTitle = ?;";
+	$selectstmt2 = mysqli_stmt_init($mydb);
+        if(!mysqli_stmt_prepare($selectstmt2, $select2))
+        {
+                return false;
+                exit();
+        }
+        mysqli_stmt_bind_param($selectstmt2, "s", $songTitle);
+        mysqli_stmt_execute($selectstmt2);
+        $selectresult2 = mysqli_stmt_get_result($selectstmt2);
+        $selectassoc2 = mysqli_fetch_assoc($selectresult2);
+        mysqli_stmt_close($selectstmt2);
+        if($selectassoc2 == Null)
         {
                 return false;
                 exit();
         }
         // Updates the like counter for the requested song.
-        foreach($selectassoc as $key => $value)
+        foreach($selectassoc2 as $key => $value)
         {
 		$likesUpdated = $value+1;
 		$update = "update songLikesAndDislike set likes = ? where songTitle = ?;";
@@ -330,58 +335,56 @@ function addLikeSong($username, $songTitle, $artist)
         	mysqli_stmt_execute($updatestmt);
         	mysqli_stmt_close($updatestmt);
 	}
-	str_replace(' ', '_', $artist);
-	str_replace('/', 'slash', $artist);
 	// Selects the column to update in the userRec table based on the artist of the liked song.
-	$select2 = "select ? from userRec where username = ?;";
-        $selectstmt2 = mysqli_stmt_init($mydb);
-        if(!mysqli_stmt_prepare($selectstmt2, $select2))
+	$select3 = "select LD from userRec where username = ? and artist = ?;";
+        $selectstmt3 = mysqli_stmt_init($mydb);
+        if(!mysqli_stmt_prepare($selectstmt3, $select3))
         {
                 return false;
                 exit();
         }
-        mysqli_stmt_bind_param($selectstmt2, "ss", $artist, $username);
-        mysqli_stmt_execute($selectstmt2);
-       	$selectresult2 = mysqli_stmt_get_result($selectstmt2);
-        $selectassoc2 = mysqli_fetch_assoc($selectresult2);
-        mysqli_stmt_close($selectstmt2);
-        if($selectassoc2 == Null)
+        mysqli_stmt_bind_param($selectstmt3, "ss", $username, $artist);
+        mysqli_stmt_execute($selectstmt3);
+       	$selectresult3 = mysqli_stmt_get_result($selectstmt3);
+        $selectassoc3 = mysqli_fetch_assoc($selectresult3);
+        mysqli_stmt_close($selectstmt3);
+        if($selectassoc3 == Null)
         {
-		$alter = "alter table userRec add ? int(10) not null default 0;";
-		$alterstmt = mysqli_stmt_init($mydb);
-        	if(!mysqli_stmt_prepare($alterstmt, $alter))
+		$insert2 = "insert into userRec (username, artist) values (?, ?);";
+		$insertstmt2 = mysqli_stmt_init($mydb);
+        	if(!mysqli_stmt_prepare($insertstmt2, $insert2))
         	{
                 	return false;
                 	exit();
         	}
-        	mysqli_stmt_bind_param($alterstmt, "s", $artist);
-        	mysqli_stmt_execute($alterstmt);
-		mysqli_stmt_close($alterstmt);
-		$select2 = "select ? from userRec where username = ?;";
-        	$selectstmt2 = mysqli_stmt_init($mydb);
-        	if(!mysqli_stmt_prepare($selectstmt2, $select2))
+        	mysqli_stmt_bind_param($insertstmt2, "ss", $username, $artist);
+        	mysqli_stmt_execute($insertstmt2);
+		mysqli_stmt_close($insertstmt2);
+		$select3 = "select LD from userRec where username = ? and artist = ?;";
+        	$selectstmt3 = mysqli_stmt_init($mydb);
+        	if(!mysqli_stmt_prepare($selectstmt3, $select3))
         	{
                 	return false;
                 	exit();
         	}
-        	mysqli_stmt_bind_param($selectstmt2, "ss", $artist, $username);
-        	mysqli_stmt_execute($selectstmt2);
-        	$selectresult2 = mysqli_stmt_get_result($selectstmt2);
-        	$selectassoc2 = mysqli_fetch_assoc($selectresult2);
-        	mysqli_stmt_close($selectstmt2);
+        	mysqli_stmt_bind_param($selectstmt3, "ss", $username, $artist);
+        	mysqli_stmt_execute($selectstmt3);
+        	$selectresult3 = mysqli_stmt_get_result($selectstmt3);
+        	$selectassoc3 = mysqli_fetch_assoc($selectresult3);
+        	mysqli_stmt_close($selectstmt3);
 	}
 	// Updates the like to dislike ratio of the artist of the song this specific user liked.
-	foreach($selectassoc2 as $key => $value)
+	foreach($selectassoc3 as $key => $value)
         {
-		$ldUpdated = $value +1;
-		$update2 = "update userRec set ? = ? where username = ?;";
+		$ldUpdated = $value + 1;
+		$update2 = "update userRec set LD = ? where username = ? and artist = ?;";
                 $updatestmt2 = mysqli_stmt_init($mydb);
                 if(!mysqli_stmt_prepare($updatestmt2, $update2))
                 {
                         return false;
                         exit();
                 }
-                mysqli_stmt_bind_param($updatestmt2, "sis", $artist, $ldUpdated, $username);
+                mysqli_stmt_bind_param($updatestmt2, "iss", $ldUpdated, $username, $artist);
                 mysqli_stmt_execute($updatestmt2);
                 mysqli_stmt_close($updatestmt2);
 	}
@@ -391,8 +394,7 @@ function addLikeSong($username, $songTitle, $artist)
 function addDislikeSong($username, $songTitle, $artist)
 {
 	global $mydb;
-	// Searches for the number of dislikes the requested song currently has. 
-	$select = "select dislikes from songLikesAndDislike where songTitle = ?;";
+	$select = "select songTitle from songLikesAndDislike where songTitle = ?;";
         $selectstmt = mysqli_stmt_init($mydb);
         if(!mysqli_stmt_prepare($selectstmt, $select))
         {
@@ -406,13 +408,39 @@ function addDislikeSong($username, $songTitle, $artist)
         mysqli_stmt_close($selectstmt);
         if($selectassoc == Null)
         {
+                $insert = "insert into songLikesAndDislike (songTitle, likes, dislikes, artist) values(?, ?, ?, ?);";
+                $insertstmt = mysqli_stmt_init($mydb);
+                if(!mysqli_stmt_prepare($insertstmt, $insert))
+                {
+                        return false;
+                        exit();
+                }
+                mysqli_stmt_bind_param($insertstmt, "siis", $songTitle, 0, 0, $artist);
+		mysqli_stmt_execute($insertstmt);
+                mysqli_stmt_close($insertstmt);
+	}
+	// Searches for the number of dislikes the requested song currently has. 
+	$select2 = "select dislikes from songLikesAndDislike where songTitle = ?;";
+        $selectstmt2 = mysqli_stmt_init($mydb);
+        if(!mysqli_stmt_prepare($selectstmt2, $select2))
+        {
+                return false;
+                exit();
+        }
+        mysqli_stmt_bind_param($selectstmt2, "s", $songTitle);
+        mysqli_stmt_execute($selectstmt2);
+        $selectresult2 = mysqli_stmt_get_result($selectstmt2);
+        $selectassoc2 = mysqli_fetch_assoc($selectresult2);
+        mysqli_stmt_close($selectstmt2);
+        if($selectassoc2 == Null)
+        {
                 return false;
                 exit();
         }
         // Updates the dislike counter for the requested song.
-        foreach($selectassoc as $key => $value)
+        foreach($selectassoc2 as $key => $value)
         {
-		$dislikesUpdated = $value + 1;
+		$dislikesUpdated = $value+1;
 		$update = "update songLikesAndDislike set dislikes = ? where songTitle = ?;";
                 $updatestmt = mysqli_stmt_init($mydb);
                 if(!mysqli_stmt_prepare($updatestmt, $update))
@@ -424,58 +452,54 @@ function addDislikeSong($username, $songTitle, $artist)
                 mysqli_stmt_execute($updatestmt);
                 mysqli_stmt_close($updatestmt);
 	}
-	str_replace(' ', '_', $artist);
-	str_replace('/', 'slash', $artist);
-	// Selects the column to update in the userRec table based on the artist of the disliked song.
-	$select2 = "select ? from userRec where username = ?;";
-        $selectstmt2 = mysqli_stmt_init($mydb);
-        if(!mysqli_stmt_prepare($selectstmt2, $select2))
+	$select3 = "select LD from userRec where username = ? and artist = ?;";
+        $selectstmt3 = mysqli_stmt_init($mydb);
+        if(!mysqli_stmt_prepare($selectstmt3, $select3))
         {
                 return false;
                 exit();
         }
-        mysqli_stmt_bind_param($selectstmt2, "ss", $artist, $username);
-        mysqli_stmt_execute($selectstmt2);
-        $selectresult2 = mysqli_stmt_get_result($selectstmt2);
-        $selectassoc2 = mysqli_fetch_assoc($selectresult2);
-        mysqli_stmt_close($selectstmt2);
-        if($selectassoc2 == Null)
+        mysqli_stmt_bind_param($selectstmt3, "ss", $username, $artist);
+        mysqli_stmt_execute($selectstmt3);
+        $selectresult3 = mysqli_stmt_get_result($selectstmt3);
+        $selectassoc3 = mysqli_fetch_assoc($selectresult3);
+        mysqli_stmt_close($selectstmt3);
+        if($selectassoc3 == Null)
         {
-                $alter = "alter table userRec add ? int(10) not null default 0;";
-                $alterstmt = mysqli_stmt_init($mydb);
-                if(!mysqli_stmt_prepare($alterstmt, $alter))
+                $insert2 = "insert into userRec (username, artist) values (?, ?);";
+                $insertstmt2 = mysqli_stmt_init($mydb);
+                if(!mysqli_stmt_prepare($insertstmt2, $insert2))
                 {
                         return false;
                         exit();
                 }
-                mysqli_stmt_bind_param($alterstmt, "s", $artist);
-                mysqli_stmt_execute($alterstmt);
-                mysqli_stmt_close($alterstmt);
-                $select2 = "select ? from userRec where username = ?;";
-                $selectstmt2 = mysqli_stmt_init($mydb);
-                if(!mysqli_stmt_prepare($selectstmt2, $select2))
+		mysqli_stmt_bind_param($insertstmt2, "ss", $username, $artist);
+                mysqli_stmt_execute($insertstmt2);
+                mysqli_stmt_close($insertstmt2);
+                $select3 = "select LD from userRec where username = ? and artist = ?;";
+                $selectstmt3 = mysqli_stmt_init($mydb);
+                if(!mysqli_stmt_prepare($selectstmt3, $select3))
                 {
                         return false;
                         exit();
                 }
-                mysqli_stmt_bind_param($selectstmt2, "ss", $artist, $username);
-                mysqli_stmt_execute($selectstmt2);
-                $selectresult2 = mysqli_stmt_get_result($selectstmt2);
-                $selectassoc2 = mysqli_fetch_assoc($selectresult2);
-                mysqli_stmt_close($selectstmt2);
-
-	}
+                mysqli_stmt_bind_param($selectstmt3, "ss", $username, $artist);
+                mysqli_stmt_execute($selectstmt3);
+                $selectresult3 = mysqli_stmt_get_result($selectstmt3);
+                $selectassoc3 = mysqli_fetch_assoc($selectresult3);
+                mysqli_stmt_close($selectstmt3);
+        }        
 	// Updates the like to dislike ratio of the artist of the song this specific user disliked.
-        foreach($selectassoc as $key => $value)
+        foreach($selectassoc3 as $key => $value)
         {
                 $ldUpdated = $value-1;
-                $update2 = "update userRec set ? = ? where username = ?;";
+                $update2 = "update userRec set LD = ? where username = ? and artist = ?;";
                 $updatestmt2 = mysqli_stmt_init($mydb);
                 if(!mysqli_stmt_prepare($updatestmt2, $update2))
                 {
                         return false;
 		}
-		mysqli_stmt_bind_param($updatestmt2, "sis", $artist, $ldUpdated, $username);
+		mysqli_stmt_bind_param($updatestmt2, "iss", $ldUpdated, $username, $artist);
                 mysqli_stmt_execute($updatestmt2);
                 mysqli_stmt_close($updatestmt2);
 	}
@@ -486,7 +510,7 @@ function getRecommendation($username)
 {
 	global $mydb;
 	// Selects the like to dislike ratio of all artists for the selected user.
-        $select = "select * from userRec where username = ?;";
+        $select = "select artist, LD from userRec where username = ?;";
         $selectquery = mysqli_stmt_init($mydb);
         if(!mysqli_stmt_prepare($selectquery, $select))
         {
@@ -496,7 +520,7 @@ function getRecommendation($username)
         mysqli_stmt_bind_param($selectquery, "s", $username);
         mysqli_stmt_execute($selectquery);
 	$selectresult = mysqli_stmt_get_result($selectquery);
-	$selectassoc = mysqli_fetch_assoc($selectresult);
+	$selectassoc = mysqli_fetch_all($selectresult);
 	mysqli_stmt_close($selectquery);
         if ($selectassoc == Null)
 	{
@@ -506,17 +530,14 @@ function getRecommendation($username)
 	// Loops through the user's like to dislike ratio for each artist to see which genre has the greatest ratio.
 	$greatestRatio = -999;
 	$recArtist = "";
-	foreach($selectassoc as $key => $value)
+	foreach($selectassoc as $s)
 	{
-		if($value > $greatestRatio)
+		if($s[1] > $greatestRatio)
 		{
-			$greatestRatio = $value;
-			$recArtist = $key;
+			$greatestRatio = $s[1];
+			$recArtist = $s[0];
 		}
 	}
-	str_replace('_', ' ', $recArtist);
-	str_replace('slash', '/', $artist);
-	// Chooses a artist to recomend to the user based on which artist had the highest like to dislike ratio.
 	// Returns songs and song information of the picked genre. 
 	$rec = "select songTitle, artist, album from music where artist = ?;";
         $recquery = mysqli_stmt_init($mydb);
@@ -529,9 +550,10 @@ function getRecommendation($username)
         mysqli_stmt_execute($recquery);
         $recresult = mysqli_stmt_get_result($recquery);
 	$recfetch = mysqli_fetch_all($recresult);
+	mysqli_stmt_close($recquery);
 	return $recfetch;
 }
-           
+
 function searchUser($username)
 {
 	global $mydb;
@@ -576,7 +598,7 @@ function searchUserAll($username)
         mysqli_stmt_bind_param($selectstmt, "s", $username);
         mysqli_stmt_execute($selectstmt);
         $selectresult = mysqli_stmt_get_result($selectstmt);
-        $selectassoc = mysqli_fetch_assoc($selectresult);
+        $selectassoc = mysqli_fetch_all($selectresult);
         mysqli_stmt_close($selectstmt);
         if($selectassoc == Null)
         {
@@ -590,7 +612,7 @@ function addFriend($username, $friendusername)
 {
 	global $mydb;
 	// Checks to see if the user is already friends with the other user.
-	$select = "select username1, username2 from ? friends where username1 = ? and username2 = ?;";
+	$select = "select username1, username2 from friends where username1 = ? and username2 = ?;";
         $selectstmt = mysqli_stmt_init($mydb);
         if(!mysqli_stmt_prepare($selectstmt, $select))
         {
@@ -615,7 +637,6 @@ function addFriend($username, $friendusername)
         	mysqli_stmt_bind_param($insertstmt1, "ss", $username, $friendusername);
         	mysqli_stmt_execute($insertstmt1);
         	mysqli_stmt_close($insertstmt1);
-		return true;
 		$insert2 = "insert into friends (username1, username2) values(?, ?);";
                 $insertstmt2 = mysqli_stmt_init($mydb);
                 if(!mysqli_stmt_prepare($insertstmt2, $insert2))
@@ -638,7 +659,7 @@ function removeFriend($username, $friendusername)
 	global $mydb;
 	// Checks to see if the user the other user attempting to unfriend it friends with that user.
 	$select = "select username1, username2 from friends where username1 = ?
- and username 2 = ?;";
+ and username2 = ?;";
         $selectstmt = mysqli_stmt_init($mydb);
         if(!mysqli_stmt_prepare($selectstmt, $select))
         {
@@ -682,6 +703,25 @@ function removeFriend($username, $friendusername)
 
 }
 
+function getFriendsList($username)
+{
+	global $mydb;
+        // Selects all the friends of the specified user and returns it to the frontend.
+        $select = "select username2 from friends where username1 = ?;";
+        $selectstmt = mysqli_stmt_init($mydb);
+        if(!mysqli_stmt_prepare($selectstmt, $select))
+        {
+                return false;
+                exit();
+        }
+        mysqli_stmt_bind_param($selectstmt, "s", $username);
+        mysqli_stmt_execute($selectstmt);
+        $selectresult = mysqli_stmt_get_result($selectstmt);
+        $selectassoc = mysqli_fetch_all($selectresult);
+	mysqli_stmt_close($selectstmt);
+	return $selectassoc;
+}
+
 function getConcert($artist)
 {
 	global $mydb;
@@ -693,14 +733,14 @@ function getConcert($artist)
                 return false;
                 exit();
         }
-        mysqli_stmt_bind_param($concertquery, "s", $concertTitle);
+        mysqli_stmt_bind_param($concertquery, "s", $artist);
         mysqli_stmt_execute($concertquery);
         $concertresult = mysqli_stmt_get_result($concertquery);
         mysqli_stmt_close($concertquery);
-        if (mysqli_fetch_assoc($movieresult) == Null)
+        if (mysqli_fetch_all($concertresult) == Null)
 	{
 		// Sends a client request to the dmz if the artist was not found in the concerts database.
-                $client = new rabbitMQClient("testRabbitMQ.ini","testServer");
+                $client = new rabbitMQClient("dmzRabbitMQ.ini","testServer");
                 if (isset($argv[1]))
                 {
                         $msg = $argv[1];
@@ -723,14 +763,15 @@ function getConcert($artist)
 		// Insert the concert and concert information into the database
 		foreach($response as $concert)
 		{
-                	$insert = "insert into concerts (concertTitle, artist, location, dateAndTime) values(?,?,?,?);";
+			$date = date($concert[4]);
+                	$insert = "insert into concerts (concertTitle, artist, location, venue, date) values(?,?,?,?,?);";
                 	$insertstmt = mysqli_stmt_init($mydb);
                 	if(!mysqli_stmt_prepare($insertstmt, $insert))
                 	{
                         	return false;
                         	exit();
                 	}
-                	mysqli_stmt_bind_param($insertstmt, "ssss", $concert[0], $artist, $concert[2], $concert[3]);
+                	mysqli_stmt_bind_param($insertstmt, "sssss", $concert[0], $artist, $concert[2], $concert[3], $date);
                 	mysqli_stmt_execute($insertstmt);
 			mysqli_stmt_close($insertstmt);
 		}
@@ -746,15 +787,16 @@ function getConcert($artist)
         mysqli_stmt_bind_param($cdquery, "s", $artist);
         mysqli_stmt_execute($cdquery);
         $cdresult = mysqli_stmt_get_result($cdquery);
-        $cfetch = mysqli_fetch_all($cdresult);
+	$cfetch = mysqli_fetch_all($cdresult);
+	mysqli_stmt_close($cdquery);
         return $cfetch;
 }
 
-function addDiscussion($username, $content, $timestamp, $topic)
+function addDiscussion($username, $content)
 {
 	global $mydb;
 	// Inserts the newest discussion post into the discussion table.
-        $discussion = "insert into discussion (username, content, timestamp, postTopic) values(?, ?, ?, ?);";
+        $discussion = "insert into discussion (username, content) values(?, ?);";
 
         $discussionquery = mysqli_stmt_init($mydb);
         if(!mysqli_stmt_prepare($discussionquery, $discussion))
@@ -762,7 +804,7 @@ function addDiscussion($username, $content, $timestamp, $topic)
                 return false;
                 exit();
         }
-        mysqli_stmt_bind_param($discussionquery, "sssi", $username, $content, $timestamp, $topic);
+        mysqli_stmt_bind_param($discussionquery, "ss", $username, $content);
         mysqli_stmt_execute($discussionquery);
 	mysqli_stmt_close($discussionquery);
 	return true;
@@ -782,79 +824,72 @@ function getDiscussion()
         mysqli_stmt_execute($discussionquery);
 	$discussionresult = mysqli_stmt_get_result($discussionquery);
 	$discussionfetch = mysqli_fetch_all($discussionresult);
+	mysqli_stmt_close($discussionquery);
         return $discussionfetch;
 }
 
-function addCategory($categoryName, $description)
+function addGameScore($username, $score)
 {
 	global $mydb;
-	// Inserts the new category into the categories table.
-	$category = "insert into categroies (catName, catDescription) values(?, ?);";
-	$categoryquery = mysqli_stmt_init($mydb);
-        if(!mysqli_stmt_prepare($categoryquery, $category))
+	// Searches for the specified user in the userGame table.
+	$user = "select username from userGame where username = ?;";
+        $userquery = mysqli_stmt_init($mydb);
+        if(!mysqli_stmt_prepare($userquery, $user))
         {
                 return false;
                 exit();
         }
-        mysqli_stmt_bind_param($categoryquery, "ss", $categoryName, $description);
-        mysqli_stmt_execute($categoryquery);
-        mysqli_stmt_close($categoryquery);
+        mysqli_stmt_bind_param($userquery, "s", $username);
+        mysqli_stmt_execute($userquery);
+        $userresult = mysqli_stmt_get_result($userquery);
+        $userfetch = mysqli_fetch_assoc($userresult);
+        $mysqli_stmt_close($userquery);
+	if($userassoc == Null)
+	{
+		$insert = "insert into userGame (username) values(?);";
+
+        	$insertquery = mysqli_stmt_init($mydb);
+        	if(!mysqli_stmt_prepare($insertquery, $insert))
+        	{
+                	return false;
+                	exit();
+        	}
+        	mysqli_stmt_bind_param($insertquery, "s", $username);
+        	mysqli_stmt_execute($insertquery);
+        	mysqli_stmt_close($insertquery);
+	}
+	// Updates the quiz score of the specified user.
+        $score = "update userGame set score = ? where username = ?;";
+        $scorequery = mysqli_stmt_init($mydb);
+        if(!mysqli_stmt_prepare($scorequery, $score))
+        {
+                return false;
+                exit();
+        }
+        mysqli_stmt_bind_param($scorequery, "is", $score, $username);
+        mysqli_stmt_execute($scorequery);
+        mysqli_stmt_close($scorequery);
         return true;
 
 }
 
-function getCategories()
+function getGameScore($username)
 {
 	global $mydb;
-        // Searches for and return all categories.
-        $category = "select * from categories;";
-        $categoryquery = mysqli_stmt_init($mydb);
-        if(!mysqli_stmt_prepare($categoryquery, $category))
+	// Searches for and returns the quiz score of the specified user.
+        $score = "select score from userGame where username = ?;";
+        $scorequery = mysqli_stmt_init($mydb);
+        if(!mysqli_stmt_prepare($scorequery, $score))
         {
                 return false;
                 exit();
-        }
-        mysqli_stmt_execute($categoryquery);
-        $categoryresult = mysqli_stmt_get_result($categoryquery);
-        $categoryfetch = mysqli_fetch_all($categoryresult);
-        return $categoryfetch;
-
-}
-
-function addTopic($username, $subject, $category, $date)
-{
-	global $mydb;
-	// Inserts new topic into the topics table.
-        $topic = "insert into topics (topicSubject, topicDate, topicCat, username) values(?, ?, ?, ?);";
-        $topicquery = mysqli_stmt_init($mydb);
-        if(!mysqli_stmt_prepare($topicquery, $topic))
-        {
-                return false;
-                exit();
-        }
-        mysqli_stmt_bind_param($topicquery, "ssis", $subject, $date, $category, $username);
-        mysqli_stmt_execute($topicquery);
-        mysqli_stmt_close($topicquery);
-        return true;
-
-}
-
-function getTopics()
-{
-	global $mydb;
-        // Searches for and returns all topics.
-        $topic = "select * from topics;";
-        $topicquery = mysqli_stmt_init($mydb);
-        if(!mysqli_stmt_prepare($topicquery, $topic))
-        {
-                return false;
-                exit();
-        }
-        mysqli_stmt_execute($topicquery);
-        $topicresult = mysqli_stmt_get_result($topicquery);
-        $topicfetch = mysqli_fetch_all($topicresult);
-        return $topicfetch;
-
+	}
+	mysqli_stmt_bind_param($scorequery, "s", $username);
+        mysqli_stmt_execute($scorequery);
+        $scoreresult = mysqli_stmt_get_result($scorequery);
+	$scorefetch = mysqli_fetch_all($scoreresult);
+	mysqli_stmt_close($scorequery);
+        return $scorefetch;
 }
 
 //function sendNotification()
@@ -884,6 +919,8 @@ function requestProcessor($request)
       return searchUser($request['username']);
     case "search user all":
       return searchUserAll($request['username']);
+    case "get friends":
+      return getFriendsList($request['username']);
     case "add friend":
       return addFriend($request['username'],$request['friendusername']);
     case "remove friend":
@@ -891,7 +928,7 @@ function requestProcessor($request)
     case "concert":
       return getConcert($request['artist']);
     case "add discussion":
-      return addDiscussion($request['username'], $request['post content'], $request['timestamp'], $request['topic']);
+      return addDiscussion($request['username'], $request['msg']);
     case "get discussion":
       return getDiscussion();
     case "get notification":
@@ -901,19 +938,15 @@ function requestProcessor($request)
     case "get notification by user":
       return getNotificationByUSer($request['username']);
     case "like":
-      return addLikeSong($reuest['username'],$request['song'], $request['artist']);
+      return addLikeSong($request['username'],$request['song'], $request['artist']);
     case "dislike":
-      return addDislikeSong($reuest['username'], $request['song'], $request['artist']);
+      return addDislikeSong($request['username'], $request['song'], $request['artist']);
     case "user rec":
       return getRecomendation($request['username']);
-    case "add category":
-      return addCategory($request['cat name'], $request['description']);
-    case "get categories":
-      return getCategories();
-    case "add topic":
-      return addTopic($request['username'], $request['subject'], $request['category'],$request['date']);
-    case "get topics":
-      return getTopics();
+    case "add score":
+      return addGameScore($request['username'], $request['score']);
+    case "get score":
+      return getGameScore($request['username']);
   }
 }
 

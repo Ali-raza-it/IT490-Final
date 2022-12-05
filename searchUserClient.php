@@ -4,7 +4,7 @@ require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 
-$username = $_POST['username'];
+$username = $_GET['user'];
 
 $client = new rabbitMQClient("testRabbitMQ.ini","testServer");
 if (isset($argv[1]))
@@ -17,7 +17,7 @@ else
 }
 
 $request = array();
-$request['type'] = "search user";
+$request['type'] = "search user all";
 $request['username'] = $username;
 $request['message'] = $msg;
 $response = $client->send_request($request);
@@ -33,4 +33,3 @@ else {
   header('Location: Frontend/landing.php');
 }
 echo $argv[0]." END".PHP_EOL;
-

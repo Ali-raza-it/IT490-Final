@@ -14,8 +14,8 @@ Firewall Rules with UFW
 HTTPS: Youtube-Christian Lempa: How to create a valid self signed SSL 
 Certificate
 
-Discussion Forum: Youtube-Aaron Jack: Let's code a Forum App in 5
-minutes - HTML, CSS, and JavaScript
+Discussion Forum: code.tutsplus.com - how to create a phpmysql forum from 
+scratch
 
 Friends Databse Table: stackoverflow - BuddyList: Relational Databse 
 Table Design
@@ -24,13 +24,13 @@ Database stuff: w3schools.com/sql
 
 IT202  Bootstrap Intro Matt Toegel youtube video - youtube.com/watch?v=ct_dc99eMeE
 
-DMZ: Youtube - Roel Van de Paar: Ubuntu:  Port fowarding with UFW
+API Calls/Functions: Youtube-Coding Reflections: How to use PHP cURL to Handle JSON API Requests.
 
-profile page: youtube-dynamic webZone: profile page in HTML CSS
+Profile Page: youtube-dynamic webZone: profile page in HTML CSS
 
 Hot Standby: linuxconfig.org - How to create a hot standby with PostgreSQL
 
 Notification System: webdamm.com - Build Push Notification System with 
 PHP and MySQL
 
-https://code.tutsplus.com/tutorials/how-to-create-a-phpmysql-powered-forum-from-scratch--net-10188
+API: Rapid API: Spotify Scraper.

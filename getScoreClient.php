@@ -5,8 +5,6 @@ require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 
 $username = $_POST['username'];
-$song = $_POST['songtitle'];
-$artist = $_POST['artist'];
 
 $client = new rabbitMQClient("testRabbitMQ.ini","testServer");
 if (isset($argv[1]))
@@ -19,14 +17,13 @@ else
 }
 
 $request = array();
-$request['type'] = "like";
+$request['type'] = "get score";
 $request['username'] = $username;
-$request['song'] = $song;
-$request['artist'] = $artist; 
 $request['message'] = $msg;
 $response = $client->send_request($request);
 //$response = $client->publish($request);
 
+print_r($response);
 
 //if ($response=='true') {
   //header('Location: Frontend/landing.php');

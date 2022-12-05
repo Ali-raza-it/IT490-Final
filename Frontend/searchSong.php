@@ -1,3 +1,19 @@
+<?php
+  session_start();
+  if(!isset($_SESSION['valid']) OR $_SESSION['valid'] !== true){
+      header("location: login.php");
+      exit;
+  }
+  if(isset($_SESSION['response'])){
+      $response = $_SESSION['response'];
+      
+      $uname = $response[0];
+      $fname = $response[1];
+      $lname = $response[2];
+      $email = $response[3];
+      include "nav.php";
+  }
+?>
 <html>
 <head>
     <meta charset="utf-8">
@@ -108,18 +124,16 @@
     </style>
 </head>
 <body>
-    <script id=replace_with_navbar src=nav.js></script> 
     <div class="center">
         <h1>Search For Song<h1>
-        <form method="post" action= "../songClient.php">
+  <form method="post" action= "../songClient.php">
 
-                <div class="txt_field">
-                <input type="text" name="Search Song" id="Search Song" required>
-                <label>Song Title</label>
-		</div>
-		<input type="submit" value="Submit" name="Search Song">
-	</form>
-  <script src='app.js' type='text/javascript'></script>
+          <div class="txt_field">
+          <input type="text" name="song" id="song" required>
+          <label>Song Title</label>
+          </div>
+      <input type="submit" value="Submit" name="searchSong"></input>
+  </form>
+
 </body>
 </html>
-

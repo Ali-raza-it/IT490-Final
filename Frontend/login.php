@@ -1,10 +1,10 @@
 <html>
 <script id=replace_with_navbar src=nav.js></script>
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <title>Login Page</title>
     <style>
-    body{
+    	body{
       margin: 0;
       padding: 0;
       font-family: sans-serif;
@@ -105,14 +105,12 @@
       text-decoration: none;
       color:#9370DB;
     }
-
     </style>
 </head>
 <body>
     <div class="center">
         <h1>Login</h1>
         <form method="post" action= "../testRabbitMQClient.php">
-
                 <div class="txt_field">
                 <input type="text" name="LoginInfo" id="LoginInfo" required>
                 <label>Username or Email</label>

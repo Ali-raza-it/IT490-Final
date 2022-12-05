@@ -28,18 +28,18 @@ $response = $client->send_request($request);
 
 echo "client received response: ".PHP_EOL;
 echo "\n\n";
-echo $response;
 
 if ($response==0)
 {
   	header('Location: Frontend/login.php');
-    exit();
+    	exit();
 }
 else
 {
 	 $_SESSION['valid'] = true;
+	 $_SESSION['response'] = $response;
 	 header('Location: Frontend/landing.php');
-   exit();
+   	 exit();
 }
 
 echo $argv[0]." END".PHP_EOL;

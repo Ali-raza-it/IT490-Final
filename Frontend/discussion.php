@@ -7,20 +7,7 @@ session_start()
 
 ?>
 <body>
-<div id="userbar">
-    <?php
-    $username=$_SESSION["username"];
-
-    if($_SESSION['valid']==1)
-    {
-        echo 'Hello' . $_SESSION['username'] . '. Not you? <a href="logout.php">Sign out</a>';
-    }
-    else
-    {
-        echo '<a href="register.php">Sign in</a> or <a href="sign up">create an account</a>.';
-    }
-
-?>  
+  <script id=replace_with_navbar src=nav.js></script>
 </div> 
   <div class="top-bar">
       <h1>
