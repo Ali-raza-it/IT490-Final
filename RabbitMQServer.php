@@ -928,7 +928,7 @@ function requestProcessor($request)
     case "concert":
       return getConcert($request['artist']);
     case "add discussion":
-      return addDiscussion($request['username'], $request['msg'], $request['parentComment']);
+      return addDiscussion($request['username'], $request['content'], $request['parentComment']);
     case "get discussion":
       return getDiscussion();
     case "get notification":

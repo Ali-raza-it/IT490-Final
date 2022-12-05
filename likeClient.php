@@ -4,7 +4,7 @@ require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 
-$username = $_POST['username'];
+$username = $_SESSION['username'];
 $song = $_POST['songtitle'];
 $artist = $_POST['artist'];
 
