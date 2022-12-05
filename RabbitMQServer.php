@@ -550,6 +550,7 @@ function getRecommendation($username)
         mysqli_stmt_execute($recquery);
         $recresult = mysqli_stmt_get_result($recquery);
 	$recfetch = mysqli_fetch_all($recresult);
+	mysqli_stmt_close($recquery);
 	return $recfetch;
 }
 
@@ -702,6 +703,25 @@ function removeFriend($username, $friendusername)
 
 }
 
+function getFriendsList($username)
+{
+	global $mydb;
+        // Selects all the friends of the specified user and returns it to the frontend.
+        $select = "select username2 from friends where username1 = ?;";
+        $selectstmt = mysqli_stmt_init($mydb);
+        if(!mysqli_stmt_prepare($selectstmt, $select))
+        {
+                return false;
+                exit();
+        }
+        mysqli_stmt_bind_param($selectstmt, "s", $username);
+        mysqli_stmt_execute($selectstmt);
+        $selectresult = mysqli_stmt_get_result($selectstmt);
+        $selectassoc = mysqli_fetch_all($selectresult);
+	mysqli_stmt_close($selectstmt);
+	return $selectassoc;
+}
+
 function getConcert($artist)
 {
 	global $mydb;
@@ -767,7 +787,8 @@ function getConcert($artist)
         mysqli_stmt_bind_param($cdquery, "s", $artist);
         mysqli_stmt_execute($cdquery);
         $cdresult = mysqli_stmt_get_result($cdquery);
-        $cfetch = mysqli_fetch_all($cdresult);
+	$cfetch = mysqli_fetch_all($cdresult);
+	mysqli_stmt_close($cdquery);
         return $cfetch;
 }
 
@@ -803,9 +824,73 @@ function getDiscussion()
         mysqli_stmt_execute($discussionquery);
 	$discussionresult = mysqli_stmt_get_result($discussionquery);
 	$discussionfetch = mysqli_fetch_all($discussionresult);
+	mysqli_stmt_close($discussionquery);
         return $discussionfetch;
 }
 
+function addGameScore($username, $score)
+{
+	global $mydb;
+	// Searches for the specified user in the userGame table.
+	$user = "select username from userGame where username = ?;";
+        $userquery = mysqli_stmt_init($mydb);
+        if(!mysqli_stmt_prepare($userquery, $user))
+        {
+                return false;
+                exit();
+        }
+        mysqli_stmt_bind_param($userquery, "s", $username);
+        mysqli_stmt_execute($userquery);
+        $userresult = mysqli_stmt_get_result($userquery);
+        $userfetch = mysqli_fetch_assoc($userresult);
+        $mysqli_stmt_close($userquery);
+	if($userassoc == Null)
+	{
+		$insert = "insert into userGame (username) values(?);";
+
+        	$insertquery = mysqli_stmt_init($mydb);
+        	if(!mysqli_stmt_prepare($insertquery, $insert))
+        	{
+                	return false;
+                	exit();
+        	}
+        	mysqli_stmt_bind_param($insertquery, "s", $username);
+        	mysqli_stmt_execute($insertquery);
+        	mysqli_stmt_close($insertquery);
+	}
+	// Updates the quiz score of the specified user.
+        $score = "update userGame set score = ? where username = ?;";
+        $scorequery = mysqli_stmt_init($mydb);
+        if(!mysqli_stmt_prepare($scorequery, $score))
+        {
+                return false;
+                exit();
+        }
+        mysqli_stmt_bind_param($scorequery, "is", $score, $username);
+        mysqli_stmt_execute($scorequery);
+        mysqli_stmt_close($scorequery);
+        return true;
+
+}
+
+function getGameScore($username)
+{
+	global $mydb;
+	// Searches for and returns the quiz score of the specified user.
+        $score = "select score from userGame where username = ?;";
+        $scorequery = mysqli_stmt_init($mydb);
+        if(!mysqli_stmt_prepare($scorequery, $score))
+        {
+                return false;
+                exit();
+	}
+	mysqli_stmt_bind_param($scorequery, "s", $username);
+        mysqli_stmt_execute($scorequery);
+        $scoreresult = mysqli_stmt_get_result($scorequery);
+	$scorefetch = mysqli_fetch_all($scoreresult);
+	mysqli_stmt_close($scorequery);
+        return $scorefetch;
+}
 
 //function sendNotification()
 //{
@@ -834,6 +919,8 @@ function requestProcessor($request)
       return searchUser($request['username']);
     case "search user all":
       return searchUserAll($request['username']);
+    case "get friends":
+      return getFriendsList($request['username']);
     case "add friend":
       return addFriend($request['username'],$request['friendusername']);
     case "remove friend":
@@ -856,7 +943,10 @@ function requestProcessor($request)
       return addDislikeSong($request['username'], $request['song'], $request['artist']);
     case "user rec":
       return getRecomendation($request['username']);
-    case "add category":
+    case "add score":
+      return addGameScore($request['username'], $request['score']);
+    case "get score":
+      return getGameScore($request['username']);
   }
 }
 
