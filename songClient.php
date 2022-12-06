@@ -24,24 +24,8 @@ $request['message'] = $msg;
 $response = $client->send_request($request);
 //$response = $client->publish($request);
 
+$_SESSION['songData'] = $response;
 
-if ($response!==0) 
-{
-	echo "<table style='width:100%'>";
-        echo " <tr>";
-        echo "  <th>Song Name</th>";
-        echo "  <th>Artist Name</th>";
-	echo "  <th>Album Name</th>";
-	echo "  <th>Like Song</th>";
-	echo "  <th>Dislike Song</th>";
-        echo " </tr>";
-        echo " <tr>";
-        echo "  <td>".$response[0]."</td>";
-        echo "  <td>".$response[1]."</td>";
-	echo "  <td>".$response[2]."</td>";
-	echo "  <td> </td>";
-	echo "  <td> </td>";
-        echo " </tr>";
-        echo "</table>";
+header("location: Frontend/searchArtist.php");
 
-}
+?>

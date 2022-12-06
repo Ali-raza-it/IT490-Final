@@ -13,6 +13,16 @@
       $email = $response[3];
       include "nav.php";
   }
+
+  if(isset($_SESSION['songData'])){
+	$Data = $_SESSION['songData'];
+	
+	$songName = $Data[0];
+	$artName = $Data[1];
+	$albName = $Data[2];
+	
+	unset($_SESSION['artistData']);
+}
 ?>
 <html>
 <head>
