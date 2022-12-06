@@ -17,7 +17,7 @@ else
 }
 
 $request = array();
-$request['type'] = "get recomendation";
+$request['type'] = "get friends";
 $request['username'] = $username;
 $request['message'] = $msg;
 $response = $client->send_request($request);
