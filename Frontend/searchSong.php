@@ -21,7 +21,7 @@
 	$artName = $Data[1];
 	$albName = $Data[2];
 	
-	unset($_SESSION['artistData']);
+	unset($_SESSION['songData']);
 }
 ?>
 <html>
