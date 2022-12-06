@@ -175,11 +175,15 @@
 	<th>Song Title:</th>
 	<th>Artist Name:</th>
 	<th>Album Name:</th>
+	<th>Like</th>
+	<th>Dislike</th>
 	</tr>
 	<tr>
 	<td><?php echo $songName;?></td>
         <td><?php echo $artName;?></td>
-        <td><?php echo $albName;?></td>
+	<td><?php echo $albName;?></td>
+	<td><button type="button" action="../likeClient.php"> Like </button></td>
+	<td><button type="button" action="../dislikeClient.php"> Dislike </button></td>
         </tr>
 	</table>
 
