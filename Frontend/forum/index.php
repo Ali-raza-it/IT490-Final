@@ -1,4 +1,20 @@
-<!DOCTYPE html>
+<?php
+  session_start();
+  if(!isset($_SESSION['valid']) OR $_SESSION['valid'] !== true){
+      header("location: login.php");
+      exit;
+  }
+  if(isset($_SESSION['response'])){
+      $response = $_SESSION['response'];
+      
+      $uname = $response[0];
+      $fname = $response[1];
+      $lname = $response[2];
+      $email = $response[3];
+      include "nav.php";
+  }
+?>
+
 <html>
 <head>
 <link rel="icon" href="./images/favicon.png" type="image/png" sizes="16x16">
@@ -25,7 +41,7 @@
         <form name="frm1" method="post">
             <input type="hidden" id="commentid" name="Rcommentid">
         	<div class="form-group">
-        	  <label for="usr">Write your name:</label>
+        	  <label for="usr">Write your name: <?php echo $uname; ?> </label>
         	  <input type="text" class="form-control" name="Rname" required>
         	</div>
             <div class="form-group">
