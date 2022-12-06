@@ -56,14 +56,9 @@
         <form name="frm1" method="post">
             <input type="hidden" id="commentid" name="Rcommentid">
         	<div class="form-group">
-<<<<<<< HEAD
             
-            <input type="hidden" class="form-control" name="Rname" value ="<?php echo $uname ?>">
+          <input type="hidden" class="form-control" name="Rname" value ="<?php echo $uname ?>">
 
-=======
-        	  <label for="usr">Write your name: <?php echo $uname; ?> </label>
-        	  <input type="text" class="form-control" name="Rname" required>
->>>>>>> refs/remotes/origin/main
         	</div>
             <div class="form-group">
               <label for="comment">Write your reply:</label>
