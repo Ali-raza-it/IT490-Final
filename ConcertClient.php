@@ -1,6 +1,5 @@
 #!/usr/bin/php
 <?php
-@ob_end_clean();
 require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
@@ -27,25 +26,14 @@ $response = $client->send_request($request);
 
 if ($response!==0)) 
 {
-	echo "<table style='width:100%'>";
-        echo " <tr>";
-        echo "  <th>Concert Name</th>";
-        echo "  <th>Artist Name</th>";
-        echo "  <th>Location</th>";
-        echo "  <th>Date and Time</th>";
-        echo "  <th>Venue</th>";
-	echo " </tr>";
-	foreach($response as $concert)
-	{
-        	echo " <tr>";
-        	echo "  <td>".$concert[0]."</td>";
-        	echo "  <td>".$concert[1]."</td>";
-        	echo "  <td>".$concert[2]."</td>";
-        	echo "  <td>".$concert[3]."</td>";
-        	echo "  <td>".$concert[4]."</td>";
-		echo " </tr>";
-	}
-        echo "</table>";
-
+	$_SESSION['concertData'] = $response;
+      	header("location: Frontend/searchConcert.php");
+      	exit;
 }
+else
+{
+        header("location: Frontend/searchConcert.php");
+        exit;
+}
+
 

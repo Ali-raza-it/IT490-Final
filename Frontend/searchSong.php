@@ -176,6 +176,12 @@
 	<th>Artist Name:</th>
 	<th>Album Name:</th>
 	</tr>
+	<tr>
+	<td><?php echo $songName;?></td>
+        <td><?php echo $artName;?></td>
+        <td><?php echo $albName;?></td>
+        </tr>
+	</table>
 
 </body>
 </html>

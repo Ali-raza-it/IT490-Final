@@ -13,11 +13,18 @@
       $email = $response[3];
       include "nav.php";
   }
+
+  if(isset($_SESSION['recData'])){
+        $Data = $_SESSION['recData'];
+
+        unset($_SESSION['recData']);
+}
+
 ?>
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Search for Song</title>
+    <title>Recommendation</title>
     <style>
     body{
       margin: 0;
@@ -32,7 +39,8 @@
       top: 50%;
       left:50%;
       transform: translate(-50%, -50%);
-      width: 400px;
+      margin-left: auto;
+      margin-right: auto;
       background: white;
       border-radius: 10px;
       box-shadow: 20px 20px 50px grey;
@@ -120,6 +128,30 @@
       text-decoration: none;
       color:#9370DB;
     }
+    #tabledata {
+      font-family: Arial, Helvetica, sans-serif;
+      border-collapse: collapse;
+      width: 90%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    #tabledata td, #tabledata th {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+
+    #tabledata tr:nth-child(even){background-color: #f2f2f2;}
+
+    #tabledata tr:hover {background-color: #ddd;}
+
+    #tabledata th {
+      padding-top: 12px;
+      padding-bottom: 12px;
+      text-align: left;
+      background-color: #bb99ff;
+      color: white;
+    }
+
 
     </style>
 </head>
@@ -129,6 +161,27 @@
   <form method="post" action= "../recClient.php">
       <input type="submit" value="Submit" name="get recommendation"></input>
   </form>
+
+	<table id="tabledata">
+        <tr>
+        <th>Song Title:</th>
+        <th>Artist Name:</th>
+        <th>Albim Name:</th>
+        </tr>
+        <?php 
+        foreach($Data as $song)
+        {
+        ?>
+        <tr>
+        <td><?php echo $song[0];?></td>
+        <td><?php echo $song[1];?></td>
+        <td><?php echo $song[2];?></td>
+        </tr>
+        <?php
+        }
+        ?>
+        </table>
+
 
 </body>
 </html>

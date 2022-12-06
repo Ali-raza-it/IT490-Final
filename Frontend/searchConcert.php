@@ -13,6 +13,13 @@
       $email = $response[3];
       include "nav.php";
   }
+
+  if(isset($_SESSION['concertData'])){
+      $Data = $_SESSION['concertData'];
+
+      unset($_SESSION['concertData']);
+  }
+
 ?>
 <html>
 <head>
@@ -168,6 +175,21 @@
 	<th>Venue:</th>
 	<th>Date:</th>
 	</tr>
+	<?php
+        foreach($Data as $concert)
+	{
+  	?>
+	<td><?php echo $concert[0];?></td>
+        <td><?php echo $concert[1];?></td>
+        <td><?php echo $concert[2];?></td>
+	<td><?php echo $concert[3];?></td>
+	<td><?php echo $concert[4];?></td>
+	</tr>
+	<?php 
+	}
+	?>
+	</table>
+
 </body>
 </html>
 

@@ -23,15 +23,15 @@ $request['message'] = $msg;
 $response = $client->send_request($request);
 //$response = $client->publish($request);
 
-echo "client received response: ".PHP_EOL;
-print_r($response);
-echo "\n\n";
-
-//if ($response=='true') {
-  //header('Location: Frontend/landing.php');
-//}
-//else {
-  //header('Location: Frontend/login.php');
-//}
-echo $argv[0]." END".PHP_EOL;
+if($response!==0)
+{
+	$_SESSION['recData'] = $response;
+	header("location: Frontend/userRec.php");
+        exit;
+}
+else
+{
+	header("location: Frontend/userRec.php");
+        exit;
+}
 

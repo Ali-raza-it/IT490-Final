@@ -1,23 +1,5 @@
 #!/usr/bin/php
-@ob_end_clean();
 <?php
-session_start();
-  if(!isset($_SESSION['valid']) OR $_SESSION['valid'] !== true){
-      header("location: login.php");
-      exit;
-  }
-  if(isset($_SESSION['response'])){
-      $rep = $_SESSION['response'];
-
-      $uname = $rep[0];
-      $fname = $rep[1];
-      $lname = $rep[2];
-      $email = $rep[3];
-      include "nav.php";
-  }
-
-
-
 require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
@@ -40,10 +22,17 @@ $request['artist'] = $artist;
 $request['message'] = $msg;
 $response = $client->send_request($request);
 
-$_SESSION['artistData'] = $response;
-
-      header("location: Frontend/searchArtist.php");
-      exit;
+if($response!==0)
+{
+	$_SESSION['artistData'] = $response;
+	header("location: Frontend/searchArtist.php");
+        exit;
+}
+else
+{
+        header("location: Frontend/searchArtist.php");
+        exit;
+}
 
 ?>
 

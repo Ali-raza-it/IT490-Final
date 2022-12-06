@@ -186,7 +186,7 @@
 	<td><?php echo $artList;?></td>
 	<td><?php echo $artWR;?></td>
 	</tr>
-	
+	</table>
 	
 	
 </body>
