@@ -24,36 +24,18 @@ $request['message'] = $msg;
 $response = $client->send_request($request);
 //$response = $client->publish($request);
 
-
-if ($response!==0) 
-{
-	echo "<table style='width:100%'>";
-	echo " <tr>";
-	echo "  <th>Artist Name</th>";
-	echo "  <th>Followers</th>";
-	echo "  <th>Montly Listeners</th>";
-	echo "  <th>World Rank</th>";
-	echo " </tr>";
-	echo " <tr>";
-	echo "  <td>".$response[0]."</td>";
-	echo "  <td>".$response[1]."</td>";
-	echo "  <td>".$response[2]."</td>";
-	echo "  <td>".$response[3]."</td>";
-	echo " </tr>";
-	echo "</table>";
-}
 session_start();
   if(!isset($_SESSION['valid']) OR $_SESSION['valid'] !== true){
       header("location: login.php");
       exit;
   }
   if(isset($_SESSION['response'])){
-      $response = $_SESSION['response'];
+      $rep = $_SESSION['response'];
 
-      $uname = $response[0];
-      $fname = $response[1];
-      $lname = $response[2];
-      $email = $response[3];
+      $uname = $rep[0];
+      $fname = $rep[1];
+      $lname = $rep[2];
+      $email = $rep[3];
       include "nav.php";
   }
 
@@ -70,6 +52,12 @@ session_start();
       background: linear-gradient(120deg, #9370DB,#E6E6FA);
       height: 100vh;
       overflow: hidden;
+    }
+    table {
+        width: 100;
+        margin: 0 auto;
+        font-size: large;
+        border: 1px solid black;
     }
     .center{
       position: absolute;
@@ -176,7 +164,29 @@ input[type="submit"]:hover{
                 <label>Artist</label>
                 </div>
                 <input type="submit" value="Submit" name="Search Artist">
-        </form>
+	</form>
+        
+     <?php
+     if ($response!==0)
+     {
+     ?>
+        <table>
+           	<tr>
+                	<th>Artist Name</th>
+                	<th>Followers</th>
+                	<th>Montly Listeners</th>"
+                	<th>World Rank</th>
+               </tr>
+               <tr>;
+               		<td><?php echo $response[0];?></td>
+                        <td><?php echo $response[1];?></td>
+			<td><?php echo $response[2];?></td>
+			<td><?php echo $response[3];?>"</td>
+               </tr>";
+	</table>
+      <?php
+      }
+      ?>
 </body>
 </html>
 

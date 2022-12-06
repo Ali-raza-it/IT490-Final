@@ -5,7 +5,7 @@ require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 
 $name = $_SESSION['username'];
-$content = $_POST['content'];
+$content = $_POST['msg'];
 $parent = $_POST['parentComment'];
 
 
