@@ -822,68 +822,24 @@ function addDiscussion($parent, $username, $post)
 
 }
 
-function addGameScore($username, $score)
+function getConcertVideo($video)
 {
-	global $mydb;
-	// Searches for the specified user in the userGame table.
-	$user = "select username from userGame where username = ?;";
-        $userquery = mysqli_stmt_init($mydb);
-        if(!mysqli_stmt_prepare($userquery, $user))
+	$client = new rabbitMQClient("dmzRabbitMQ.ini","testServer");
+        if (isset($argv[1]))
         {
-                return false;
-                exit();
-        }
-        mysqli_stmt_bind_param($userquery, "s", $username);
-        mysqli_stmt_execute($userquery);
-        $userresult = mysqli_stmt_get_result($userquery);
-        $userfetch = mysqli_fetch_assoc($userresult);
-        $mysqli_stmt_close($userquery);
-	if($userassoc == Null)
-	{
-		$insert = "insert into userGame (username) values(?);";
-
-        	$insertquery = mysqli_stmt_init($mydb);
-        	if(!mysqli_stmt_prepare($insertquery, $insert))
-        	{
-                	return false;
-                	exit();
-        	}
-        	mysqli_stmt_bind_param($insertquery, "s", $username);
-        	mysqli_stmt_execute($insertquery);
-        	mysqli_stmt_close($insertquery);
+        	$msg = $argv[1];
 	}
-	// Updates the quiz score of the specified user.
-        $score = "update userGame set score = ? where username = ?;";
-        $scorequery = mysqli_stmt_init($mydb);
-        if(!mysqli_stmt_prepare($scorequery, $score))
+	else
         {
-                return false;
-                exit();
-        }
-        mysqli_stmt_bind_param($scorequery, "is", $score, $username);
-        mysqli_stmt_execute($scorequery);
-        mysqli_stmt_close($scorequery);
-        return true;
-
-}
-
-function getGameScore($username)
-{
-	global $mydb;
-	// Searches for and returns the quiz score of the specified user.
-        $score = "select score from userGame where username = ?;";
-        $scorequery = mysqli_stmt_init($mydb);
-        if(!mysqli_stmt_prepare($scorequery, $score))
-        {
-                return false;
-                exit();
+                $msg = "test message";
 	}
-	mysqli_stmt_bind_param($scorequery, "s", $username);
-        mysqli_stmt_execute($scorequery);
-        $scoreresult = mysqli_stmt_get_result($scorequery);
-	$scorefetch = mysqli_fetch_all($scoreresult);
-	mysqli_stmt_close($scorequery);
-        return $scorefetch;
+        $request = array();
+        $request['type'] = "concertvideoapi";
+        $request['video'] = $video;
+        $request['message'] = $msg;
+        $response = $client->send_request($request);
+	return $response;
+
 }
 
 //function sendNotification()
@@ -935,10 +891,8 @@ function requestProcessor($request)
       return addDislikeSong($request['username'], $request['song'], $request['artist']);
     case "user rec":
       return getRecommendation($request['username']);
-    case "add score":
-      return addGameScore($request['username'], $request['score']);
-    case "get score":
-      return getGameScore($request['username']);
+    case "concert video":
+      return getConcertVideo($request['video']);
   }
 }
 

@@ -36,6 +36,7 @@
       <li><a href="/Frontend/searchConcert.php">Search Concerts</a></li>
       <li><a href="/Frontend/searchSong.php">Search Songs</a></li>
       <li><a href="/Frontend/searchArtist.php">Search Artists</a></li>
+      <li><a href="/Frontend/concertVideo.php">Concert Videos</a></li>
       <li><a href="/Frontend/userRec.php">Recommendations</a></li>
       <li><a href="/Frontend/forum/index.php">Discussion Forum</a></li>
     </ul>

@@ -143,6 +143,47 @@ function searchConcerts($artist)
         }
 }
 
+function searchConcertVideo($video)
+{
+	$newVideo = str_replace(" ", "%20", $video);
+        $curl = curl_init();
+        curl_setopt_array($curl, [CURLOPT_URL => "https://youtube-media-downloader.p.rapidapi.com/v2/search/videos?keyword=$newVideo", CURLOPT_RETURNTRANSFER => true, CURLOPT_FOLLOWLOCATION => true, CURLOPT_ENCODING => "", CURLOPT_MAXREDIRS => 10, CURLOPT_TIMEOUT => 30, CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1, CURLOPT_CUSTOMREQUEST => "GET", CURLOPT_HTTPHEADER => ["X-RapidAPI-Host: youtube-media-downloader.p.rapidapi.com","X-RapidAPI-Key: 147e6c149emsha489899b80761adp17daebjsne9c296bf864a"],]);
+
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
+
+        curl_close($curl);
+
+        if ($err)
+        {
+                echo "cURL Error #:" . $err;
+	}
+	else
+	{
+		$decoded = json_decode($response, true);
+		$videoID = $decoded['items'][0]['id'];
+		$curl2 = curl_init();
+        	curl_setopt_array($curl2, [CURLOPT_URL => "https://youtube-media-downloader.p.rapidapi.com/v2/video/details?videoId=$videoID", CURLOPT_RETURNTRANSFER => true, CURLOPT_FOLLOWLOCATION => true, CURLOPT_ENCODING => "", CURLOPT_MAXREDIRS => 10, CURLOPT_TIMEOUT => 30, CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1, CURLOPT_CUSTOMREQUEST => "GET", CURLOPT_HTTPHEADER => ["X-RapidAPI-Host: youtube-media-downloader.p.rapidapi.com","X-RapidAPI-Key: 147e6c149emsha489899b80761adp17daebjsne9c296bf864a"],]);
+
+        	$response2 = curl_exec($curl2);
+        	$err2 = curl_error($curl2);
+
+		curl_close($curl2);
+
+		if ($err2)
+        	{
+                	echo "cURL Error #:" . $err2;
+        	}
+        	else
+        	{
+			$decoded2 = json_decode($response2, true);
+			$concertURL = $decoded2['videos']['items'][0]['url'];
+			return $concertURL;
+		}
+	}
+
+}
+
 function requestProcessor($request)
 {
   echo "received request".PHP_EOL;
@@ -159,6 +200,8 @@ function requestProcessor($request)
       return searchArtist($request['artist']);
     case "concertapi":
       return searchConcerts($request['artist']);
+    case "concertvideoapi":
+      return searchConcertVideo($request['video']);
   }
 }
 
