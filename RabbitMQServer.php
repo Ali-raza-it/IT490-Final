@@ -792,11 +792,11 @@ function getConcert($artist)
         return $cfetch;
 }
 
-function addDiscussion($name, $reply, $parent)
+function addDiscussion($parent, $username, $post)
 {
 	global $mydb;
 	// Inserts the newest discussion post into the discussion table.
-        $discussion = "insert into discussion (username, content, parentComment) values(?, ?, ?);";
+        $discussion = "insert into discussion (id, parent_comment, username, post) values(?, ?, ?, ?);";
 
         $discussionquery = mysqli_stmt_init($mydb);
         if(!mysqli_stmt_prepare($discussionquery, $discussion))
@@ -804,28 +804,22 @@ function addDiscussion($name, $reply, $parent)
                 return false;
                 exit();
         }
-        mysqli_stmt_bind_param($discussionquery, "sss", $username, $content. $parentComment);
+        mysqli_stmt_bind_param($discussionquery, "isss", $id, $parentcomment, $username, $post);
         mysqli_stmt_execute($discussionquery);
 	mysqli_stmt_close($discussionquery);
-	return true;
-}
-
-function getDiscussion()
-{
-	global $mydb;
-        // Searches for and returns all discussion posts.
-        $discussion = "select * from discussion;";
-        $discussionquery = mysqli_stmt_init($mydb);
-        if(!mysqli_stmt_prepare($discussionquery, $discussion))
+	$discussion2 = "select * from discussion;";
+        $discussionquery2 = mysqli_stmt_init($mydb);
+        if(!mysqli_stmt_prepare($discussionquery2, $discussion2))
         {
                 return false;
                 exit();
         }
-        mysqli_stmt_execute($discussionquery);
-	$discussionresult = mysqli_stmt_get_result($discussionquery);
-	$discussionfetch = mysqli_fetch_all($discussionresult);
-	mysqli_stmt_close($discussionquery);
+        mysqli_stmt_execute($discussionquery2);
+        $discussionresult = mysqli_stmt_get_result($discussionquery2);
+        $discussionfetch = mysqli_fetch_all($discussionresult);
+        mysqli_stmt_close($discussionquery2);
         return $discussionfetch;
+
 }
 
 function addGameScore($username, $score)
@@ -928,9 +922,7 @@ function requestProcessor($request)
     case "concert":
       return getConcert($request['artist']);
     case "add discussion":
-      return addDiscussion($request['username'], $request['content'], $request['parentComment']);
-    case "get discussion":
-      return getDiscussion();
+      return addDiscussion($request['parent'], $request['username'], $request['post']);
     case "get notification":
       return sendNotification();
     case "update notification":
@@ -942,7 +934,7 @@ function requestProcessor($request)
     case "dislike":
       return addDislikeSong($request['username'], $request['song'], $request['artist']);
     case "user rec":
-      return getRecomendation($request['username']);
+      return getRecommendation($request['username']);
     case "add score":
       return addGameScore($request['username'], $request['score']);
     case "get score":
