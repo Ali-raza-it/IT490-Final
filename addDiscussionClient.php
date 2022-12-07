@@ -5,8 +5,9 @@ require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 
 $name = $_SESSION['name'];
-$content = $_POST['msg'];
-$parent = $_POST['commentid'];
+$reply = $_POST['commentid'];
+$parent = $_POST['messageone'];
+
 
 
 $client = new rabbitMQClient("testRabbitMQ.ini","testServer");
@@ -22,16 +23,15 @@ else
 $request = array();
 $request['type'] = "add discussion";
 $request['username'] = $name;
-$request['content'] = $content;
+$request['content'] = $reply;
 $request['parentComent'] = $parent;
 $request['msg'] = $msg; 
 $response = $client->send_request($request);
 //$response = $client->publish($request);
 
-
-//if ($response=='true') {
-  //header('Location: Frontend/landing.php');
-//}
+if ($response=='true') {
+  header('Location: Frontend/forum/index.php');
+}
 //else {
   //header('Location: Frontend/login.php');
 //}
