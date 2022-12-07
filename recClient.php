@@ -1,10 +1,10 @@
 #!/usr/bin/php
 <?php
-session_start();
+//session_start();
   if(!isset($_SESSION['valid']) OR $_SESSION['valid'] !== true){
       header("location: login.php");
       exit;
-  }
+ }
   if(isset($_SESSION['response'])){
       $rep = $_SESSION['response'];
 
@@ -19,10 +19,6 @@ require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 5b505c038bdb1c7c82b9312d85904aaed2ac9fff
 $client = new rabbitMQClient("testRabbitMQ.ini","testServer");
 if (isset($argv[1]))
 {
@@ -34,16 +30,11 @@ else
 }
 
 $request = array();
-<<<<<<< HEAD
-$request['type'] = "get recomendation";
-=======
 $request['type'] = "user rec";
->>>>>>> 5b505c038bdb1c7c82b9312d85904aaed2ac9fff
 $request['username'] = $uname;
 $request['message'] = $msg;
 $response = $client->send_request($request);
 //$response = $client->publish($request);
-
 
 $_SESSION['recData'] = $response;
 
