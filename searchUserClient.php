@@ -1,5 +1,6 @@
 #!/usr/bin/php
 <?php
+  session_start();
 require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
@@ -23,13 +24,8 @@ $request['message'] = $msg;
 $response = $client->send_request($request);
 //$response = $client->publish($request);
 
-echo "client received response: ".PHP_EOL;
-echo "\n\n";
+$_SESSION['userSearched'] = $response;
 
-if ($response==1) {
-  header('Location: Frontend/Profile.html');
-}
-else {
-  header('Location: Frontend/landing.php');
-}
+header('Location: Frontend/SearchedProfile.php');
+
 echo $argv[0]." END".PHP_EOL;

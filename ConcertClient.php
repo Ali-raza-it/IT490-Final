@@ -1,10 +1,11 @@
 #!/usr/bin/php
 <?php
+session_start();
 require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 
-$artist = $_POST['Search Artist'];
+$artist = $_POST['artist'];
 
 $client = new rabbitMQClient("testRabbitMQ.ini","testServer");
 if (isset($argv[1]))

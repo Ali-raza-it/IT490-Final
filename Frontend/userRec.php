@@ -17,7 +17,7 @@
   if(isset($_SESSION['recData'])){
         $Data = $_SESSION['recData'];
 
-        unset($_SESSION['recData']);
+        var_dump($Data);
 }
 
 ?>
@@ -177,7 +177,7 @@
         <td><?php echo $song[1];?></td>
         <td><?php echo $song[2];?></td>
         </tr>
-        <?php
+        <?php unset($_SESSION['recData']);
         }
         ?>
         </table>
