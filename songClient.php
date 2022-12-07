@@ -26,7 +26,7 @@ $response = $client->send_request($request);
 if($response!==0)
 {
 	$_SESSION['songData'] = $response;
-	header("location: Frontend/searchArtist.php");
+	header("location: Frontend/searchSong.php");
 	exit;
 }
 ?>
