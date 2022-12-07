@@ -23,15 +23,8 @@ $request['message'] = $msg;
 $response = $client->send_request($request);
 //$response = $client->publish($request);
 
-if($response!==0)
-{
-	$_SESSION['recData'] = $response;
+$_SESSION['recData'] = $response;
 	header("location: Frontend/userRec.php");
         exit;
-}
-else
-{
-	header("location: Frontend/userRec.php");
-        exit;
-}
+
 

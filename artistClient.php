@@ -22,17 +22,9 @@ $request['artist'] = $artist;
 $request['message'] = $msg;
 $response = $client->send_request($request);
 
-if($response!==0)
-{
-	$_SESSION['artistData'] = $response;
+$_SESSION['artistData'] = $response;
 	header("location: Frontend/searchArtist.php");
         exit;
-}
-else
-{
-        header("location: Frontend/searchArtist.php");
-        exit;
-}
 
 ?>
 
