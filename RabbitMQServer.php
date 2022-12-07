@@ -792,7 +792,7 @@ function getConcert($artist)
         return $cfetch;
 }
 
-function addDiscussion($username, $content, $parentComment)
+function addDiscussion($name, $reply, $parent)
 {
 	global $mydb;
 	// Inserts the newest discussion post into the discussion table.
