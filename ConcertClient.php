@@ -24,7 +24,7 @@ $response = $client->send_request($request);
 //$response = $client->publish($request);
 
 
-if ($response!==0)) 
+if ($response!==0)
 {
 	$_SESSION['concertData'] = $response;
       	header("location: Frontend/searchConcert.php");
