@@ -30,22 +30,7 @@
 <!-- Modal -->
 <div id="ReplyModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
-  <?php
-  session_start();
-  if(!isset($_SESSION['valid']) OR $_SESSION['valid'] !== true){
-      header("location: ../login.php");
-      exit;
-  }
-  if(isset($_SESSION['response'])){
-      $response = $_SESSION['response'];
-      
-      $uname = $response[0];
-      $fname = $response[1];
-      $lname = $response[2];
-      $email = $response[3];
 
-  }
-  ?>
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
@@ -53,7 +38,7 @@
         <h4 class="modal-title">Reply Question</h4>
       </div>
       <div class="modal-body">
-        <form name="frm1" method="post">
+        <form name="frm1" method="post" action="/addDiscussionClient.php">
             <input type="hidden" id="commentid" name="Rcommentid">
         	<div class="form-group">
             
@@ -78,7 +63,7 @@
   <div class="panel-body">
     <h3>Spotify Community Forum</h3>
     <hr>
-    <form name="frm" method="post" action="../addDiscussionClient.php">
+    <form name="frm" method="post" action="/addDiscussionClient.php">
         <input type="hidden" id="commentid" name="Pcommentid" value="0">
 	<div class="form-group">
     <input type="hidden" class="form-control" name="name" value ="<?php echo $uname ?>">

@@ -4,9 +4,9 @@ require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 
-$name = $_SESSION['username'];
+$name = $_SESSION['name'];
 $content = $_POST['msg'];
-$parent = $_POST['parentComment'];
+$parent = $_POST['commentid'];
 
 
 $client = new rabbitMQClient("testRabbitMQ.ini","testServer");
