@@ -164,10 +164,10 @@
         <form method="post" action= "../ConcertClient.php">
 
                 <div class="txt_field">
-                <input type="text" name="artist" id="artist" required>
+                <input type="text" name="search" id="search" required>
                 <label>Concert</label>
 		</div>
-		<input type="submit" value="Submit" name="Search Concert">
+		<input type="submit" value="Submit" name="search">
 	</form>
 	
 	  	<table id="tabledata">
@@ -175,7 +175,7 @@
 	<th>Video Link:</th>
   	</tr>
         <tr>
-	<td><?php echo $video;?></td>
+	<td><iframe src="<?php echo $video;?>" height="300" width="300" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></td>
 	</tr>
 	</table>
 

@@ -34,4 +34,7 @@ Hot Standby: linuxconfig.org - How to create a hot standby with PostgreSQL
 Notification System: webdamm.com - Build Push Notification System with 
 PHP and MySQL
 
-API: Rapid API: Spotify Scraper.
+API: Rapid API: Spotify Scraper. Rapid API: Youtube Media Downloader.
+
+Embeeding Videos: youtube-PixemWeb: How to Embed Youtube Videos with 
+iframe Tag in HTML - Tutorial for Beginners
