@@ -1,6 +1,6 @@
 #!/usr/bin/php
 <?php
-//session_start();
+session_start();
   if(!isset($_SESSION['valid']) OR $_SESSION['valid'] !== true){
       header("location: login.php");
       exit;
