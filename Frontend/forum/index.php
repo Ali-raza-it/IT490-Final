@@ -47,7 +47,7 @@
         	</div>
             <div class="form-group">
               <label for="comment">Write your reply:</label>
-              <textarea class="form-control" rows="5" name="Rmsg" required></textarea>
+              <textarea class="form-control" rows="5" id="reply" name="Rmsg" required></textarea>
             </div>
         	 <input type="button" id="btnreply" name="btnreply" class="btn btn-primary" value="Reply">
       </form>
@@ -70,7 +70,7 @@
 	</div>
     <div class="form-group">
       <label for="comment">What would you like to share ?</label>
-      <textarea class="form-control" rows="5" name="msg" required></textarea>
+      <textarea class="form-control" rows="5" id="messageone" name="msg" required></textarea>
     </div>
 	 <input type="button" id="butsave" name="save" class="btn btn-primary" value="Send">
   </form>
