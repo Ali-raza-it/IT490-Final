@@ -1,5 +1,6 @@
 #!/usr/bin/php
 <?php
+session_start();
 require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
@@ -23,10 +24,7 @@ $request['message'] = $msg;
 $response = $client->send_request($request);
 //$response = $client->publish($request);
 
-if($response!==0)
-{
-	$_SESSION['songData'] = $response;
-	header("location: Frontend/searchArtist.php");
+$_SESSION['songData'] = $response;
+	header("location: Frontend/searchSong.php");
 	exit;
-}
 ?>

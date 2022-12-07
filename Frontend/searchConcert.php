@@ -17,7 +17,7 @@
   if(isset($_SESSION['concertData'])){
       $Data = $_SESSION['concertData'];
 
-      unset($_SESSION['concertData']);
+      var_dump($Data);
   }
 
 ?>
@@ -161,7 +161,7 @@
         <form method="post" action= "../ConcertClient.php">
 
                 <div class="txt_field">
-                <input type="text" name="Search Concert" id="Search Concert" required>
+                <input type="text" name="artist" id="artist" required>
                 <label>Concert</label>
 		</div>
 		<input type="submit" value="Submit" name="Search Concert">
@@ -179,13 +179,14 @@
         foreach($Data as $concert)
 	{
   	?>
+  	<tr>
 	<td><?php echo $concert[0];?></td>
         <td><?php echo $concert[1];?></td>
         <td><?php echo $concert[2];?></td>
 	<td><?php echo $concert[3];?></td>
 	<td><?php echo $concert[4];?></td>
 	</tr>
-	<?php 
+	<?php unset($_SESSION['concertData']);
 	}
 	?>
 	</table>
