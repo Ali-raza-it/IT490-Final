@@ -1,4 +1,22 @@
 <!DOCTYPE html>
+<?php
+  session_start();
+  if(!isset($_SESSION['valid']) OR $_SESSION['valid'] !== true){
+      header("location: login.php");
+      exit;
+  }
+  if(isset($_SESSION['response'])){
+      $response = $_SESSION['response'];
+      
+      $uname = $response[0];
+      $fname = $response[1];
+      $lname = $response[2];
+      $email = $response[3];
+      include "nav.php";
+      
+  }
+  
+?>
 <html>
 <head>
 <link rel="icon" href="./images/favicon.png" type="image/png" sizes="16x16">
@@ -25,12 +43,12 @@
         <form name="frm1" method="post">
             <input type="hidden" id="commentid" name="Rcommentid">
         	<div class="form-group">
-        	  <label for="usr">Write your name:</label>
-        	  <input type="text" class="form-control" name="Rname" required>
+            <input type="hidden" class="form-control" name="Rname" value= "<?php echo $uname ?>">
+
         	</div>
             <div class="form-group">
               <label for="comment">Write your reply:</label>
-              <textarea class="form-control" rows="5" name="Rmsg" required></textarea>
+              <textarea class="form-control" rows="5" name="Rmsg" ></textarea>
             </div>
         	 <input type="button" id="btnreply" name="btnreply" class="btn btn-primary" value="Reply">
       </form>
@@ -46,11 +64,10 @@
   <div class="panel-body">
     <h3>Spotify Community Forum</h3>
     <hr>
-    <form name="frm" method="post" action="../addDiscussionClient.php">
+    <form name="frm" method="post" >
         <input type="hidden" id="commentid" name="Pcommentid" value="0">
 	<div class="form-group">
-	  <label for="usr">Write your name ?:</label>
-	  <input type="text" class="form-control" name="name" required>
+  <input type="hidden" class="form-control" name="name" value= "<?php echo $uname ?>">
 	</div>
     <div class="form-group">
       <label for="comment">What would you like to share ?</label>
