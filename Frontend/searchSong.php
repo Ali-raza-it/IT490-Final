@@ -22,12 +22,14 @@
 	$albName = $Data[2];
 	
 	unset($_SESSION['songData']);
-}
+  }
+  $_SESSION['songTitle'] = $songName;
+  $_SESSION['artist'] = $artName;
 ?>
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>Search for Artist</title>
+	<title>Search for Song</title>
 	<style>
 	body{
 	margin: 0;

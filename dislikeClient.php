@@ -5,8 +5,8 @@ require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 
 $username = $_SESSION['username'];
-$song = $_POST['songtitle'];
-$artist = $_POST['artist'];
+$song = $_SESSION['songtitle'];
+$artist = $_SESSION['artist'];
 
 $client = new rabbitMQClient("testRabbitMQ.ini","testServer");
 if (isset($argv[1]))
@@ -33,3 +33,5 @@ $response = $client->send_request($request);
 //else {
   //header('Location: Frontend/login.php');
 //}
+
+?>

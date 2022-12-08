@@ -28,4 +28,4 @@ $_SESSION['concertData'] = $response;
 	header("location: Frontend/searchConcert.php");
       	exit;
 
-
+?>
