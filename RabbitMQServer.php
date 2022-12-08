@@ -774,6 +774,7 @@ function getConcert($artist)
                 	mysqli_stmt_bind_param($insertstmt, "sssss", $concert[0], $artist, $concert[2], $concert[3], $date);
                 	mysqli_stmt_execute($insertstmt);
 			mysqli_stmt_close($insertstmt);
+			sendNotification($concert[0], $artist, $date);
 		}
 	}
 	// Returns concert information to the client.
@@ -842,10 +843,38 @@ function getConcertVideo($video)
 
 }
 
-//function sendNotification()
-//{
-	//global $mydb;
-//}
+function sendNotification($concertTitle, $artist, $date)
+{
+	global $mydb;
+	$notification = "$artist will be performing at $concertTitle on $date";
+	// Inserts the newest notification into the notification table.
+        $notify = "insert into discussion (username, concertDate, message, artist) values(?, ?, ?, ?);";
+
+        $notifyquery = mysqli_stmt_init($mydb);
+        if(!mysqli_stmt_prepare($notifyquery, $notify))
+        {
+                return false;
+                exit();
+        }
+        mysqli_stmt_bind_param($notifyquery, "ssss", $username, $date, $notification, $artist);
+        mysqli_stmt_execute($notifyquery);
+        mysqli_stmt_close($notifyquery);
+
+	$client = new rabbitMQClient("notifyRabbitMQ.ini","testServer");
+        if (isset($argv[1]))
+        {
+                $msg = $argv[1];
+        }
+        else
+        {
+                $msg = "test message";
+        }
+        $request = array();
+        $request['type'] = "notification";
+        $request['notification'] = $notification;
+        $request['message'] = $msg;
+        $response = $client->send_request($request);
+}
 
 function requestProcessor($request)
 {
@@ -879,12 +908,6 @@ function requestProcessor($request)
       return getConcert($request['artist']);
     case "add discussion":
       return addDiscussion($request['parent'], $request['username'], $request['post']);
-    case "get notification":
-      return sendNotification();
-    case "update notification":
-      return updateNotification();
-    case "get notification by user":
-      return getNotificationByUSer($request['username']);
     case "like":
       return addLikeSong($request['username'],$request['song'], $request['artist']);
     case "dislike":
