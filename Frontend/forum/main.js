@@ -4,7 +4,7 @@ http_request = new XMLHttpRequest();
 
 function LoadData(){
 $.ajax({
-url: 'view.phps',
+url: 'view.php',
 type: "POST",
 dataType: 'json',
 success: function(data) {

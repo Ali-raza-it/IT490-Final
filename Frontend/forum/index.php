@@ -1,20 +1,4 @@
-<?php
-  session_start();
-  if(!isset($_SESSION['valid']) OR $_SESSION['valid'] !== true){
-      header("location: login.php");
-      exit;
-  }
-  if(isset($_SESSION['response'])){
-      $response = $_SESSION['response'];
-      
-      $uname = $response[0];
-      $fname = $response[1];
-      $lname = $response[2];
-      $email = $response[3];
-      include "nav.php";
-  }
-?>
-
+<!DOCTYPE html>
 <html>
 <head>
 <link rel="icon" href="./images/favicon.png" type="image/png" sizes="16x16">
@@ -38,16 +22,15 @@
         <h4 class="modal-title">Reply Question</h4>
       </div>
       <div class="modal-body">
-        <form name="frm1" method="post" >
+        <form name="frm1" method="post">
             <input type="hidden" id="commentid" name="Rcommentid">
         	<div class="form-group">
-            
-          <input type="hidden" class="form-control" name="Rname" value ="<?php echo $uname ?>">
-
+        	  <label for="usr">Write your name:</label>
+        	  <input type="text" class="form-control" name="Rname" required>
         	</div>
             <div class="form-group">
               <label for="comment">Write your reply:</label>
-              <textarea class="form-control" rows="5" id="reply" name="Rmsg" required></textarea>
+              <textarea class="form-control" rows="5" name="Rmsg" required></textarea>
             </div>
         	 <input type="button" id="btnreply" name="btnreply" class="btn btn-primary" value="Reply">
       </form>
@@ -63,14 +46,15 @@
   <div class="panel-body">
     <h3>Spotify Community Forum</h3>
     <hr>
-    <form name="frm" method="post" >
+    <form name="frm" method="post" action="../addDiscussionClient.php">
         <input type="hidden" id="commentid" name="Pcommentid" value="0">
 	<div class="form-group">
-    <input type="hidden" class="form-control" name="name" value ="<?php echo $uname ?>">
+	  <label for="usr">Write your name ?:</label>
+	  <input type="text" class="form-control" name="name" required>
 	</div>
     <div class="form-group">
       <label for="comment">What would you like to share ?</label>
-      <textarea class="form-control" rows="5" id="messageone" name="msg" required></textarea>
+      <textarea class="form-control" rows="5" name="msg" required></textarea>
     </div>
 	 <input type="button" id="butsave" name="save" class="btn btn-primary" value="Send">
   </form>

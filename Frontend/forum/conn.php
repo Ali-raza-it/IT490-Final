@@ -1,8 +1,10 @@
 <?php
 session_start();
-$db_username = 'root';
-$db_password = 'roo';
-$conn = new pdo( 'mysql:host=localhost;dbname=IT490', $db_username, $db_password);
+$db_username = 'testUser';
+$db_password = '12345';
+$conn = new PDO( 'mysql:host=localhost;dbname=testdb', $db_username, $db_password );
 if(!$conn){
-    die("Fatal Error: connection failed");
+die("Fatal Error: Connection Failed!");
 }
+
+?>
