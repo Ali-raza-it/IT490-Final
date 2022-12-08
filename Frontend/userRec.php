@@ -17,7 +17,6 @@
   if(isset($_SESSION['recData'])){
         $Data = $_SESSION['recData'];
 
-        var_dump($Data);
 }
 
 ?>

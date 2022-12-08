@@ -15,11 +15,8 @@
   }
 
   if(isset($_SESSION['concertVideo'])){
-      $Data = $_SESSION['concertVideo'];
+      $Video = $_SESSION['concertVideo'];
 
-      $Video = $Data[0];
-
-      unset($_SESSION['concertVideo']);
 
   }
 
@@ -161,24 +158,24 @@
 <body>
     <div class="center">
         <h1>Search For Concert<h1>
-        <form method="post" action= "../ConcertClient.php">
+        <form method="post" action= "../concertVideoClient.php">
 
                 <div class="txt_field">
                 <input type="text" name="search" id="search" required>
                 <label>Concert</label>
 		</div>
-		<input type="submit" value="Submit" name="search">
+		<input type="submit" value="Submit" name="concert">
 	</form>
 	
 	  	<table id="tabledata">
 	<tr>
 	<th>Video Link:</th>
   	</tr>
-        <tr>
-	<td><iframe src="<?php echo $video;?>" height="300" width="300" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></td>
+	<tr>
+	<td><iframe src="<?php echo $Video;?>" height="400" width="600" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></td>
 	</tr>
 	</table>
-
+<?php unset($_SESSION['concertVideo']); ?>
 </body>
 </html>
 
