@@ -4,7 +4,7 @@ http_request = new XMLHttpRequest();
 
 function LoadData(){
 $.ajax({
-url: 'addDiscussionClient.php',
+url: 'view.phps',
 type: "POST",
 dataType: 'json',
 success: function(data) {
