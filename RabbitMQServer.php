@@ -290,14 +290,14 @@ function addLikeSong($username, $songTitle, $artist)
         mysqli_stmt_close($selectstmt);
 	if($selectassoc == Null)
 	{
-		$insert = "insert into songLikesAndDislike (songTitle, likes, dislikes, artist) values(?, ?, ?, ?);";
+		$insert = "insert into songLikesAndDislike (songTitle, artist) values(?, ?);";
                 $insertstmt = mysqli_stmt_init($mydb);
                 if(!mysqli_stmt_prepare($insertstmt, $insert))
                 {
                         return false;
                         exit();
                 }
-                mysqli_stmt_bind_param($insertstmt, "siis", $songTitle, 0, 0, $artist);
+                mysqli_stmt_bind_param($insertstmt, "ss", $songTitle,$artist);
                 mysqli_stmt_execute($insertstmt);
                 mysqli_stmt_close($insertstmt);
 
@@ -408,14 +408,14 @@ function addDislikeSong($username, $songTitle, $artist)
         mysqli_stmt_close($selectstmt);
         if($selectassoc == Null)
         {
-                $insert = "insert into songLikesAndDislike (songTitle, likes, dislikes, artist) values(?, ?, ?, ?);";
+                $insert = "insert into songLikesAndDislike (songTitle, artist) values(?, ?);";
                 $insertstmt = mysqli_stmt_init($mydb);
                 if(!mysqli_stmt_prepare($insertstmt, $insert))
                 {
                         return false;
                         exit();
                 }
-                mysqli_stmt_bind_param($insertstmt, "siis", $songTitle, 0, 0, $artist);
+                mysqli_stmt_bind_param($insertstmt, "ss", $songTitle, $artist);
 		mysqli_stmt_execute($insertstmt);
                 mysqli_stmt_close($insertstmt);
 	}
