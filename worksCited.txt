@@ -38,3 +38,5 @@ API: Rapid API: Spotify Scraper. Rapid API: Youtube Media Downloader.
 
 Embeeding Videos: youtube-PixemWeb: How to Embed Youtube Videos with 
 iframe Tag in HTML - Tutorial for Beginners
+
+HTML & PHP most frontend elements including navbar was adopted from W3Schools
