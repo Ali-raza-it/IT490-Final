@@ -859,7 +859,6 @@ function sendNotification($concertTitle, $artist, $date)
         mysqli_stmt_bind_param($notifyquery, "ssss", $username, $date, $notification, $artist);
         mysqli_stmt_execute($notifyquery);
         mysqli_stmt_close($notifyquery);
-
 	$client = new rabbitMQClient("notifyRabbitMQ.ini","testServer");
         if (isset($argv[1]))
         {
@@ -871,7 +870,10 @@ function sendNotification($concertTitle, $artist, $date)
         }
         $request = array();
         $request['type'] = "notification";
-        $request['notification'] = $notification;
+	$request['username'] = $username;
+	$request['artist'] = $artist;
+	$request['date'] = $date;
+	$request['notification'] = $notification;
         $request['message'] = $msg;
         $response = $client->send_request($request);
 }
