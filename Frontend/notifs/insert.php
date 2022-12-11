@@ -1,13 +1,20 @@
 <?php
 //insert.php
+
 if(isset($_POST["subject"]))
 {
+
  include("connect.php");
+	if(isset($_POST["userS"]) and $_POST["userS"]!='')
+	{
+	$userS = mysqli_real_escape_string($con, $_POST["userS"]);
+	$lnk = '../searchUserClient.php?user='.$userS;
+	}
+
  $userR = mysqli_real_escape_string($con, $_POST["userR"]);
- $userS = mysqli_real_escape_string($con, $_POST["userS"]);
+
  $subject = mysqli_real_escape_string($con, $_POST["subject"]);
  $comment = mysqli_real_escape_string($con, $_POST["comment"]);
- $lnk = mysqli_real_escape_string($con, $_POST["lnk"]);
  
  $query = "
  INSERT INTO comments(userR, userS, comment_subject, comment_text, lnk)
@@ -17,4 +24,6 @@ if(isset($_POST["subject"]))
  
  mysqli_query($con, $query);
 }
+
+
 ?>

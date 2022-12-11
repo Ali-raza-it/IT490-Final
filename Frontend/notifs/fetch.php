@@ -33,9 +33,11 @@ if(mysqli_num_rows($result) > 0)
 {
  while($row = mysqli_fetch_array($result))
  {
+ $lnk = $row["lnk"];
+ 
    $output .= '
    <li>
-   <a href="#">
+   <a href="'.$lnk.'">
    <strong>'.$row["comment_subject"].'</strong><br />
    <small><em>'.$row["comment_text"].'</em></small>
    </a>

@@ -1,7 +1,7 @@
 <?php 
   session_start();
   if(!isset($_SESSION['valid']) OR $_SESSION['valid'] !== true){
-      header("location: login.php");
+      header("location: ../login.php");
       exit;
   }
   if(isset($_SESSION['response'])){

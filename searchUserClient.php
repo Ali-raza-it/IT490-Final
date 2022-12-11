@@ -7,6 +7,11 @@ require_once('rabbitMQLib.inc');
 
 $username = $_GET['user'];
 
+if($username==$_SESSION['response'][0]){
+header("location: Frontend/Profile.php");
+      exit;
+      }
+
 $client = new rabbitMQClient("testRabbitMQ.ini","testServer");
 if (isset($argv[1]))
 {
