@@ -1,4 +1,19 @@
 <?php
+  session_start();
+  if(!isset($_SESSION['valid']) OR $_SESSION['valid'] !== true){
+      header("location: login.php");
+      exit;
+  }
+  if(isset($_SESSION['response'])){
+      $response = $_SESSION['response'];
+      
+      $uname = $response[0];
+      $fname = $response[1];
+      $lname = $response[2];
+      $email = $response[3];
+      
+  }
+
 include('connect.php');
 
 
@@ -8,10 +23,10 @@ if(isset($_POST['view'])){
 
 if($_POST["view"] != '')
 {
-    $update_query = "UPDATE comments SET comment_status = 1 WHERE comment_status=0";
+    $update_query = "UPDATE comments SET comment_status = 1 WHERE comment_status=0 and userR = '$uname';";
     mysqli_query($con, $update_query);
 }
-$query = "SELECT * FROM comments ORDER BY comment_id DESC LIMIT 5";
+$query = "SELECT * FROM comments WHERE userR = '$uname' ORDER BY comment_id DESC LIMIT 5 ";
 $result = mysqli_query($con, $query);
 $output = '';
 if(mysqli_num_rows($result) > 0)
@@ -36,7 +51,7 @@ else{
 
 
 
-$status_query = "SELECT * FROM comments WHERE comment_status=0";
+$status_query = "SELECT * FROM comments WHERE comment_status=0 and userR = '$uname';";
 $result_query = mysqli_query($con, $status_query);
 $count = mysqli_num_rows($result_query);
 $data = array(
