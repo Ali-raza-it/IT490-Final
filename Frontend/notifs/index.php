@@ -29,6 +29,18 @@
      <input type="text" name="subject" id="subject" class="form-control">
     </div>
     <div class="form-group">
+     <label>Enter userR</label>
+     <input type="text" name="userR" id="userR" class="form-control">
+    </div>
+    <div class="form-group">
+     <label>Enter userS</label>
+     <input type="text" name="userS" id="userS" class="form-control">
+    </div>
+    <div class="form-group">
+     <label>Enter link</label>
+     <input type="text" name="lnk" id="lnk" class="form-control">
+    </div>
+    <div class="form-group">
      <label>Enter Comment</label>
      <textarea name="comment" id="comment" class="form-control" rows="5"></textarea>
     </div>
