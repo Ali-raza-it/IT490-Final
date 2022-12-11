@@ -39,6 +39,8 @@ API: Rapid API: Spotify Scraper. Rapid API: Youtube Media Downloader.
 Embeeding Videos: youtube-PixemWeb: How to Embed Youtube Videos with 
 iframe Tag in HTML - Tutorial for Beginners
 
+push notifications using node.js and service worker youtube.com/watch?v=HIYFW2zaYQM
+
 HTML & PHP most frontend elements including navbar was adopted from W3Schools
 
 For notifications: https://github.com/shahroznawaz/php-notifications
