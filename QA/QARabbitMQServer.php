@@ -273,6 +273,8 @@ function getArtist($artist)
         return $artistarray;
 }
 
+print_r(getArtist("Pop Smoke"));
+
 function addLikeSong($username, $songTitle, $artist)
 {
 	global $mydb;
