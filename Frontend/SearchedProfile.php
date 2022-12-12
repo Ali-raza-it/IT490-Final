@@ -175,23 +175,34 @@
 	if(mysqli_num_rows($result) > 0)
 	{
 	?>
-        <button onclick="accReq()" id="accFriend"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person-add" viewBox="0 0 16 16">
-  <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Zm-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/>
-  <path d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1h5.256Z"/>
-</svg> Accept </button>
-<button onclick="delReq()" id="rejectFriend"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person-x" viewBox="0 0 16 16">
-  <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Zm.256 7a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1h5.256Z"/>
-  <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm-.646-4.854.646.647.646-.647a.5.5 0 0 1 .708.708l-.647.646.647.646a.5.5 0 0 1-.708.708l-.646-.647-.646.647a.5.5 0 0 1-.708-.708l.647-.646-.647-.646a.5.5 0 0 1 .708-.708Z"/>
-</svg> Reject </button>
-	<?php }else{ ?>
+        
+        
+        <form action="accept.php" method="post">
+        
+        <input type="hidden" name="accept" value=true>
+        <button type="submit">Accept</button>
+        
+        
+        <input type="hidden" name="delete" value=true>
+        <button type="submit" formaction="reject.php">Reject</button>
+        
+        
+	<?php } else {
+	
+	$query2 = "select * from comments where userR='".$sruname."' and userS='".$uname."'";
+	$result2 = mysqli_query($con, $query2);
+	if(mysqli_num_rows($result2) > 0) { ?>
 
-<button id="addFriend"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-person-add" viewBox="0 0 16 16">
-  <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0Zm-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z"/>
-  <path d="M8.256 14a4.474 4.474 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10c.26 0 .507.009.74.025.226-.341.496-.65.804-.918C9.077 9.038 8.564 9 8 9c-5 0-6 3-6 4s1 1 1 1h5.256Z"/>
-</svg> Add Friend</button>
+	<h1>request sent</h1>
 
-	<?php }
-	exit; ?>
+	<?php }else{
+	 ?>
+	 
+	 <form action="sendReq.php" method="post">
+        <input type="hidden" name="sendReq" value=true>
+        <button type="submit">Add Friend</button>
+
+<?php }} ?>
 
 
           </div>
@@ -246,30 +257,6 @@
 
 
     <!-- Analytics -->
-<script>
-function accReq() {
-  //we will send request to carter's db
-}
-function delReq() {
-  <?php $query = "delete from comments where userR='".$uname."' and userS='".$sruname."'";
-  $result = mysqli_query($con, $query);
-  exit; ?>
-}
 
-function addReq() {
-  <?php 
-  $userS = $uname;
-  $userR = $sruname;
-  $lnk = '../searchUserClient.php?user='.$userS;
-  
-  $query = "
- INSERT INTO comments(userR, userS, comment_subject, comment_text, lnk)
- VALUES ('$userR','$userS','Friend Request','Friend Request From ".$uname."','$lnk');
- ";
- $result = mysqli_query($con, $query); 
- exit; ?>
-}
-
-</script>
 	</body>
 </html>
