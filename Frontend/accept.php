@@ -33,11 +33,38 @@ if(isset($_POST["accept"]))
 //accept friendship goes here
 
 }
+require_once('../path.inc');
+require_once('../get_host_info.inc');
+require_once('../rabbitMQLib.inc');
 
-//header("location: SearchedProfile.php");
-//exit;
+$username = $uname;
+$friendusername = $sruname;
+
+$client = new rabbitMQClient("testRabbitMQ.ini","testServer");
+if (isset($argv[1]))
+{
+  $msg = $argv[1];
+}
+else
+{
+  $msg = "test message";
+}
+
+$request = array();
+$request['type'] = "add friend";
+$request['username'] = $username;
+$request['friendusername'] = $friendusername;
+$request['message'] = $msg;
+$FL = $client->send_request($request);
+
+if($FL!=0){
+$query = "delete from comments where userR='".$uname."' and userS='".$sruname."'";
+$result = mysqli_query($con, $query);
+}
+
+$_SESSION['friendlist'] = $FL;
+
+header("location: SearchedProfile.php");
+exit;
 
 ?>
-<h1> Accept friend request page! </h1>
-<h4> this currently does not do anything so redirecting you back! </h4>
-<meta http-equiv="refresh" content="7; url='SearchedProfile.php'" />
