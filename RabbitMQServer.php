@@ -647,7 +647,21 @@ function addFriend($username, $friendusername)
                 mysqli_stmt_bind_param($insertstmt2, "ss", $friendusername, $username);
                 mysqli_stmt_execute($insertstmt2);
                 mysqli_stmt_close($insertstmt2);
-                return true;
+                // Selects all the friends of the specified user and returns it to the frontend.
+        	$select2 = "select username2 from friends where username1 = ?;";
+        	$selectstmt2 = mysqli_stmt_init($mydb);
+        	if(!mysqli_stmt_prepare($selectstmt2, $select2))
+        	{
+                	return false;
+                	exit();
+        	}
+        	mysqli_stmt_bind_param($selectstmt2, "s", $username);
+        	mysqli_stmt_execute($selectstmt2);
+        	$selectresult2 = mysqli_stmt_get_result($selectstmt2);
+        	$selectassoc2 = mysqli_fetch_all($selectresult2);
+        	mysqli_stmt_close($selectstmt2);
+        	return $selectassoc2;
+
 
 	}
 	// Returns false if user is already friends with the other user.
