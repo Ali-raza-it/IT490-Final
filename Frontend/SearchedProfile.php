@@ -26,6 +26,7 @@
   }
     if(isset($_SESSION['friendlist'])){
       $FL = $_SESSION['friendlist'];
+      var_dump($FL);
       
 $friends = false;
 	
@@ -188,11 +189,11 @@ $friends = false;
 	if(mysqli_num_rows($result) > 0)
 	{
 	?> <form action="accept.php" method="post">
-                            <input type="hidden" name="accept" value=true>
-                            <input type="hidden" name="friendusername" value=<?php echo $sruname; ?>>
-                            <button type="submit">Accept</button>
-                            <input type="hidden" name="delete" value=true>
-                            <button type="submit" formaction="reject.php">Reject</button> 
+            <input type="hidden" name="accept" value=true>
+            <input type="hidden" name="friendusername" value=<?php echo $sruname; ?>>
+            <button type="submit">Accept</button>
+            <input type="hidden" name="delete" value=true>
+            <button type="submit" formaction="reject.php">Reject</button> 
         <?php } 
 	else
 	 { 
