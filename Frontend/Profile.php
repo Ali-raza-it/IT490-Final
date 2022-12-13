@@ -25,6 +25,31 @@
 <html lang="en">
 <head>
       <style>
+      
+      	#tabledata {
+	  font-family: Arial, Helvetica, sans-serif;
+	  border-collapse: collapse;
+	  width: 90%;
+	  margin-left: auto;
+	  margin-right: auto;
+	}
+
+	#tabledata td, #tabledata th {
+	  border: 1px solid #ddd;
+	  padding: 8px;
+	}
+
+	#tabledata tr:nth-child(even){background-color: #f2f2f2;}
+
+	#tabledata tr:hover {background-color: #ddd;}
+
+	#tabledata th {
+	  padding-top: 12px;
+	  padding-bottom: 12px;
+	  text-align: left;
+	  background-color: #bb99ff;
+	  color: white;
+	}
     	body{
       margin: 0;
       padding: 0;
@@ -198,13 +223,13 @@
             <h3 class="mb-0"><i class="far fa-clone pr-1"></i>Other Information</h3>
           </div>
           <div class="card-body pt-0">
-              <p>High Scores or Music likes could go here!</p>
-              <table>
+              
+              <table id="tabledata">
               <th>Friends</th>
               
               <?php foreach ($FL as $userArray) { foreach ($userArray as $user){
               	?>
-              	<tr><td><?php echo $user; ?></td></tr>
+              	<tr><td>	<a href="../searchUserClient.php?user=<?php echo $user; ?>" </a>	<?php echo $user; ?>	</td></tr>
               	<?php }} ?>
           </div>
         </div>
