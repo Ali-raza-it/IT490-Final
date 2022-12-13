@@ -25,19 +25,19 @@
       
   }
   
-       if(!isset($_SESSION['friendlist'])){
-     header("location: ../getFriendsClient.php?username=".$uname);
+    if(!isset($_SESSION['friendlist'])){
+    header("location: ../getFriendsClient.php?username=".$uname);
   }
     if(isset($_SESSION['friendlist'])){
-      $FL = $_SESSION['friendlist'];
+    $FL = $_SESSION['friendlist'];
       
 $friends = false;
 	
-	foreach ($FL[0] as $user) {
+	foreach ($FL as $userArray) { foreach ($userArray as $user) {
 	  
-		if($sruname == $user){
+		if($sruname == $user){ 
 		$friends = true;
-		}
+		} }
 	}
   }
   

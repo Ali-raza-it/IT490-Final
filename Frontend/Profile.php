@@ -202,10 +202,10 @@
               <table>
               <th>Friends</th>
               
-              <?php foreach ($FL[0] as $user) {
+              <?php foreach ($FL as $userArray) { foreach ($userArray as $user){
               	?>
               	<tr><td><?php echo $user; ?></td></tr>
-              	<?php } ?>
+              	<?php }} ?>
           </div>
         </div>
       </div>
