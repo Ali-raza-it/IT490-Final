@@ -1,18 +1,11 @@
 #!/usr/bin/php
-
-<?php 
+<?php
 session_start();
-if(!isset($_SESSION['valid']) OR $_SESSION['valid'] !== true){
-header("location: login.php");
-exit;
-}
+require_once('../path.inc');
+require_once('../get_host_info.inc');
+require_once('../rabbitMQLib.inc');
 
-require_once('path.inc');
-require_once('get_host_info.inc');
-require_once('rabbitMQLib.inc');
-
-$username = $_POST['username'];
-$friendusername = $_POST['friendusername'];
+$username = $_GET['username'];
 
 $client = new rabbitMQClient("testRabbitMQ.ini","testServer");
 if (isset($argv[1]))
@@ -25,18 +18,19 @@ else
 }
 
 $request = array();
-$request['type'] = "remove friend";
+$request['type'] = "get friends";
 $request['username'] = $username;
-$request['friendusername'] = $friendusername;
 $request['message'] = $msg;
-$response = $client->send_request($request);
+$FL = $client->send_request($request);
 //$response = $client->publish($request);
 
 echo "client received response: ".PHP_EOL;
-print_r($response);
+print_r($FL);
 echo "\n\n";
 
-header("location: getFriendsClient.php?username=".$username);
+$_SESSION['friendlist'] = $FL;
+
+header('Location: Profile.php');
 
 //if ($response=='true') {
   //header('Location: Frontend/landing.php');

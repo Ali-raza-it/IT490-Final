@@ -14,6 +14,13 @@
       include "nav.php";
       
   }
+     if(!isset($_SESSION['friendlist'])){
+     header("location: ProfileGetFriends.php?username=".$uname);
+  }
+      if(isset($_SESSION['friendlist'])){
+      $FL = $_SESSION['friendlist'];
+  }
+
 ?>
 <html lang="en">
 <head>
@@ -192,6 +199,13 @@
           </div>
           <div class="card-body pt-0">
               <p>High Scores or Music likes could go here!</p>
+              <table>
+              <th>Friends</th>
+              
+              <?php foreach ($FL[0] as $user) {
+              	?>
+              	<tr><td><?php echo $user; ?></td></tr>
+              	<?php } ?>
           </div>
         </div>
       </div>

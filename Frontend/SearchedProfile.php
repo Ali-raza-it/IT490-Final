@@ -24,9 +24,12 @@
       $sremail = $sruser[0][3];
       
   }
+  
+       if(!isset($_SESSION['friendlist'])){
+     header("location: ../getFriendsClient.php?username=".$uname);
+  }
     if(isset($_SESSION['friendlist'])){
       $FL = $_SESSION['friendlist'];
-      var_dump($FL);
       
 $friends = false;
 	
@@ -203,7 +206,14 @@ $friends = false;
 	
 	?> <h1>request sent</h1> 
 	
-	<?php }elseif($friends==true){ ?> <h1> You are now friends! </h1> <?php }  else { 
+	<?php }elseif($friends==true){ ?> 
+	
+	<form action="../removeFriendClient.php" method="post">
+        <input type="hidden" name="username" value=<?php echo $uname; ?>>
+        <input type="hidden" name="friendusername" value=<?php echo $sruname; ?>>
+        <button type="submit">Remove Friend</button>
+        
+             <?php }  else { 
 	 ?> <form action="sendReq.php" method="post">
                               <input type="hidden" name="sendReq" value=true>
                               <button type="submit">Add Friend</button> 
