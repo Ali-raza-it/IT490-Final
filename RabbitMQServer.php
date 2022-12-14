@@ -789,7 +789,6 @@ function getConcert($username, $artist)
                 	mysqli_stmt_bind_param($insertstmt, "sssss", $concertTitle, $artist, $concert[2], $concert[3], $date);
                 	mysqli_stmt_execute($insertstmt);
 			mysqli_stmt_close($insertstmt);
-			sendNotification($username, $concertTitle, $artist, $date);
 		}
 	}
 	// Returns concert information to the client.
