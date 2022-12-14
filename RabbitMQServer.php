@@ -863,7 +863,7 @@ function sendNotification($username, $concertTitle, $artist, $date)
 	global $mydb;
 	$notification = "$artist will be performing at $concertTitle on $date";
 	// Inserts the newest notification into the notification table.
-        $notify = "insert into discussion (username, concertDate, message, artist, concertTitle) values(?, ?, ?, ?, ?);";
+        $notify = "insert into notification (username, concertDate, message, artist, concertTitle) values(?, ?, ?, ?, ?);";
 
         $notifyquery = mysqli_stmt_init($mydb);
         if(!mysqli_stmt_prepare($notifyquery, $notify))
