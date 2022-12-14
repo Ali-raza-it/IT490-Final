@@ -23,10 +23,10 @@ if(isset($_POST['view'])){
 
 if($_POST["view"] != '')
 {
-    $update_query = "UPDATE comments SET comment_status = 1 WHERE comment_status=0 and userR = '$uname' AND `dt` >= NOW() AND `dt` < NOW() + INTERVAL 1 MONTH;";
+    $update_query = "UPDATE comments SET comment_status = 1 WHERE comment_status=0 and userR = '$uname' AND `dt` < NOW() + INTERVAL 1 MONTH;";
     mysqli_query($con, $update_query);
 }
-$query = "SELECT * FROM comments WHERE `dt` >= NOW() AND `dt` < NOW() + INTERVAL 1 MONTH AND userR = '$uname' ORDER BY comment_id DESC LIMIT 5 ";
+$query = "SELECT * FROM comments WHERE userR = '$uname' AND `dt` < NOW() + INTERVAL 1 MONTH ORDER BY comment_id DESC LIMIT 10 ";
 $result = mysqli_query($con, $query);
 $output = '';
 if(mysqli_num_rows($result) > 0)
@@ -53,7 +53,7 @@ else{
 
 
 
-$status_query = "SELECT * FROM comments WHERE comment_status=0 and userR = '$uname' AND `dt` >= NOW() AND `dt` < NOW() + INTERVAL 1 MONTH;";
+$status_query = "SELECT * FROM comments WHERE comment_status=0 and userR = '$uname' AND `dt` < NOW() + INTERVAL 1 MONTH;";
 $result_query = mysqli_query($con, $status_query);
 $count = mysqli_num_rows($result_query);
 $data = array(
