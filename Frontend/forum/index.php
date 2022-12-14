@@ -12,7 +12,7 @@
       $fname = $response[1];
       $lname = $response[2];
       $email = $response[3];
-      include "../nav.php";
+      //include "../nav.php";
   }
   
 ?>
