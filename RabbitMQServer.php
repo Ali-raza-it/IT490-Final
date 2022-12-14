@@ -736,7 +736,7 @@ function getFriendsList($username)
 	return $selectassoc;
 }
 
-function getConcert($artist)
+function getConcert($username, $artist)
 {
 	global $mydb;
 	// Searches for the requested artist in the concert database table.
@@ -788,7 +788,7 @@ function getConcert($artist)
                 	mysqli_stmt_bind_param($insertstmt, "sssss", $concert[0], $artist, $concert[2], $concert[3], $date);
                 	mysqli_stmt_execute($insertstmt);
 			mysqli_stmt_close($insertstmt);
-			sendNotification($concert[0], $artist, $date);
+			sendNotification($username, $concert[0], $artist, $date);
 		}
 	}
 	// Returns concert information to the client.
@@ -857,12 +857,12 @@ function getConcertVideo($video)
 
 }
 
-function sendNotification($concertTitle, $artist, $date)
+function sendNotification($username, $concertTitle, $artist, $date)
 {
 	global $mydb;
 	$notification = "$artist will be performing at $concertTitle on $date";
 	// Inserts the newest notification into the notification table.
-        $notify = "insert into discussion (username, concertDate, message, artist) values(?, ?, ?, ?);";
+        $notify = "insert into discussion (username, concertDate, message, artist, concertTitle) values(?, ?, ?, ?, ?);";
 
         $notifyquery = mysqli_stmt_init($mydb);
         if(!mysqli_stmt_prepare($notifyquery, $notify))
@@ -870,7 +870,7 @@ function sendNotification($concertTitle, $artist, $date)
                 return false;
                 exit();
         }
-        mysqli_stmt_bind_param($notifyquery, "ssss", $username, $date, $notification, $artist);
+        mysqli_stmt_bind_param($notifyquery, "sssss", $username, $date, $notification, $artist, $concertTitle);
         mysqli_stmt_execute($notifyquery);
         mysqli_stmt_close($notifyquery);
 	$client = new rabbitMQClient("notifyRabbitMQ.ini","testServer");
@@ -885,6 +885,7 @@ function sendNotification($concertTitle, $artist, $date)
         $request = array();
         $request['type'] = "notification";
 	$request['username'] = $username;
+	$request['concertTitle'] = $concertTitle
 	$request['artist'] = $artist;
 	$request['date'] = $date;
 	$request['notification'] = $notification;
@@ -921,7 +922,7 @@ function requestProcessor($request)
     case "remove friend":
       return removeFriend($request['username'], $request['friendusername']);
     case "concert":
-      return getConcert($request['artist']);
+      return getConcert($request['username'], $request['artist']);
     case "add discussion":
       return addDiscussion($request['parent'], $request['username'], $request['post']);
     case "like":

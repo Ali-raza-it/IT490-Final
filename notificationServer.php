@@ -4,7 +4,7 @@ require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 
-function displayNotification($username, $artist, $date, $notification)
+function displayNotification($username, $concertTitle, $artist, $date, $notification)
 {
     return true;
 }
@@ -20,7 +20,7 @@ function requestProcessor($request)
   switch ($request['type'])
   {
     case "notification":
-      return displayNotification($request['username'], $request['artist'], $request['date'], $request['notification']);
+      return displayNotification($request['username'], $request['concertTitle'], $request['artist'], $request['date'], $request['notification']);
   }
   return array("returnCode" => '0', 'message'=>"Server received request and processed");
 }
