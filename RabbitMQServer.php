@@ -885,7 +885,7 @@ function sendNotification($username, $concertTitle, $artist, $date)
         $request = array();
         $request['type'] = "notification";
 	$request['username'] = $username;
-	$request['concertTitle'] = $concertTitle
+	$request['concertTitle'] = $concertTitle;
 	$request['artist'] = $artist;
 	$request['date'] = $date;
 	$request['notification'] = $notification;
