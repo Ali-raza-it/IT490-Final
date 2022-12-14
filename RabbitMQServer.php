@@ -777,6 +777,7 @@ function getConcert($username, $artist)
 		// Insert the concert and concert information into the database
 		foreach($response as $concert)
 		{
+			$concertTitle = $concert[0];
 			$date = date($concert[4]);
                 	$insert = "insert into concerts (concertTitle, artist, location, venue, date) values(?,?,?,?,?);";
                 	$insertstmt = mysqli_stmt_init($mydb);
@@ -785,10 +786,10 @@ function getConcert($username, $artist)
                         	return false;
                         	exit();
                 	}
-                	mysqli_stmt_bind_param($insertstmt, "sssss", $concert[0], $artist, $concert[2], $concert[3], $date);
+                	mysqli_stmt_bind_param($insertstmt, "sssss", $concertTitle, $artist, $concert[2], $concert[3], $date);
                 	mysqli_stmt_execute($insertstmt);
 			mysqli_stmt_close($insertstmt);
-			sendNotification($username, $concert[0], $artist, $date);
+			sendNotification($username, $concertTitle, $artist, $date);
 		}
 	}
 	// Returns concert information to the client.
