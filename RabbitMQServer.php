@@ -891,7 +891,8 @@ function sendNotification($username, $concertTitle, $artist, $date)
 	$request['date'] = $date;
 	$request['notification'] = $notification;
         $request['message'] = $msg;
-        $response = $client->send_request($request);
+	$response = $client->send_request($request);
+	return $response;
 }
 
 function requestProcessor($request)

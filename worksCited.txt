@@ -1,6 +1,7 @@
 Logging System: Youtube-Christian Augusto Romero Goyzueta II: Rsyslog Server and Client - Ubuntu Server 20.04
 
 Nagios: Youtube-Happy Ghost: How to Install and configure Nagios Monitoring Server on Ubuntu
+osradar.com/install-nagios-ubuntu-linux-mint/ - How to install Nagios agent on Ubuntu 18.04?
 
 OSSIM: Youtube-Atul Awasthy: How to Download, Install and
 configure the OSSIM by Alienware
