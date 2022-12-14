@@ -13,7 +13,6 @@ session_start();
       $fname = $rep[1];
       $lname = $rep[2];
       $email = $rep[3];
-      include "nav.php";
   }
 
 

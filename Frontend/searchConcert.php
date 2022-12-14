@@ -16,7 +16,8 @@
 
   if(isset($_SESSION['concertData'])){
       $Data = $_SESSION['concertData'];
-
+	$reply = $_SESSION['REPLY'];
+	var_dump($reply);
   }
 
 ?>

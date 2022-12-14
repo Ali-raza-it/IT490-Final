@@ -6,7 +6,13 @@ require_once('rabbitMQLib.inc');
 
 function displayNotification($username, $concertTitle, $artist, $date, $notification)
 {
-    return true;
+$con = mysqli_connect("localhost", "ali", "12345", "testdb");
+$query = "
+INSERT INTO comments (userR, comment_subject, comment_text) VALUES ('$username', 'Concert', '$notification');
+";
+$result = mysqli_query($con, $query); 
+
+return true;
 }
 
 function requestProcessor($request)

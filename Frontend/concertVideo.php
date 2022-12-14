@@ -172,7 +172,7 @@
 	<th>Video Link:</th>
   	</tr>
 	<tr>
-	<td><iframe src="<?php echo $Video;?>" height="400" width="600" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></td>
+	<td><iframe src="<?php echo $Video;?>" height="300" width="500" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></td>
 	</tr>
 	</table>
 <?php unset($_SESSION['concertVideo']); ?>
