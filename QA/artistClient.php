@@ -23,7 +23,7 @@ require_once('rabbitMQLib.inc');
 
 $artist = $_POST['artist'];
 
-$client = new rabbitMQClient("DBQARabbitMQ.ini","testServer");
+$client = new rabbitMQClient("DBAQRabbitMQ.ini","testServer");
 if (isset($argv[1]))
 {
   $msg = $argv[1];
