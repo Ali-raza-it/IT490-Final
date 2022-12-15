@@ -9,7 +9,7 @@ $username = $_SESSION['response'][0];
 $song = $_SESSION['songTitle'];
 $artist = $_SESSION['artist'];
 
-$client = new rabbitMQClient("DBQARabbitMQ.ini","testServer");
+$client = new rabbitMQClient("testRabbitMQ.ini","testServer");
 if (isset($argv[1]))
 {
   $msg = $argv[1];

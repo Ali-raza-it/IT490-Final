@@ -18,7 +18,7 @@ if($password !== $confirmPassword)
 }	
 
 
-$client = new rabbitMQClient("DBQARabbitMQ.ini","testServer");
+$client = new rabbitMQClient("testRabbitMQ.ini","testServer");
 if (isset($argv[1]))
 {
   $msg = $argv[1];
