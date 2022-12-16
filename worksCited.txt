@@ -30,7 +30,7 @@ API Calls/Functions: Youtube-Coding Reflections: How to use PHP cURL to Handle J
 
 Profile Page: youtube-dynamic webZone: profile page in HTML CSS
 
-Hot Standby: linuxconfig.org - How to create a hot standby with PostgreSQL
+database replication: youtube-techblog:Mysqlreplication
 
 Notification System: webdamm.com - Build Push Notification System with 
 PHP and MySQL
